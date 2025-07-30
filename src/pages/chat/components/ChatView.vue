@@ -23,7 +23,6 @@
 						<span style="font-size: 100px">🤖</span>
 					</div>
 					<h2 class="title">{{ $t('ai.hi.assistant') }}</h2>
-					<div class="sub-tip">{{ $t('ai.assistant.tips') }}</div>
 				</div>
 				<div v-if="messageContext?.length" class="message-list">
 					<div
@@ -360,14 +359,13 @@ const handleMsgFeedback = (type, message?) => {
 	}).then((res) => {
 		if (type === 1) {
 			ElMessage({
-				message: t('ai.thank.support'),
-				type: 'success'
+				message: '😊',
+				type: 'info'
 			})
 		}
 		if (type === 2) {
-			// todo
 			ElMessage({
-				message: t('ai.thank.feedback'),
+				message: '😭',
 				type: 'info'
 			})
 		}
