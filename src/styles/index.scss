@@ -1,0 +1,14 @@
+// 业务系统自定义公共样式
+@use './platform';
+
+::-webkit-scrollbar {
+	width: 6px; 
+}
+	
+::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+	
+::-webkit-scrollbar-thumb {
+	background-color: #cdcdcd;
+}

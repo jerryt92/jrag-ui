@@ -1,0 +1,33 @@
+{
+	"include": ["src/**/*", "lib/**/*"],
+	"exclude": ["node_modules"],
+	"compilerOptions": {
+		"baseUrl": ".",
+		"skipLibCheck": true,
+		"alwaysStrict": false,
+		"strictNullChecks": false,
+		"strictBindCallApply": false,
+		"strictFunctionTypes": false,
+		"declaration": true,
+		"target": "esnext",
+		"module": "esnext",
+		"strict": true,
+		"jsx": "preserve",
+		"importHelpers": true,
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"strictPropertyInitialization": false,
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true,
+		"noImplicitAny": false,
+		"sourceMap": true,
+		"types": ["vite/client", "unplugin-vue-define-options"],
+		"lib": ["es2020", "esnext", "dom"],
+		"paths": {
+			"@/*": ["src/*"],
+			"@jrag/lib": ["lib/index.ts"],
+			"@jrag/*": ["lib/*"]
+		}
+	}
+}

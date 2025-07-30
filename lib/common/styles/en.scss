@@ -1,0 +1,20 @@
+html[lang=en]{
+    .app-en{
+        .layout-header {
+            .header-menu {
+                .menu-box{
+                    width: auto;
+                    min-width: 120px!important;
+                }
+            }
+        }
+    }
+    .header-popover{
+        .pop-content{
+            .pop-content-menus{
+                width: auto;
+                min-width: 160px!important;
+            } 
+        }
+    }
+}

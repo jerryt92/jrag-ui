@@ -1,0 +1,123 @@
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': #409eff,
+    ),
+    'success': (
+      'base': #52AC82,
+    ),
+    'warning': (
+      'base': #DCB447,
+    ),
+    'info': (
+      'base': #637A9E,
+    ),
+  ),
+);
+@use "element-plus/theme-chalk/src/index.scss" as *;
+
+// 默认蓝色主题
+:root {
+  // 基础主题色
+  --el-color-primary: #5182e4; // 主色
+  --el-color-success: #52AC82; // 主色
+  --el-color-warning: #DCB447; // 主色
+  --el-color-danger: #f36b6b; // 主色
+  --el-color-info: #637A9E; // 主色
+  --n-color-neutral-w: #fff;
+  --n-color-neutral-b: #000000;
+  --n-color-neutral-0: #f5f7fa; // fill-color-light
+  --n-color-neutral-1: #ebeff5; // N1-背景色
+  --n-color-neutral-2: #f2f3f5; // N2-背景色
+  --n-color-neutral-3: #ebedf0; // N3-边框&线色
+  --n-color-neutral-4: #dcdee0; // N4-边框&线色
+  --n-color-neutral-5: #8F959E; // 一级文字色
+  --n-color-state-1: #eb0000; // 状态色
+  --n-color-state-2: #ed6a0c; // 状态色
+  --n-color-state-3: #fad20c; // 状态色
+  --n-color-state-4: #637A9E; // 状态色
+  --n-color-state-5: #8bcb01; // 状态色
+  --n-color-state-6: #8bcb01; // 状态色
+  // 透明色
+  --n-color-opacity-1: rgba(0, 0, 0, 0.75); 
+  --n-color-opacity-2: rgba(
+    50,
+    50,
+    50,
+    0.55
+  ); // 主要用于弹框 抽屉的mask 滚动条hover
+  --n-color-opacity-3: rgba(0, 0, 0, 0.12); // 主要用于box-shadow的color;
+  --n-color-opacity-4: rgba(0, 0, 0, 0.4); // 主要用于滚动条;
+
+  // 基础长度单位
+  --n-length-basic: 4px;
+
+  // 间距  最小间距都是8px，其他间距均为8的倍数
+  --n-margin-basic: 8px;
+  --n-padding-basic: 8px;
+
+  // 圆角
+  --n-radius-basic: 0px;
+  --n-radius-block: 2px;
+  --n-radius-double: 4px;
+
+  // 文字大小
+  --n-font-size-1: 12px;
+  --n-font-size-2: 14px;
+  --n-font-size-3: 16px;
+  --n-font-size-4: 20px;
+  --n-font-size-5: 26px;
+  --n-font-size-6: 34px;
+  --n-font-size-7: 44px;
+
+  // 文字行高
+  --n-font-line-height-1: 20px;
+  --n-font-line-height-double-1: 18px;
+  --n-font-line-height-2: 22px;
+  --n-font-line-height-double-2: 22px;
+  --n-font-line-height-3: 24px;
+  --n-font-line-height-double-3: 24px;
+  --n-font-line-height-4: 28px;
+  --n-font-line-height-double-4: 32px;
+  --n-font-line-height-5: 34px;
+  --n-font-line-height-double-5: 38px;
+  --n-font-line-height-6: 42px;
+  --n-font-line-height-double-6: 48px;
+  --n-font-line-height-7: 52px;
+  --n-font-line-height-double-7: 50px;
+
+  // 字重
+  --n-font-weight-primary: 400;
+  --n-font-weight-bold: 500;
+
+  // 阴影
+  --n-box-shadow-mini: 0px 0px 4px rgba(10, 42, 97, 0.2);
+  --n-box-shadow-large: 0px 2px 8px rgba(200, 201, 204, 0.5);
+  --n-box-shadow-huge: 0px 2px 24px rgba(200, 201, 204, 0.5);
+
+  // 过渡动画持续时间
+  --n-transition-duration-basic: 100ms;
+
+  // 头部高度
+  --headerBarHeight:54px;
+}
+
+html.orange {
+  --el-color-primary: #409eff;
+  --el-color-primary-light-3: #f58c64;
+  --el-color-primary-light-5: #f8ad91;
+  --el-color-primary-light-7: #fbcebd;
+  --el-color-primary-light-8: #fcded3;
+  --el-color-primary-light-9: #feefe9;
+  --el-color-primary-dark-2: #c1481b;
+}
+
+html.blue {
+  --el-color-primary: #2b6afd;
+  --el-color-primary-light-3: #6b97fe;
+  --el-color-primary-light-5: #95b5fe;
+  --el-color-primary-light-7: #bfd2fe;
+  --el-color-primary-light-8: #d5e1ff;
+  --el-color-primary-light-9: #eaf0ff;
+  --el-color-primary-dark-2: #2255ca;
+}

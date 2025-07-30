@@ -1,0 +1,61 @@
+// media样式
+@charset "utf-8";
+
+@media screen and (max-width: 1680px) {
+    body {
+        
+    }
+}
+@media screen and (max-width: 1440px) {
+    body {
+        
+    }
+}
+@media screen and (max-width: 1366px) {
+    body {
+       
+    }
+}
+@media screen and (max-width: 1280px) {
+    body {
+        
+    }
+}
+@media screen and (max-width: 902px) {
+    body {
+        min-width: 899px;
+        font-size: 12px!important;
+        .header,
+        .el-menu-item,
+        .el-submenu__title,
+        .el-breadcrumb,
+        .el-dropdown,
+        .el-radio__label,
+        .el-button--medium,
+        .el-input--medium,
+        .el-dropdown-menu--medium .el-dropdown-menu__item,
+        .el-dropdown-menu__item,
+        .el-select-dropdown__item,
+        .el-tabs__item,
+        .el-range-editor--medium .el-range-input,
+        .el-range-editor--medium .el-range-separator,
+        .el-form,
+        .el-form-item__label,
+        .el-form-item__content,
+        .el-tree-node__label,
+        .el-checkbox__label,
+        .el-dialog,
+        .el-table,
+        .el-card,
+        .el-radio-button__inner,
+        .form-controls,
+        .form-control,
+        input[type="text"],
+        input[type="password"] {
+            font-size: var(--n-font-size-1);
+        }
+        .el-button.is-text {
+            padding: 10px 0;
+        }
+    }
+}
