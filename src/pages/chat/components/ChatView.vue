@@ -71,13 +71,14 @@
 								</div>
 								<div v-show="message?.content && !isWaiting" class="support">
 									<span
-										class="iconfont"
+										class="feedback-icon"
 										:class="{ yes: message.feedback === 1 }"
 										@click="handleMsgFeedback(1, message)"
 										>👍</span
 									>
+									&nbsp;
 									<span
-										class="iconfont"
+										class="feedback-icon"
 										:class="{ no: message.feedback === 2 }"
 										@click="handleMsgFeedback(2, message)"
 										>👎</span
@@ -617,22 +618,21 @@ defineExpose({
 					font-style: italic;
 					font-size: var(--n-font-size-1);
 				}
-
 				.support {
 					text-align: right;
 					margin-top: 10px;
-
-					.iconfont {
+					.feedback-icon {
 						cursor: pointer;
-
 						&:last-child {
 							margin-right: 0;
 						}
-
 						&:hover,
-						&.yes,
+						&.yes {
+							text-shadow: 0px 0px 10px var(--el-color-success);
+						}
+						&:hover,
 						&.no {
-							color: var(--el-color-primary);
+							text-shadow: 0px 0px 10px var(--el-color-error);
 						}
 					}
 				}
@@ -723,7 +723,7 @@ defineExpose({
 	}
 
 	.ai-chat-logo {
-		background-color: #6c57f6;
+		background-color: #7eaaff;
 		img {
 			width: 100%;
 			height: 100%;
