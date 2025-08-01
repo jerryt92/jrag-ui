@@ -65,9 +65,7 @@ const handleSubmit = () => {
 <style lang="scss" scoped>
 .login-container {
 	background-image: url("@/assets/wallpaper.webp");
-	background-repeat: repeat;
-	background-size: auto;
-	background-position: center;
+	background-size: cover;
 	display: flex;
 	justify-content: center;
 	align-items: center;

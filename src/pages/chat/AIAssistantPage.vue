@@ -120,9 +120,7 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .ai-assistant-page {
 	background-image: url("@/assets/wallpaper.webp");
-	background-repeat: repeat;
-	background-size: auto;
-	background-position: center;
+	background-size: cover;
 	height: 100%;
 	position: relative;
 	.chat-view {
