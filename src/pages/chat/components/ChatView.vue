@@ -43,7 +43,7 @@
 							>
 								<el-avatar :size="50" class="ai-chat-logo">
 									<!--									<img src="/src/assets/ai-logo-w.png" />-->
-									<span style="font-size: 35px; margin: auto">🤖</span>
+									<span style="font-size: 30px; margin: auto">🤖</span>
 								</el-avatar>
 							</div>
 							<div class="message-content">
@@ -724,8 +724,6 @@ defineExpose({
 
 	.ai-chat-logo {
 		background-color: #6c57f6;
-		padding: 8px 10px 12px;
-
 		img {
 			width: 100%;
 			height: 100%;

@@ -217,7 +217,6 @@ defineExpose({
 		left: 0;
 		width: 100%;
 		max-width: 360px;
-		max-height: calc(100vh - 40px);
 	}
 
 	.chat-manage-header {
@@ -293,10 +292,10 @@ defineExpose({
 				flex-direction: row;
 				justify-content: space-between;
 				align-items: center;
-				width: 100%;
-				margin: 15px 0;
+				width: 95%;
+				margin: 15px auto auto;
 				padding: 0 15px;
-				background-color: rgba(255, 255, 255, 0.9);
+				background-color: rgba(255, 255, 255, 0.8);
 				border-radius: 15px;
 				height: 45px;
 				line-height: 45px;
@@ -305,8 +304,7 @@ defineExpose({
 				&:hover,
 				&.active {
 					color: var(--el-color-primary);
-					border-color: var(--el-color-primary);
-					background-color: var(--el-color-primary-light-9);
+					box-shadow: 0px 0px 12px var(--el-color-primary-light-3);
 				}
 
 				.cont {
