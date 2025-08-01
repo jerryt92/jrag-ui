@@ -5,6 +5,7 @@
 	>
 		<ChatManage
 			v-show="showChatManage || isFullscreen"
+			class="chat-manage"
 			ref="chatManageRef"
 			:new-chat="newChat"
 			:history-chat="historyChat"
@@ -124,7 +125,7 @@
 					:placeholder="t('ai.input.placeholder')"
 					type="textarea"
 					:autosize="{ minRows: 5, maxRows: 10 }"
-					:maxlength="1000"
+					:maxlength="4000"
 					show-word-limit
 					@keydown="handleKeydown"
 					@input="handleInput"
@@ -451,6 +452,7 @@ defineExpose({
 
 		.chat-view {
 			flex-grow: 1;
+			width: 100%;
 		}
 	}
 
@@ -487,6 +489,7 @@ defineExpose({
 	align-items: center;
 	// margin: 20px auto;
 	// width: 380px;
+	margin-top: 44px;
 	padding: 20px 0;
 
 	.title {
@@ -571,7 +574,7 @@ defineExpose({
 					background-color: var(--el-color-primary-light-9);
 					display: inline-block;
 					padding: 0 4px 0 2px;
-					border-radius: 5px;
+					border-radius: 15px;
 				}
 
 				&:last-child {
@@ -601,6 +604,12 @@ defineExpose({
 			justify-content: center;
 			display: flex;
 			flex-direction: column;
+			transition: transform 0.2s ease;
+		}
+
+		.message-content:hover {
+			transform: translate(-3px, -3px);
+			box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
 		}
 
 		.message-content :deep(img) {
@@ -626,7 +635,6 @@ defineExpose({
 
 					.iconfont {
 						cursor: pointer;
-						margin-right: 15px;
 
 						&:last-child {
 							margin-right: 0;
@@ -682,6 +690,9 @@ defineExpose({
 	.el-textarea {
 		&.chat-input {
 			:deep(textarea) {
+				resize: none;
+				background-color: rgba(255, 255, 255, 0.9);
+				backdrop-filter: blur(10px);
 				padding: 15px 20px;
 				border-radius: 15px;
 				word-wrap: break-word;
@@ -742,7 +753,7 @@ defineExpose({
 	}
 
 	.ai-chat-logo {
-		background-color: #282b33;
+		background-color: #6c57f6;
 		padding: 8px 10px 12px;
 
 		img {
