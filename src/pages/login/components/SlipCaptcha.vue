@@ -330,7 +330,7 @@ onDeactivated(() => {
 		height: 35px;
 		width: 35px;
 		background-color: #fff;
-		box-shadow: var(--el-color-primary) 0px 0px 1px 2px;
+		box-shadow: var(--el-color-primary) 0 0 1px 2px;
 		cursor: pointer;
 		z-index: 11;
 		user-select: none;

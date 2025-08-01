@@ -23,25 +23,39 @@
 				></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-button
-					type="primary"
-					@click="handleSubmit"
-					class="submit-btn"
-				>
+				<el-button type="primary" @click="handleSubmit" class="submit-btn">
 					登录
 				</el-button>
 			</el-form-item>
 		</el-form>
 	</div>
+	<ElDialog
+		v-model="captchaDialogShow"
+		class="captcha-dialog"
+		align-center
+		:loading="loading"
+		show-close
+		@close="loading = false"
+	>
+		<SlipCaptcha
+			ref="slideCaptchaRef"
+			:loading="loading"
+			@valid-pass="slideCaptchaSuccess"
+		/>
+	</ElDialog>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElForm, ElFormItem, ElInput, ElButton, ElMessage } from 'element-plus'
+import { ElForm, ElFormItem, ElInput, ElButton, ElDialog } from 'element-plus'
 import { login } from '@/api/login.api'
+import SlipCaptcha from '@/pages/login/components/SlipCaptcha.vue'
 
 const router = useRouter()
+const slideCaptchaRef = ref()
+const loading = ref<boolean>(false)
+const captchaDialogShow = ref<boolean>(false)
 
 // 表单数据
 const loginData = reactive({
@@ -57,14 +71,18 @@ const rules = {
 
 // 提交处理函数
 const handleSubmit = () => {
-	login(loginData.username, loginData.password).then(() => {
+	captchaDialogShow.value = true
+}
+
+const slideCaptchaSuccess = (e) => {
+	login(loginData.username, loginData.password, e.code, e.hash).then(() => {
 		router.push('/')
 	})
 }
 </script>
 <style lang="scss" scoped>
 .login-container {
-	background-image: url("@/assets/wallpaper.webp");
+	background-image: url('@/assets/wallpaper.webp');
 	background-size: cover;
 	display: flex;
 	justify-content: center;
@@ -106,5 +124,10 @@ const handleSubmit = () => {
 
 .submit-btn {
 	width: 100%;
+}
+
+:global(.captcha-dialog) {
+	width: auto;
+	min-width: 0
 }
 </style>
