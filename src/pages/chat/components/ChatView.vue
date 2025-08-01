@@ -646,7 +646,7 @@ defineExpose({
 			justify-content: flex-end;
 
 			.message-content {
-				background-color: #c3ddf7; //#cfe6fc;
+				background-color: #d8d8f6; //#cfe6fc;
 			}
 		}
 	}
