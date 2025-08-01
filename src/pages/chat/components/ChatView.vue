@@ -479,7 +479,7 @@ defineExpose({
 	align-items: center;
 	// margin: 20px auto;
 	// width: 380px;
-	margin-top: 44px;
+	margin-top: 60px;
 	padding: 20px 0;
 
 	.title {
@@ -873,15 +873,24 @@ defineExpose({
 
 .scroll-to-bottom-button {
 	position: absolute;
-	top: 95%;
+	top: 93%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background-color: rgba(255, 255, 255, 0.7);
+	background: rgba(255, 255, 255, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 	backdrop-filter: blur(2px);
 	border-radius: 50%;
-	padding: 10px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	padding: 13px;
 	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.scroll-to-bottom-button:hover {
+	background: rgba(255, 255, 255, 0.5);
+	backdrop-filter: blur(5px);
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+	transform: translate(-50%, -50%) scale(1.2);
 }
 
 @media only screen and (max-width: 768px) {

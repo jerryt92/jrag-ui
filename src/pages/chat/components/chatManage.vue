@@ -192,7 +192,7 @@ defineExpose({
 <style lang="scss" scoped>
 .chat-manage-container {
 	width: 400px;
-	padding: 64px 20px 20px;
+	padding: 70px 20px 20px;
 	margin: auto;
 	display: flex;
 	height: 100%;
@@ -203,8 +203,10 @@ defineExpose({
 	}
 
 	.chat-manage-card {
-		background-color: rgba(255, 255, 255, 0.5);
-		backdrop-filter: blur(10px);
+		background: rgba(255, 255, 255, 0.2);
+		backdrop-filter: blur(2px);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -212,11 +214,15 @@ defineExpose({
 		flex-grow: 1;
 		padding: 0 20px 20px;
 		border-radius: 15px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 		position: relative;
 		left: 0;
 		width: 100%;
 		max-width: 360px;
+	}
+
+	.chat-manage-card:hover {
+		backdrop-filter: blur(5px);
+		transform: scale(1.008);
 	}
 
 	.chat-manage-header {

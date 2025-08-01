@@ -160,10 +160,11 @@ onUnmounted(() => {
 		top: 0;
 		left: 0;
 		right: 0;
-		height: 44px;
-		background-color: rgba(255, 255, 255, 0.6);
+		height: 50px;
+		background: rgba(255, 255, 255, 0.2);
 		backdrop-filter: blur(10px);
-		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 		display: flex;
 		align-items: center;
 		justify-content: left;
@@ -174,6 +175,7 @@ onUnmounted(() => {
 			font-size: 20px;
 			font-weight: 500;
 			color: #333;
+			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		}
 	}
 }
