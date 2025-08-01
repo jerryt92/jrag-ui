@@ -4,7 +4,7 @@
 		:class="{ 'full-page': isFullscreen, 'mobile-page': isMobile }"
 	>
 		<div class="top-bar">
-			<h3>Jrag</h3>
+			<h3>🤖 Jrag AI</h3>
 			<span
 				v-show="isMobile"
 				v-draggable="{ device: 'mobile' }"
@@ -119,10 +119,11 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .ai-assistant-page {
-	background-image: url("@/assets/wallpaper.webp");
+	background-image: url('@/assets/wallpaper.webp');
 	background-size: cover;
 	height: 100%;
 	position: relative;
+
 	.chat-view {
 		width: 100%;
 	}
@@ -165,11 +166,11 @@ onUnmounted(() => {
 		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: left;
 		z-index: 100;
 
 		h3 {
-			margin: 0;
+			margin-left: 20px;
 			font-size: 20px;
 			font-weight: 500;
 			color: #333;

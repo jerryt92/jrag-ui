@@ -108,16 +108,6 @@
 					</ElIcon>
 				</div>
 			</el-scrollbar>
-			<div class="chat-model">
-				<!--				<ElButton-->
-				<!--					type="default"-->
-				<!--					round-->
-				<!--					:class="{ active: chatType === 'function' }"-->
-				<!--					@click="choseChatModel('function')"-->
-				<!--				>-->
-				<!--					<img src="/src/assets/icon-dengpao.svg" />{{ $t('xxx') }}-->
-				<!--				</ElButton>-->
-			</div>
 			<div class="input-area">
 				<ElInput
 					v-model="inputMessage"
@@ -162,8 +152,7 @@ import {
 	ChatRequestDto,
 	ChatResponseDto,
 	convertSrcFilesToMd,
-	MessageDto,
-	WsResponse
+	MessageDto
 } from '@/types/ai.types'
 import { t } from '@jrag/lib'
 import {
@@ -660,27 +649,8 @@ defineExpose({
 	}
 }
 
-.chat-model {
-	padding-bottom: 15px;
-
-	.el-button {
-		&.active {
-			// background-color: var(--el-color-primary);
-			// color: #fff;
-			color: var(--el-color-primary);
-			border-color: var(--el-color-primary);
-			background-color: var(--el-color-primary-light-9);
-		}
-
-		img {
-			height: 16px;
-			margin-right: 5px;
-		}
-	}
-}
-
 .input-area {
-	box-shadow: 0px 0px 12px var(--el-color-primary-light-7);
+	box-shadow: 0px 0px 12px var(--el-color-primary-light-3);
 	overflow: visible;
 	display: flex;
 	padding: 0;
