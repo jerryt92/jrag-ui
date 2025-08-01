@@ -1,1 +1,0 @@
-System.register(["../index-legacy-7ec55da3.js"],(function(t){"use strict";var e;return{setters:[function(t){e=t.h}],execute:function(){t("l",(function(t,n){return e.post("/v1/auth/jrag/login",{username:t,password:n})})),t("a",(function(){return e.get("/v1/auth/jrag/logout")}))}}}));
