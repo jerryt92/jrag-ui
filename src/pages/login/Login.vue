@@ -64,6 +64,10 @@ const handleSubmit = () => {
 </script>
 <style lang="scss" scoped>
 .login-container {
+	background-image: url("@/assets/wallpaper.svg");
+	background-repeat: repeat;
+	background-size: auto;
+	background-position: center;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -74,9 +78,15 @@ const handleSubmit = () => {
 .login-form {
 	width: 400px;
 	padding: 20px;
-	background-color: #fff;
+	background-color: rgba(255, 255, 255, 0.4);
+	backdrop-filter: blur(12px);
 	border-radius: 8px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s ease;
+}
+
+.login-form:hover {
+	transform: scale(1.02);
 }
 
 .logo-container {
