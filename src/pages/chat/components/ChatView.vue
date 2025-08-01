@@ -71,15 +71,15 @@
 								</div>
 								<div v-show="message?.content && !isWaiting" class="support">
 									<span
-										class="feedback-icon"
-										:class="{ yes: message.feedback === 1 }"
+										class="feedback-icon-good"
+										:class="{ good: message.feedback === 1 }"
 										@click="handleMsgFeedback(1, message)"
 										>👍</span
 									>
 									&nbsp;
 									<span
-										class="feedback-icon"
-										:class="{ no: message.feedback === 2 }"
+										class="feedback-icon-bad"
+										:class="{ bad: message.feedback === 2 }"
 										@click="handleMsgFeedback(2, message)"
 										>👎</span
 									>
@@ -139,13 +139,13 @@
 import { ArrowDown, Position } from '@element-plus/icons-vue'
 import { nextTick, onMounted, ref } from 'vue'
 import {
-	ElIcon,
-	ElScrollbar,
-	ElButton,
-	ElInput,
 	ElAvatar,
+	ElButton,
+	ElIcon,
+	ElInput,
 	ElMessage,
-	ElMessageBox
+	ElMessageBox,
+	ElScrollbar
 } from 'element-plus'
 import MarkdownIt from 'markdown-it'
 import ChatManage from './chatManage.vue'
@@ -618,20 +618,33 @@ defineExpose({
 					font-style: italic;
 					font-size: var(--n-font-size-1);
 				}
+
 				.support {
 					text-align: right;
 					margin-top: 10px;
-					.feedback-icon {
+
+					.feedback-icon-good {
 						cursor: pointer;
+
 						&:last-child {
 							margin-right: 0;
 						}
+
 						&:hover,
-						&.yes {
+						&.good {
 							text-shadow: 0px 0px 10px var(--el-color-success);
 						}
+					}
+
+					.feedback-icon-bad {
+						cursor: pointer;
+
+						&:last-child {
+							margin-right: 0;
+						}
+
 						&:hover,
-						&.no {
+						&.bad {
 							text-shadow: 0px 0px 10px var(--el-color-error);
 						}
 					}
