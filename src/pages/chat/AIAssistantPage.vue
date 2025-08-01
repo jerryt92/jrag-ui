@@ -119,7 +119,7 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .ai-assistant-page {
-	background-image: url("@/assets/wallpaper.svg");
+	background-image: url("@/assets/wallpaper.webp");
 	background-repeat: repeat;
 	background-size: auto;
 	background-position: center;
