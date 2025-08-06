@@ -44,7 +44,7 @@ const classObj = computed(()=>{
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: rgba(44, 154, 187, 0.5);
+		background-color: rgba(105, 221, 255, 0.55);
 		z-index: 0;
 	}
 	height: 100vh;
