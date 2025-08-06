@@ -683,14 +683,14 @@ defineExpose({
 				background: color-mix(
 					in srgb,
 					var(--n-color-neutral-w),
-					transparent 90%
+					transparent 80%
 				);
 				backdrop-filter: blur(10px);
 				padding: 15px 20px;
 				border-color: color-mix(
 					in srgb,
 					var(--n-color-neutral-w),
-					transparent 90%
+					transparent 80%
 				);
 				border-radius: 15px;
 				word-wrap: break-word;
