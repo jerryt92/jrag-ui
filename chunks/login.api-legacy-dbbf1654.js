@@ -1,0 +1,1 @@
+System.register(["../index-legacy-4b4eebbb.js"],(function(e){"use strict";var t;return{setters:[function(e){t=e.h}],execute:function(){e("l",(function(e,n,r,u){return t.post("/v1/auth/jrag/login",{username:e,password:n,validateCode:r,hash:u})})),e("a",(function(){return t.get("/v1/auth/jrag/logout")}))}}}));
