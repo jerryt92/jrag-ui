@@ -9,7 +9,7 @@
 <script lang="ts" setup>
 import { ElConfigProvider } from 'element-plus'
 import { useElementLocale } from '@jrag/hooks'
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const { elLocale } = useElementLocale()
@@ -17,25 +17,31 @@ const { elLocale } = useElementLocale()
 const route = useRoute()
 
 const isScreen = ref(false)
-watch(()=>route.hash, (newHash, oldHash) => {
-	if (newHash && newHash.indexOf('big-screen') > -1){
-		isScreen.value = true
-	} else {
-		isScreen.value = false
+watch(
+	() => route.hash,
+	(newHash, oldHash) => {
+		if (newHash && newHash.indexOf('big-screen') > -1) {
+			isScreen.value = true
+		} else {
+			isScreen.value = false
+		}
 	}
-})
-const classObj = computed(()=>{
+)
+const classObj = computed(() => {
 	return {
-		isScreen: isScreen.value, // 是否大屏页面
+		isScreen: isScreen.value // 是否大屏页面
 	}
 })
 </script>
 
 <style lang="scss">
 .web-app {
-	background-image: url('@/assets/wallpaper.svg');
+	background-image: url('@/assets/wallpaper.svg'),
+		linear-gradient(45deg, rgb(195, 195, 196) 0px, rgb(83, 83, 83) 100%);
 	background-size: cover;
+
 	position: relative;
+	height: 100%;
 	// 添加遮罩层
 	&::before {
 		content: '';
@@ -47,30 +53,29 @@ const classObj = computed(()=>{
 		background-color: rgba(105, 221, 255, 0.55);
 		z-index: 0;
 	}
-	height: 100vh;
-	&.isFullscreen{
+	&.isFullscreen {
 		position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
 		padding: 0;
 		margin: 0;
 	}
-	&.isScreen{
-		.content{
-			margin: 0!important;
+	&.isScreen {
+		.content {
+			margin: 0 !important;
 		}
 	}
 }
 
 // 深色模式下的背景处理
 html.dark {
-  .web-app {
-    &::before {
-	    background-color: rgba(0, 12, 30, 0.7);
-    }
-  }
+	.web-app {
+		&::before {
+			background-color: rgba(0, 12, 30, 0.7);
+		}
+	}
 }
 </style>
