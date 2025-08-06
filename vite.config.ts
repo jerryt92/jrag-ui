@@ -16,6 +16,11 @@ export default defineConfig(({ command, mode }) => {
 			rewrite: false
 		},
 		{
+			path: '/ws/',
+			target: 'ws://' + devServer,
+			rewrite: false
+		},
+		{
 			path: '^/v.+/api/',
 			target: 'http://' + devServer,
 			rewrite: false

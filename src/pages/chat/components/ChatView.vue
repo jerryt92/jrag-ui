@@ -137,7 +137,7 @@
 
 <script setup lang="ts">
 import { ArrowDown, Position } from '@element-plus/icons-vue'
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import {
 	ElAvatar,
 	ElButton,
@@ -164,6 +164,7 @@ import {
 	getNewContextId
 } from '@/api/ai.api'
 import { SSE } from 'sse.js'
+import { openChatKeepAliveWsClient } from '@/routes/chat'
 
 const md = new MarkdownIt({
 	html: true, // 启用 HTML 标签解析
@@ -184,6 +185,7 @@ md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
 const showChatManage = ref(false)
 const chatManageRef = ref(null)
 const contextId = ref<string>()
+let keepAliveWsClient: WebSocket
 const scrollbarRef = ref()
 const isAtBottom = ref<boolean>(true)
 const messageContext = ref<MessageDto[]>([])
@@ -225,6 +227,7 @@ const sendMessage = (msg?: string) => {
 			chatSSEClient = chatSSEClientApi(chatRequestDto)
 			// 连接打开时的处理
 			chatSSEClient.onopen = () => {
+				keepAliveWsClient = openChatKeepAliveWsClient(contextId.value)
 				if (isNewLlmResponse.value) {
 					messageContext.value.push({
 						index: messageContext.value.length,
@@ -266,38 +269,46 @@ const handleChatResponse = (chatResponseDto: ChatResponseDto) => {
 	if (isAtBottom.value) {
 		scrollToBottom()
 	}
-	if (chatResponseDto.message?.role === 'system') {
-		messageContext.value[messageContext.value.length - 1] =
-			chatResponseDto.message
-		messageContext.value.push({
-			index: messageContext.value.length,
-			role: 'assistant',
-			content: ''
-		})
-	} else if (chatResponseDto.message?.role === 'assistant') {
-		if (
-			messageContext.value[messageContext.value.length - 1].index !==
-			chatResponseDto.message.index
-		) {
-			console.error('消息index异常')
-		}
-		if (chatResponseDto.done === true) {
-			// 对话结束
-			messageContext.value[messageContext.value.length - 1].content +=
-				chatResponseDto.message.content
-			isWaiting.value = false
-			isNewLlmResponse.value = true
-			nextTick(() => {
-				chatSSEClient.close()
+	if (chatResponseDto.message) {
+		if (chatResponseDto.message?.role === 'system') {
+			messageContext.value[messageContext.value.length - 1] =
+				chatResponseDto.message
+			messageContext.value.push({
+				index: messageContext.value.length,
+				role: 'assistant',
+				content: ''
 			})
-		} else {
-			if (chatResponseDto.message.srcFile) {
-				messageContext.value[messageContext.value.length - 1].srcFile =
-					chatResponseDto.message.srcFile
+		} else if (chatResponseDto.message?.role === 'assistant') {
+			if (
+				messageContext.value[messageContext.value.length - 1].index !==
+				chatResponseDto.message.index
+			) {
+				console.error('消息index异常')
 			}
-			if (chatResponseDto.message.content) {
+			if (chatResponseDto.done === true) {
+				// 对话结束
 				messageContext.value[messageContext.value.length - 1].content +=
 					chatResponseDto.message.content
+				isWaiting.value = false
+				isNewLlmResponse.value = true
+				nextTick(() => {
+					chatSSEClient.close()
+					if (
+						keepAliveWsClient &&
+						keepAliveWsClient.readyState === keepAliveWsClient.OPEN
+					) {
+						keepAliveWsClient.close()
+					}
+				})
+			} else {
+				if (chatResponseDto.message.srcFile) {
+					messageContext.value[messageContext.value.length - 1].srcFile =
+						chatResponseDto.message.srcFile
+				}
+				if (chatResponseDto.message.content) {
+					messageContext.value[messageContext.value.length - 1].content +=
+						chatResponseDto.message.content
+				}
 			}
 		}
 	}
@@ -394,6 +405,12 @@ const interruptChat = () => {
 	if (chatSSEClient) {
 		chatSSEClient.close()
 	}
+	if (
+		keepAliveWsClient &&
+		keepAliveWsClient.readyState === keepAliveWsClient.OPEN
+	) {
+		keepAliveWsClient.close()
+	}
 }
 
 onMounted(() => {
@@ -410,6 +427,10 @@ onMounted(() => {
 			newChat()
 		}
 	})
+})
+
+onUnmounted(() => {
+	interruptChat()
 })
 
 defineExpose({
@@ -699,7 +720,8 @@ defineExpose({
 			}
 
 			:hover {
-				box-shadow: 0px 0px 12px color-mix(in srgb, var(--el-color-primary-light-3), transparent 10%)
+				box-shadow: 0px 0px 12px
+					color-mix(in srgb, var(--el-color-primary-light-3), transparent 10%);
 			}
 		}
 	}
