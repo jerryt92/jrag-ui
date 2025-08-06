@@ -48,9 +48,17 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElForm, ElFormItem, ElInput, ElButton, ElDialog } from 'element-plus'
+import {
+	ElForm,
+	ElFormItem,
+	ElInput,
+	ElButton,
+	ElDialog,
+	ElMessage
+} from 'element-plus'
 import { login } from '@/api/login.api'
 import SlipCaptcha from '@/pages/login/components/SlipCaptcha.vue'
+import { t } from '@jrag/lib'
 
 const router = useRouter()
 const slideCaptchaRef = ref()
@@ -72,12 +80,22 @@ const rules = {
 // 提交处理函数
 const handleSubmit = () => {
 	captchaDialogShow.value = true
+	slideCaptchaRef.value.updateSlideCaptcha()
 }
 
 const slideCaptchaSuccess = (e) => {
-	login(loginData.username, loginData.password, e.code, e.hash).then(() => {
-		router.push('/')
-	})
+	loading.value = true
+	login(loginData.username, loginData.password, e.code, e.hash)
+		.then(() => {
+			router.push('/')
+		})
+		.catch((e) => {
+			console.log(e)
+			if (e.status === 401) {
+				captchaDialogShow.value = false
+				ElMessage.error(t('login.fail'))
+			}
+		})
 }
 </script>
 <style lang="scss" scoped>
@@ -91,7 +109,7 @@ const slideCaptchaSuccess = (e) => {
 .login-form {
 	width: 400px;
 	padding: 20px;
-	background-color: rgba(255, 255, 255, 0.4);
+	background-color: rgba(255, 255, 255, 0.2);
 	backdrop-filter: blur(12px);
 	border-radius: 8px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -121,10 +139,14 @@ const slideCaptchaSuccess = (e) => {
 
 .submit-btn {
 	width: 100%;
+	&:hover {
+		transform: scale(1.01);
+	}
 }
 
 :global(.captcha-dialog) {
 	width: auto;
-	min-width: 0
+	min-width: 0;
+	padding: 25px;
 }
 </style>

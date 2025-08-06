@@ -203,9 +203,10 @@ defineExpose({
 	}
 
 	.chat-manage-card {
-		background: rgba(255, 255, 255, 0.2);
-		backdrop-filter: blur(2px);
-		border: 1px solid rgba(255, 255, 255, 0.18);
+		background: color-mix(in srgb, var(--n-color-neutral-w), transparent 90%);
+		backdrop-filter: blur(10px);
+		border-radius: var(--n-radius-quadruple);
+		border: 1px solid color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
 		box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 		display: flex;
 		flex-direction: column;
@@ -213,16 +214,10 @@ defineExpose({
 		height: 100%;
 		flex-grow: 1;
 		padding: 0 20px 20px;
-		border-radius: 15px;
 		position: relative;
 		left: 0;
 		width: 100%;
 		max-width: 360px;
-	}
-
-	.chat-manage-card:hover {
-		backdrop-filter: blur(5px);
-		transform: scale(1.008);
 	}
 
 	.chat-manage-header {

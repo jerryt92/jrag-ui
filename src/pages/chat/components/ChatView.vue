@@ -663,7 +663,6 @@ defineExpose({
 }
 
 .input-area {
-	box-shadow: 0px 0px 12px var(--el-color-primary-light-3);
 	overflow: visible;
 	display: flex;
 	padding: 0;
@@ -672,23 +671,35 @@ defineExpose({
 
 	.el-textarea {
 		&.chat-input {
-			:deep(textarea) {
+			:deep(.el-input__count) {
+				background: color-mix(
+					in srgb,
+					var(--n-color-neutral-w),
+					transparent 90%
+				);
+			}
+			:deep(.el-textarea__inner) {
 				resize: none;
-				background-color: rgba(255, 255, 255, 0.9);
+				background: color-mix(
+					in srgb,
+					var(--n-color-neutral-w),
+					transparent 90%
+				);
 				backdrop-filter: blur(10px);
 				padding: 15px 20px;
+				border-color: color-mix(
+					in srgb,
+					var(--n-color-neutral-w),
+					transparent 90%
+				);
 				border-radius: 15px;
 				word-wrap: break-word;
 				word-break: break-all;
-
-				:hover {
-					box-shadow: none;
-				}
+				box-shadow: none;
 			}
 
-			:deep(.el-input__count) {
-				right: 60px;
-				bottom: 15px;
+			:hover {
+				box-shadow: 0px 0px 12px color-mix(in srgb, var(--el-color-primary-light-3), transparent 10%)
 			}
 		}
 	}
@@ -876,7 +887,7 @@ defineExpose({
 	top: 93%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background: rgba(255, 255, 255, 0.2);
+	background: color-mix(in srgb, var(--n-color-neutral-w), transparent 80%);
 	border: 1px solid rgba(255, 255, 255, 0.18);
 	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 	backdrop-filter: blur(2px);
@@ -887,7 +898,7 @@ defineExpose({
 }
 
 .scroll-to-bottom-button:hover {
-	background: rgba(255, 255, 255, 0.5);
+	background: color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
 	backdrop-filter: blur(5px);
 	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
 	transform: translate(-50%, -50%) scale(1.2);

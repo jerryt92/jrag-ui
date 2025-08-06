@@ -245,10 +245,9 @@ onDeactivated(() => {
 	height: auto;
 	margin: 0 auto;
 	padding: 16px;
-	border-radius: 4px;
+	border-radius: var(--n-radius-triple);
 	background: #fff;
-	border: 1px solid #ebeef5;
-	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
 	.slider-canvas {
 		position: relative;
@@ -302,7 +301,7 @@ onDeactivated(() => {
 	height: 36px;
 	text-align: center;
 	line-height: 36px;
-	border: 1px solid #ddd;
+	border: 2px solid rgba(221, 221, 221, 0.17);
 	position: relative;
 	border-radius: 4px;
 	z-index: 10;
@@ -329,19 +328,17 @@ onDeactivated(() => {
 		left: 0;
 		height: 35px;
 		width: 35px;
-		background-color: #fff;
-		box-shadow: var(--el-color-primary) 0 0 1px 2px;
+		background-color: color-mix(in srgb, var(--el-color-primary), transparent 60%);
 		cursor: pointer;
 		z-index: 11;
 		user-select: none;
 		will-change: transform;
-
-		&:hover {
-			background-color: var(--el-color-primary);
-		}
-
+		border: none;
+		border-radius: var(--n-radius-double);
+		&:hover,
 		&:active {
-			background-color: var(--el-color-primary);
+			background-color: color-mix(in srgb, var(--el-color-primary), transparent 20%);
+			box-shadow: 0 0 10px var(--el-color-primary);
 		}
 	}
 }
