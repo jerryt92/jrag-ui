@@ -82,13 +82,10 @@ const slideCaptchaSuccess = (e) => {
 </script>
 <style lang="scss" scoped>
 .login-container {
-	background-image: url('@/assets/wallpaper.webp');
-	background-size: cover;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	height: 100vh;
-	background-color: #f5f7fa;
 }
 
 .login-form {

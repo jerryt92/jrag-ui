@@ -33,6 +33,20 @@ const classObj = computed(()=>{
 
 <style lang="scss">
 .web-app {
+	background-image: url('@/assets/wallpaper.svg');
+	background-size: cover;
+	position: relative;
+	// 添加遮罩层
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(44, 154, 187, 0.5);
+		z-index: 0;
+	}
 	height: 100vh;
 	&.isFullscreen{
 		position: fixed;
