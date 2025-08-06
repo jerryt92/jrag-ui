@@ -50,7 +50,7 @@ const classObj = computed(() => {
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: rgba(105, 221, 255, 0.55);
+		background-color: rgba(173, 214, 255, 0.5);
 		z-index: 0;
 	}
 	&.isFullscreen {
