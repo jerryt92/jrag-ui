@@ -2,6 +2,7 @@ import routes from './routes'
 import langLoaders from './locale'
 import { App } from '@jrag/lib'
 import { ElLoading } from 'element-plus'
+import { useDarkMode } from '@jrag/hooks'
 
 import './styles/index.scss'
 
@@ -18,6 +19,10 @@ async function APP(){
 	app.langMessage = langMessage
 	// 国际化
 	app.setUpLang([langLoaders])
+	
+	// 启用深色模式支持
+	const { currentTheme } = useDarkMode()
+	
 	// 挂载路由
 	app.createRouter(routes)
 	// 挂载应用

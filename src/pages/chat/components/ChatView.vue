@@ -484,7 +484,7 @@ defineExpose({
 
 	.title {
 		font-size: 20px;
-		color: #333;
+		color: var(--n-color-font-dark);
 		margin-top: 20px;
 	}
 

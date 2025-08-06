@@ -64,4 +64,13 @@ const classObj = computed(()=>{
 		}
 	}
 }
+
+// 深色模式下的背景处理
+html.dark {
+  .web-app {
+    &::before {
+	    background-color: rgba(0, 12, 30, 0.7);
+    }
+  }
+}
 </style>

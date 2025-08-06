@@ -171,7 +171,7 @@ onUnmounted(() => {
 			margin-left: 20px;
 			font-size: 20px;
 			font-weight: 500;
-			color: #333;
+			color: var(--n-color-font-dark);
 			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		}
 	}

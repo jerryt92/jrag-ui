@@ -1,7 +1,7 @@
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
   $colors: (
     'primary': (
-      'base': #409eff,
+      'base': #5182e4,
     ),
     'success': (
       'base': #52AC82,
@@ -16,7 +16,7 @@
 );
 @use "element-plus/theme-chalk/src/index.scss" as *;
 
-// 默认蓝色主题
+// 默认浅色主题
 :root {
   // 基础主题色
   --el-color-primary: #5182e4; // 主色
@@ -32,6 +32,7 @@
   --n-color-neutral-3: #ebedf0; // N3-边框&线色
   --n-color-neutral-4: #dcdee0; // N4-边框&线色
   --n-color-neutral-5: #8F959E; // 一级文字色
+  --n-color-font-dark: #222;
   --n-color-state-1: #eb0000; // 状态色
   --n-color-state-2: #ed6a0c; // 状态色
   --n-color-state-3: #fad20c; // 状态色
@@ -100,6 +101,36 @@
 
   // 头部高度
   --headerBarHeight:54px;
+}
+
+// 深色主题
+html.dark {
+  // 基础主题色
+  --el-color-primary: #5182e4; // 主色
+  --el-color-success: #52AC82; // 主色
+  --el-color-warning: #DCB447; // 主色
+  --el-color-error: #f36b6b; // 主色
+  --el-color-info: #637A9E; // 主色
+  --n-color-neutral-w: #1a1a1a;
+  --n-color-neutral-b: #ffffff;
+  --n-color-neutral-0: #1f1f1f; // fill-color-light
+  --n-color-neutral-1: #262626; // N1-背景色
+  --n-color-neutral-2: #2d2d2d; // N2-背景色
+  --n-color-neutral-3: #434343; // N3-边框&线色
+  --n-color-neutral-4: #5a5a5a; // N4-边框&线色
+  --n-color-neutral-5: #d3d3d3; // 一级文字色
+  --n-color-font-dark: #eee;
+  --n-color-state-1: #eb0000; // 状态色
+  --n-color-state-2: #ed6a0c; // 状态色
+  --n-color-state-3: #fad20c; // 状态色
+  --n-color-state-4: #637A9E; // 状态色
+  --n-color-state-5: #8bcb01; // 状态色
+  --n-color-state-6: #8bcb01; // 状态色
+  // 透明色
+  --n-color-opacity-1: rgba(255, 255, 255, 0.75);
+  --n-color-opacity-2: rgba(200, 200, 200, 0.55); // 主要用于弹框 抽屉的mask 滚动条hover
+  --n-color-opacity-3: rgba(255, 255, 255, 0.12); // 主要用于box-shadow的color;
+  --n-color-opacity-4: rgba(255, 255, 255, 0.4); // 主要用于滚动条;
 }
 
 html.orange {
