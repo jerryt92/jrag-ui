@@ -107,7 +107,7 @@ const slideCaptchaSuccess = (e) => {
 }
 
 .login-form {
-	width: 400px;
+	width: 380px;
 	padding: 20px;
 	background-color: rgba(255, 255, 255, 0.2);
 	backdrop-filter: blur(12px);

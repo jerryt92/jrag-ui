@@ -4,7 +4,7 @@
 			class="slider-canvas"
 			:style="{
 				width: `${slideInfo.width}px`,
-				height: `${slideInfo.height}px`,
+				height: `${slideInfo.height}px`
 			}"
 			@click="updateSlideCaptcha"
 		>
@@ -65,15 +65,21 @@ import { t } from '@jrag/lib'
 
 const isLoading = ref(false)
 
-const props = withDefaults(defineProps<{
-	loading: boolean;
-}>(), {
-	loading: false
-})
+const props = withDefaults(
+	defineProps<{
+		loading: boolean
+	}>(),
+	{
+		loading: false
+	}
+)
 
-watch(() => props.loading, (newVal) => {
-	isLoading.value = newVal
-})
+watch(
+	() => props.loading,
+	(newVal) => {
+		isLoading.value = newVal
+	}
+)
 
 // 定义 emits
 const emit = defineEmits<{
@@ -92,12 +98,14 @@ defineExpose({
 
 const puzzle = ref(null)
 const block = ref(null)
+// 通过此值可以限制展示的宽度
+const showWidth = 300
 
 const slideInfo = ref({
 	hash: '',
 	puzzleUrl: '',
-	width: 300,
-	height: 150,
+	width: showWidth,
+	height: (showWidth * 3) / 4,
 	sliderUrl: '',
 	sliderSize: 0,
 	sliderY: 0,
@@ -127,36 +135,44 @@ function updateSlideCaptcha() {
 	// 重置时使用 transform 保持性能
 	block.value.style.transform = 'translate3d(0, 0, 0)'
 	slideInfo.value.sliderLeft = 0
-	updateSlideInfo().then(() => {
-		slideInfo.value.sliderText = t('captcha.tip')
-		resultMask.height = 0
-		resultMask.class = ''
-		slideInfo.value.sliderLeft = 0
-		if (block.value) {
-			block.value.style.left = '0'
-		}
-		// 重新计算缩放比例
-		if (puzzle.value) {
-			const puzzleRect = puzzle.value.getBoundingClientRect()
-			slideInfo.value.scaleRatio = puzzleRect.width / slideInfo.value.width
-			slideInfo.value.sliderY = slideInfo.value.sliderY * slideInfo.value.scaleRatio
-			slideInfo.value.sliderSize = slideInfo.value.sliderSize * slideInfo.value.scaleRatio
-		}
-	}).finally(() => {
-		isLoading.value = false
-	})
+	updateSlideInfo()
+		.then(() => {
+			slideInfo.value.sliderText = t('captcha.tip')
+			resultMask.height = 0
+			resultMask.class = ''
+			slideInfo.value.sliderLeft = 0
+			if (block.value) {
+				block.value.style.left = '0'
+			}
+			// 重新计算缩放比例
+			if (puzzle.value) {
+				slideInfo.value.scaleRatio = showWidth / slideInfo.value.width
+				slideInfo.value.width =
+					slideInfo.value.width * slideInfo.value.scaleRatio
+				slideInfo.value.height =
+					slideInfo.value.height * slideInfo.value.scaleRatio
+				slideInfo.value.blockY =
+					slideInfo.value.blockY * slideInfo.value.scaleRatio
+				slideInfo.value.sliderSize =
+					slideInfo.value.sliderSize * slideInfo.value.scaleRatio
+			}
+		})
+		.finally(() => {
+			isLoading.value = false
+		})
 }
 
 function updateSlideInfo() {
-	return axios.get<{
-		hash: string
-		puzzleUrl: string
-		width: number
-		height: number
-		sliderUrl: string
-		sliderSize: number
-		sliderY: number
-	}>('/v1/auth/captcha/slide?' + new Date().getTime())
+	return axios
+		.get<{
+			hash: string
+			puzzleUrl: string
+			width: number
+			height: number
+			sliderUrl: string
+			sliderSize: number
+			sliderY: number
+		}>('/v1/auth/captcha/slide?' + new Date().getTime())
 		.then((res) => {
 			slideInfo.value.hash = res.data.hash
 			slideInfo.value.puzzleUrl = res.data.puzzleUrl
@@ -164,8 +180,7 @@ function updateSlideInfo() {
 			slideInfo.value.height = res.data.height
 			slideInfo.value.sliderUrl = res.data.sliderUrl
 			slideInfo.value.sliderSize = res.data.sliderSize
-			slideInfo.value.sliderY = res.data.sliderY
-			slideInfo.value.blockY = slideInfo.value.sliderY
+			slideInfo.value.blockY = res.data.sliderY
 		})
 }
 
@@ -197,9 +212,7 @@ const sliderMove = (e) => {
 	const clientX = e.pageX || e.touches?.[0]?.pageX
 	if (!clientX) return
 	const moveX = clientX - origin.originX
-	const maxMoveX =
-		(slideInfo.value.width - slideInfo.value.sliderSize) *
-		slideInfo.value.scaleRatio
+	const maxMoveX = slideInfo.value.width - slideInfo.value.sliderSize
 	// 使用更精确的边界限制
 	const clampedX = Math.max(0, Math.min(moveX, maxMoveX))
 	// 使用transform和translate3d强制硬件加速
@@ -213,9 +226,10 @@ const sliderUp = () => {
 	slider.value = false
 	// 使用 will-change 预提示浏览器优化
 	block.value.style.willChange = 'auto'
+	// 按缩放率还原x坐标
 	const resultX = slideInfo.value.sliderLeft / slideInfo.value.scaleRatio
 	verifySlideCaptcha(resultX, slideInfo.value.hash).then((res) => {
-		if (res.data.result) {
+		if (res.data) {
 			emit('validPass', {
 				hash: slideInfo.value.hash,
 				code: res.data.code
@@ -332,7 +346,11 @@ onDeactivated(() => {
 		left: 0;
 		height: 35px;
 		width: 35px;
-		background-color: color-mix(in srgb, var(--el-color-primary), transparent 10%);
+		background-color: color-mix(
+			in srgb,
+			var(--el-color-primary),
+			transparent 10%
+		);
 		cursor: pointer;
 		z-index: 11;
 		user-select: none;
