@@ -229,7 +229,7 @@ const sliderUp = () => {
 	// 按缩放率还原x坐标
 	const resultX = slideInfo.value.sliderLeft / slideInfo.value.scaleRatio
 	verifySlideCaptcha(resultX, slideInfo.value.hash).then((res) => {
-		if (res.data) {
+		if (res.data.result) {
 			emit('validPass', {
 				hash: slideInfo.value.hash,
 				code: res.data.code
