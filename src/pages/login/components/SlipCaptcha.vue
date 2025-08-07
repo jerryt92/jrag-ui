@@ -1,6 +1,13 @@
 <template>
 	<div v-loading="isLoading" class="slider-container">
-		<div class="slider-canvas" @click="updateSlideCaptcha">
+		<div
+			class="slider-canvas"
+			:style="{
+				width: `${slideInfo.width}px`,
+				height: `${slideInfo.height}px`,
+			}"
+			@click="updateSlideCaptcha"
+		>
 			<!-- 大图 -->
 			<div
 				ref="puzzle"
@@ -238,10 +245,9 @@ onDeactivated(() => {
 <style lang="scss">
 .slider-container {
 	position: relative;
-	display: flex;
+	display: inline-block;
 	flex-direction: column;
 	justify-content: center;
-	width: 100%;
 	height: auto;
 	margin: 0 auto;
 	padding: 16px;
@@ -253,8 +259,6 @@ onDeactivated(() => {
 		position: relative;
 		background-color: transparent;
 		margin-bottom: 16px;
-		width: 360px;
-		height: 270px;
 		.puzzle-image {
 			border-radius: 4px;
 		}
@@ -328,7 +332,7 @@ onDeactivated(() => {
 		left: 0;
 		height: 35px;
 		width: 35px;
-		background-color: color-mix(in srgb, var(--el-color-primary), transparent 60%);
+		background-color: color-mix(in srgb, var(--el-color-primary), transparent 10%);
 		cursor: pointer;
 		z-index: 11;
 		user-select: none;
@@ -337,7 +341,7 @@ onDeactivated(() => {
 		border-radius: var(--n-radius-double);
 		&:hover,
 		&:active {
-			background-color: color-mix(in srgb, var(--el-color-primary), transparent 20%);
+			background-color: var(--el-color-primary);
 			box-shadow: 0 0 10px var(--el-color-primary);
 		}
 	}

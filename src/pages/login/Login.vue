@@ -145,8 +145,8 @@ const slideCaptchaSuccess = (e) => {
 }
 
 :global(.captcha-dialog) {
+	min-width: auto;
 	width: auto;
-	min-width: 0;
 	padding: 25px;
 }
 </style>
