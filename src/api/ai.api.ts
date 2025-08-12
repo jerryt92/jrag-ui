@@ -28,7 +28,7 @@ export const checkApCenterApi = () => {
 		// 0 - 正常，1 - 连接异常，2 - 认证异常
 		status: 0 | 1 | 2
 		description: string
-	}>(`/v1/rest/jrag/ap-center/api/check`)
+	}>(`/v1/rest/jrag/api/check`)
 }
 /**
  * 获取一个新的对话上下文ID
