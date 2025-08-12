@@ -16,7 +16,7 @@ http.interceptors.response.use(
 		const { status } = error.response
 
 		// 判断状态码是否为 401
-		if (status === 401) {
+		if (status === 401 || status === 403) {
 			window.location.assign('/#/login')
 		}
 
