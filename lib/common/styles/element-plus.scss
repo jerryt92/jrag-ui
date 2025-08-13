@@ -39,7 +39,9 @@
     }
   }
 }
-
+.el-input__inner {
+  color: var(--n-color-font-dark);;
+}
 // el-form
 .el-form {
   label {

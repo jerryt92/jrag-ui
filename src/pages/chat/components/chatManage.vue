@@ -16,7 +16,7 @@
 					<el-button type="primary" class="add" round @click="addNewChat">
 						<i class="iconfont icon-chat-new"></i>{{ $t('ai.add.new.chat') }}
 					</el-button>
-					<el-button :icon="Search" circle @click="handleShowSearch()" />
+					<el-button class="search-button" :icon="Search" circle @click="handleShowSearch()" />
 				</template>
 			</div>
 			<div v-show="filteredHistoryList?.length" class="chat-list">
@@ -243,12 +243,17 @@ defineExpose({
 			}
 		}
 
+		.search-button {
+			background-color: var(--n-color-neutral-w);
+		}
+
 		.el-input {
 			&.search-input {
 				height: 40px;
 				width: 100%;
 
 				:deep(.el-input__wrapper) {
+					background-color: var(--n-color-neutral-w);
 					border-radius: 40px;
 				}
 			}
