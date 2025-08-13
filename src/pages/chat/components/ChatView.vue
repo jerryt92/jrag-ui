@@ -693,11 +693,9 @@ defineExpose({
 	.el-textarea {
 		&.chat-input {
 			:deep(.el-input__count) {
-				background: color-mix(
-					in srgb,
-					var(--n-color-neutral-w),
-					transparent 90%
-				);
+				right: 60px;
+				bottom: 16px;
+				background: rgba(255, 255, 255, 0);
 			}
 			:deep(.el-textarea__inner) {
 				resize: none;
