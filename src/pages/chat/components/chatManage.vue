@@ -261,6 +261,9 @@ defineExpose({
 	}
 
 	.chat-list {
+		.text {
+			color: var(--n-color-font-dark);
+		}
 		padding: 10px 0 0;
 		display: flex;
 		flex-direction: column;
