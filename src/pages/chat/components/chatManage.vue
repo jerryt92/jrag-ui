@@ -33,9 +33,8 @@
 						:key="index"
 						class="list-item fx"
 						:class="{ active: checkedHistoryId === item.contextId }"
-						@click="goHistoryChat(item.contextId)"
 					>
-						<div class="cont fx">
+						<div class="cont fx" style="height: 100%;" @click="goHistoryChat(item.contextId)">
 							<i class="iconfont icon-lishiduihua"></i>
 							<p>{{ item.title }}</p>
 						</div>
