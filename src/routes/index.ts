@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 import chat from '@/routes/chat'
-import file from '@/routes/file'
+import file from '@/routes/kb'
 
 // 业务系统路由定义
 const routes = [

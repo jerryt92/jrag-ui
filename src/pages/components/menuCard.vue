@@ -11,30 +11,32 @@
 		</div>
 		<div class="menu-card-content">
 			<ul class="menu-card-list">
+				<hr/>
 				<li
 					class="menu-card-item"
 					@click="hrefTo('/')"
 				>
-					{{t('homepage')}}
+					{{'🏠 ' + t('homepage')}}
 				</li>
+				<hr/>
 				<li
 					class="menu-card-item"
 					@click="hrefTo('/chat/assistant')"
 				>
-					{{t('ai.assistant')}}
+					{{'🤖 ' + t('ai.assistant')}}
 				</li>
 				<li
 					class="menu-card-item"
-					@click="hrefTo('/upload')"
+					@click="hrefTo('/kb')"
 				>
-					{{t('kb.knowledge.base')}}
+					{{'📚 ' + t('kb.knowledge.base')}}
 				</li>
 				<hr/>
 				<li
 					class="menu-card-item"
 					@click="hrefTo('/logout')"
 				>
-					{{t('logout')}}
+					{{'⏏️ ' + t('logout')}}
 				</li>
 			</ul>
 		</div>

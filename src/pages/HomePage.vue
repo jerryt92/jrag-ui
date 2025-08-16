@@ -43,7 +43,7 @@
 				<p>{{ t('ai.assistant.desc') }}</p>
 			</div>
 
-			<div class="feature-card" @click="goTo('/upload')">
+			<div class="feature-card" @click="goTo('/kb')">
 				<div class="card-icon">📚</div>
 				<h3>{{ t('kb.knowledge.base') }}</h3>
 				<p>{{ t('kb.management') }}</p>

@@ -24,12 +24,7 @@ export default defineConfig(({ command, mode }) => {
 			path: '^/v.+/api/',
 			target: 'http://' + devServer,
 			rewrite: false
-		},
-		{
-			path: '/private/',
-			target: 'http://' + devServer,
-			rewrite: false
-		},
+		}
 	]
 	return viteConfig(command, mode, proxyServer, 3110, '0.0.0.0')
 })
