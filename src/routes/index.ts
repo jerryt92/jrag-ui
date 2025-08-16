@@ -18,7 +18,7 @@ const routes = [
 	{
 		path: '/',
 		name: 'Index',
-		component: () => import('@/pages/chat/AIAssistantPage.vue')
+		component: () => import('@/pages/HomePage.vue')
 	},
 	...chat,
 	...file

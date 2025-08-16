@@ -5,8 +5,11 @@ export default {
 	'common.delete': 'Delete',
 	'common.cancel': 'Cancel',
 	'common.ok': 'OK',
+	'common.system.options': 'System Options',
+	'homepage': 'Homepage',
 	'login.fail': 'Username or password error',
 	'captcha.tip': 'Please slide the block to the right to log in',
 	'captcha.validate.fail': 'verification failed',
+	'logout': 'Logout',
 	...enAi
 }

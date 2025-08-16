@@ -161,10 +161,10 @@ import {
 	chatSSEClientApi,
 	checkApCenterApi,
 	getHistoryContext,
-	getNewContextId
+	getNewContextId,
+	openChatKeepAliveWsClient
 } from '@/api/ai.api'
 import { SSE } from 'sse.js'
-import { openChatKeepAliveWsClient } from '@/routes/chat'
 
 const md = new MarkdownIt({
 	html: true, // 启用 HTML 标签解析

@@ -77,3 +77,16 @@ export const deleteHistoryContext = (contextId: string | string[]) => {
 		}
 	})
 }
+
+/**
+ * 开启聊天保活ws通道
+ * @param contextId
+ */
+export const openChatKeepAliveWsClient = (contextId: string) => {
+	return new WebSocket(
+		window.location.origin.replace('http', 'ws') +
+		'/ws/jrag/chat/alive' +
+		'?context-id=' +
+		contextId
+	)
+}

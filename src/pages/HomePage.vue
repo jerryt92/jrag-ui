@@ -7,15 +7,6 @@
 			<h3>🤖 Jrag AI</h3>
 			<div class="menu-button-box">
 				<span
-					v-show="isMobile"
-					v-draggable="{ device: 'mobile' }"
-					class="menu-button"
-					:class="{ active: chatViewRef?.showChatManage }"
-					@click="handleChatManage"
-				>
-					⌥
-				</span>
-				<span
 					class="menu-button"
 					:class="{ active: showMenuCard }"
 					@click="handleMenuCard"
@@ -39,37 +30,20 @@
 				</span>
 			</div>
 		</div>
-		<MenuCard v-show="showMenuCard" ref="menuCardRef" class="menu-card" />
+		<MenuCard ref="menuCardRef" class="menu-card" />
 		<!-- 添加聊天界面组件 -->
-		<ChatView
-			ref="chatViewRef"
-			class="chat-view"
-			:is-fullscreen="isFullscreen"
-			:is-mobile="isMobile"
-		/>
 	</div>
 </template>
 <script setup lang="ts">
-import ChatView from './components/ChatView.vue'
-import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { debounce } from '@jrag/lib'
 import MenuCard from '@/pages/components/menuCard.vue'
 
 const route = useRoute()
-const chatViewRef = ref(null)
 const menuCardRef = ref(null)
 const isFullscreen = ref(true)
 const isMobile = ref(false)
-
-const handleChatManage = () => {
-	chatViewRef.value.showChatManage = !chatViewRef.value.showChatManage
-	if (chatViewRef.value.showChatManage) {
-		nextTick(() => {
-			chatViewRef.value.chatManageRef?.getHistoryListData()
-		})
-	}
-}
 
 const handleMenuCard = () => {
 	menuCardRef.value.show()
@@ -116,15 +90,6 @@ const handleMobileSafariHeight = () => {
 onMounted(() => {
 	resize()
 	handleMobileSafariHeight()
-	if (!isMobile.value) {
-		nextTick(() => {
-			chatViewRef.value.getHistoryListData()
-		})
-	} else {
-		// 移动端初始化时设置高度
-		handleMobileSafariHeight()
-	}
-
 	window.addEventListener(
 		'resize',
 		debounce(() => {
