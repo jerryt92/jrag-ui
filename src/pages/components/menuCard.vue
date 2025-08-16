@@ -36,11 +36,13 @@
 </template>
 <script setup lang="ts">
 import { t } from '@jrag/lib'
-import { ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, watch } from 'vue'
 
 defineExpose({
 		show
 })
+
+const emit = defineEmits(['show-change'])
 
 const showMenuCard = ref(false)
 const menuCardRef = ref<HTMLElement | null>(null)
@@ -67,6 +69,10 @@ const handleClickOutside = (event: MouseEvent) => {
 
 onUnmounted(() => {
 	document.removeEventListener('click', handleClickOutside)
+})
+
+watch(showMenuCard, (newValue) => {
+	emit('show-change', newValue)
 })
 
 const hrefTo = (path) => {

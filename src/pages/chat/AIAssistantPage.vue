@@ -39,7 +39,7 @@
 				</span>
 			</div>
 		</div>
-		<MenuCard v-show="showMenuCard" ref="menuCardRef" class="menu-card" />
+		<MenuCard ref="menuCardRef" class="menu-card" @show-change="showMenuCard = $event" />
 		<!-- 添加聊天界面组件 -->
 		<ChatView
 			ref="chatViewRef"
@@ -59,6 +59,7 @@ import MenuCard from '@/pages/components/menuCard.vue'
 const route = useRoute()
 const chatViewRef = ref(null)
 const menuCardRef = ref(null)
+const showMenuCard = ref(false)
 const isFullscreen = ref(true)
 const isMobile = ref(false)
 
