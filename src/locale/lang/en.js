@@ -1,4 +1,5 @@
 import enAi from './chat/en-ai.js'
+import enKb from './knowledgeBase/en-kb.js'
 
 export default {
   'common.submit': 'Submit',
@@ -11,5 +12,6 @@ export default {
 	'captcha.tip': 'Please slide the block to the right to log in',
 	'captcha.validate.fail': 'verification failed',
 	'logout': 'Logout',
-	...enAi
+	...enAi,
+	...enKb,
 }

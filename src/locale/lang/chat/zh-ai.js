@@ -1,5 +1,6 @@
 export default {
 	'ai.assistant': 'AI助手',
+	'ai.assistant.desc': '与AI助手进行对话',
 	'ai.input.placeholder': '请输入问题',
 	'ai.assistant.service.unavailable': '服务不可用，请稍后再试。',
 	'ai.assistant.waiting': '请等待上一次回复完成',

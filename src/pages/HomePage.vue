@@ -30,14 +30,31 @@
 				</span>
 			</div>
 		</div>
-		<MenuCard ref="menuCardRef" class="menu-card" @show-change="showMenuCard = $event" />
-		<!-- 添加聊天界面组件 -->
+		<MenuCard
+			ref="menuCardRef"
+			class="menu-card"
+			@show-change="showMenuCard = $event"
+		/>
+		<!-- 功能导航卡片 -->
+		<div class="feature-cards">
+			<div class="feature-card" @click="goTo('/chat/assistant')">
+				<div class="card-icon">🤖</div>
+				<h3>{{ t('ai.assistant') }}</h3>
+				<p>{{ t('ai.assistant.desc') }}</p>
+			</div>
+
+			<div class="feature-card" @click="goTo('/upload')">
+				<div class="card-icon">📚</div>
+				<h3>{{ t('kb.knowledge.base') }}</h3>
+				<p>{{ t('kb.management') }}</p>
+			</div>
+		</div>
 	</div>
 </template>
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { debounce } from '@jrag/lib'
+import { debounce, t } from '@jrag/lib'
 import MenuCard from '@/pages/components/menuCard.vue'
 
 const route = useRoute()
@@ -48,6 +65,10 @@ const isMobile = ref(false)
 
 const handleMenuCard = () => {
 	menuCardRef.value.show()
+}
+
+const goTo = (path: string) => {
+	window.location.href = '/#' + path
 }
 
 const resize = () => {
@@ -116,6 +137,49 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .ai-assistant-page {
 	height: 100%;
+	padding-top: 50px;
+
+	.feature-cards {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 20px;
+		padding: 30px 20px;
+
+		.feature-card {
+			width: 220px;
+			background: white;
+			border-radius: 12px;
+			padding: 24px 20px;
+			text-align: center;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			cursor: pointer;
+			transition: all 0.3s ease;
+
+			&:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+			}
+
+			.card-icon {
+				font-size: 40px;
+				margin-bottom: 16px;
+			}
+
+			h3 {
+				font-size: 18px;
+				font-weight: 600;
+				color: #333;
+				margin-bottom: 8px;
+			}
+
+			p {
+				font-size: 14px;
+				color: #666;
+				line-height: 1.5;
+			}
+		}
+	}
 
 	.chat-view {
 		width: 100%;

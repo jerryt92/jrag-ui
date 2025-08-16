@@ -42,6 +42,7 @@ const classObj = computed(() => {
 
 	position: relative;
 	height: 100%;
+	z-index: 0;
 	// 添加遮罩层
 	&::before {
 		content: '';
@@ -51,7 +52,7 @@ const classObj = computed(() => {
 		right: 0;
 		bottom: 0;
 		background-color: rgba(173, 214, 255, 0.5);
-		z-index: 0;
+		z-index: -1;
 	}
 	&.isFullscreen {
 		position: fixed;

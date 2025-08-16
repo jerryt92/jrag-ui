@@ -1,5 +1,6 @@
 export default {
 	'ai.assistant': 'AI Assistant',
+	'ai.assistant.desc': 'Chat with AI Assistant',
 	'ai.input.placeholder': 'Please enter your question',
 	'ai.assistant.service.unavailable': 'Service unavailable, please try again later.',
 	'ai.assistant.waiting': 'Please wait for the previous reply to complete',

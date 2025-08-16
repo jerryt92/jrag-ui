@@ -23,6 +23,12 @@
 				>
 					{{t('ai.assistant')}}
 				</li>
+				<li
+					class="menu-card-item"
+					@click="hrefTo('/upload')"
+				>
+					{{t('kb.knowledge.base')}}
+				</li>
 				<hr/>
 				<li
 					class="menu-card-item"

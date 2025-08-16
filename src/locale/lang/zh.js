@@ -1,4 +1,5 @@
 import zhAi from './chat/zh-ai.js'
+import zhKb from './knowledgeBase/zh-kb.js'
 
 export default {
   'common.submit': '提交',
@@ -12,4 +13,5 @@ export default {
 	'captcha.validate.fail': '验证失败',
 	'logout': '退出登录',
 	...zhAi,
+	...zhKb,
 }

@@ -156,13 +156,6 @@ onUnmounted(() => {
 		width: 100%;
 	}
 
-	.menu-card {
-		position: fixed;
-		top: 60px;
-		right: 10px;
-		z-index: 100;
-	}
-
 	.top-bar {
 		position: fixed;
 		top: 0;
@@ -213,6 +206,13 @@ onUnmounted(() => {
 				}
 			}
 		}
+	}
+
+	.menu-card {
+		position: fixed;
+		top: 60px;
+		right: 10px;
+		z-index: 100;
 	}
 }
 </style>
