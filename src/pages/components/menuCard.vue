@@ -109,7 +109,7 @@ const hrefTo = (path) => {
 		padding-left: var(--n-padding-basic);
 		font-size: 18px;
 		font-weight: bold;
-		color: var(--n-color-neutral-8);
+		color: var(--n-color-neutral-b);
 		margin-bottom: 15px;
 	}
 

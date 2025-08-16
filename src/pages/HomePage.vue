@@ -148,17 +148,17 @@ onUnmounted(() => {
 
 		.feature-card {
 			width: 220px;
-			background: white;
+			background: var(--n-color-neutral-1);
 			border-radius: 12px;
 			padding: 24px 20px;
 			text-align: center;
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			box-shadow: var(--n-color-opacity-3);
 			cursor: pointer;
 			transition: all 0.3s ease;
 
 			&:hover {
 				transform: translateY(-5px);
-				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+				box-shadow: 0px 0px 12px var(--el-color-primary-light-7);
 			}
 
 			.card-icon {
@@ -169,13 +169,13 @@ onUnmounted(() => {
 			h3 {
 				font-size: 18px;
 				font-weight: 600;
-				color: #333;
+				color: var(--n-color-font-dark);
 				margin-bottom: 8px;
 			}
 
 			p {
 				font-size: 14px;
-				color: #666;
+				color: var(--n-color-neutral-5);
 				line-height: 1.5;
 			}
 		}
