@@ -56,6 +56,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { debounce, t } from '@jrag/lib'
 import MenuCard from '@/pages/components/menuCard.vue'
+import { checkApCenterApi } from '@/api/ai.api'
 
 const route = useRoute()
 const menuCardRef = ref(null)
@@ -110,6 +111,7 @@ const handleMobileSafariHeight = () => {
 }
 
 onMounted(() => {
+	checkApCenterApi()
 	resize()
 	handleMobileSafariHeight()
 	window.addEventListener(
