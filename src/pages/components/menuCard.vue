@@ -91,7 +91,7 @@ const hrefTo = (path) => {
 </script>
 <style lang="scss" scoped>
 .menu-card-card {
-	background: color-mix(in srgb, var(--n-color-neutral-w), transparent 90%);
+	background: color-mix(in srgb, var(--n-color-neutral-w), transparent 50%);
 	backdrop-filter: blur(10px);
 	border-radius: var(--n-radius-quadruple);
 	border: 1px solid
