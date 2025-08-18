@@ -12,6 +12,9 @@ export default {
 	'captcha.tip': '请拖动滑块对齐图像以登录',
 	'captcha.validate.fail': '验证失败',
 	'logout': '退出登录',
+	'dark.mode.light': '浅色',
+	'dark.mode.dark': '深色',
+	'dark.mode.auto': '自动',
 	...zhAi,
 	...zhKb,
 }

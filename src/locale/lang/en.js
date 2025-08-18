@@ -12,6 +12,9 @@ export default {
 	'captcha.tip': 'Please slide the block to the right to log in',
 	'captcha.validate.fail': 'verification failed',
 	'logout': 'Logout',
+	'dark.mode.light': 'Light',
+	'dark.mode.dark': 'Dark',
+	'dark.mode.auto': 'Auto',
 	...enAi,
 	...enKb,
 }

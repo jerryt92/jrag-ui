@@ -32,6 +32,12 @@
 					{{'📚 ' + t('kb.knowledge.base')}}
 				</li>
 				<hr/>
+				<li class="menu-card-item" @click="toggleTheme">
+					<span v-if="currentTheme === 'disabled'">☀️ {{ t('dark.mode.light') }}</span>
+					<span v-else-if="currentTheme === 'enabled'">🌙 {{ t('dark.mode.dark') }}</span>
+					<span v-else>🌓 {{ t('dark.mode.auto') }}</span>
+				</li>
+				<hr/>
 				<li
 					class="menu-card-item"
 					@click="hrefTo('/logout')"
@@ -44,10 +50,10 @@
 </template>
 <script setup lang="ts">
 import { t } from '@jrag/lib'
-import { ref, onUnmounted, watch } from 'vue'
+import { ref, onUnmounted, watch, onMounted } from 'vue'
 
 defineExpose({
-		show
+	show
 })
 
 const emit = defineEmits(['show-change'])
@@ -55,6 +61,43 @@ const emit = defineEmits(['show-change'])
 const showMenuCard = ref(false)
 const menuCardRef = ref<HTMLElement | null>(null)
 const isClickOutsideEnabled = ref(false)
+const currentTheme = ref<'enabled' | 'disabled' | 'auto'>('auto')
+
+// 初始化主题
+const initTheme = () => {
+	const savedTheme = localStorage.getItem('theme') as 'enabled' | 'disabled' | 'auto' | null
+	currentTheme.value = savedTheme || 'auto'
+	applyTheme(currentTheme.value)
+}
+
+// 应用主题
+const applyTheme = (theme: 'enabled' | 'disabled' | 'auto') => {
+	if (theme === 'auto') {
+		// 使用系统主题
+		const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'enabled' : 'disabled'
+		document.documentElement.classList.toggle('dark', systemTheme === 'enabled')
+	} else {
+		// 使用指定主题
+		document.documentElement.classList.toggle('dark', theme === 'enabled')
+	}
+}
+
+// 切换主题
+const toggleTheme = () => {
+	const themes: Array<'enabled' | 'disabled' | 'auto'> = ['disabled', 'enabled', 'auto']
+	const currentIndex = themes.indexOf(currentTheme.value)
+	const nextIndex = (currentIndex + 1) % themes.length
+	currentTheme.value = themes[nextIndex]
+	localStorage.setItem('theme', currentTheme.value)
+	applyTheme(currentTheme.value)
+}
+
+// 监听系统主题变化（仅在auto模式下）
+const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+	if (currentTheme.value === 'auto') {
+		document.documentElement.classList.toggle('dark', e.matches)
+	}
+}
 
 function show() {
 	showMenuCard.value = !showMenuCard.value
@@ -75,8 +118,16 @@ const handleClickOutside = (event: MouseEvent) => {
 	}
 }
 
+onMounted(() => {
+	initTheme()
+	// 添加系统主题变化监听
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', handleSystemThemeChange)
+})
+
 onUnmounted(() => {
 	document.removeEventListener('click', handleClickOutside)
+	// 移除系统主题变化监听
+	window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', handleSystemThemeChange)
 })
 
 watch(showMenuCard, (newValue) => {
@@ -86,8 +137,6 @@ watch(showMenuCard, (newValue) => {
 const hrefTo = (path) => {
 	window.location.href = '/#' + path
 }
-
-
 </script>
 <style lang="scss" scoped>
 .menu-card-card {
@@ -95,7 +144,7 @@ const hrefTo = (path) => {
 	backdrop-filter: blur(10px);
 	border-radius: var(--n-radius-quadruple);
 	border: 1px solid
-		color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
+	color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
 	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 	display: flex;
 	flex-direction: column;
