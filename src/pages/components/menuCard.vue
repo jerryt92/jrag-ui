@@ -11,38 +11,30 @@
 		</div>
 		<div class="menu-card-content">
 			<ul class="menu-card-list">
-				<hr/>
-				<li
-					class="menu-card-item"
-					@click="hrefTo('/')"
-				>
-					{{'🏠 ' + t('homepage')}}
+				<hr />
+				<li class="menu-card-item" @click="hrefTo('/')">
+					{{ '🏠 ' + t('homepage') }}
 				</li>
-				<hr/>
-				<li
-					class="menu-card-item"
-					@click="hrefTo('/chat/assistant')"
-				>
-					{{'🤖 ' + t('ai.assistant')}}
+				<hr />
+				<li class="menu-card-item" @click="hrefTo('/chat/assistant')">
+					{{ '🤖 ' + t('ai.assistant') }}
 				</li>
-				<li
-					class="menu-card-item"
-					@click="hrefTo('/kb')"
-				>
-					{{'📚 ' + t('kb.knowledge.base')}}
+				<li class="menu-card-item" @click="hrefTo('/kb')">
+					{{ '📚 ' + t('kb.knowledge.base') }}
 				</li>
-				<hr/>
-				<li class="menu-card-item" @click="toggleTheme">
-					<span v-if="currentTheme === 'disabled'">☀️ {{ t('dark.mode.light') }}</span>
-					<span v-else-if="currentTheme === 'enabled'">🌙 {{ t('dark.mode.dark') }}</span>
-					<span v-else>🌓 {{ t('dark.mode.auto') }}</span>
+				<hr />
+				<li class="menu-card-item" @click="toggleDarkMode">
+					<span v-show="currentDarkMode === 'disabled'"
+						>☀️ {{ t('dark.mode.light') }}</span
+					>
+					<span v-show="currentDarkMode === 'enabled'"
+						>🌙 {{ t('dark.mode.dark') }}</span
+					>
+					<span v-show="currentDarkMode === 'auto'">🌓 {{ t('dark.mode.auto') }}</span>
 				</li>
-				<hr/>
-				<li
-					class="menu-card-item"
-					@click="hrefTo('/logout')"
-				>
-					{{'⏏️ ' + t('logout')}}
+				<hr />
+				<li class="menu-card-item" @click="hrefTo('/logout')">
+					{{ '⏏️ ' + t('logout') }}
 				</li>
 			</ul>
 		</div>
@@ -61,40 +53,48 @@ const emit = defineEmits(['show-change'])
 const showMenuCard = ref(false)
 const menuCardRef = ref<HTMLElement | null>(null)
 const isClickOutsideEnabled = ref(false)
-const currentTheme = ref<'enabled' | 'disabled' | 'auto'>('auto')
+const currentDarkMode = ref<'enabled' | 'disabled' | 'auto'>('auto')
 
-// 初始化主题
-const initTheme = () => {
-	const savedTheme = localStorage.getItem('theme') as 'enabled' | 'disabled' | 'auto' | null
-	currentTheme.value = savedTheme || 'auto'
-	applyTheme(currentTheme.value)
+const initDarkMode = () => {
+	const savedDarkMode = localStorage.getItem('dark-mode') as
+		| 'enabled'
+		| 'disabled'
+		| 'auto'
+		| null
+	currentDarkMode.value = savedDarkMode || 'auto'
+	applyDarkMode(currentDarkMode.value)
 }
 
-// 应用主题
-const applyTheme = (theme: 'enabled' | 'disabled' | 'auto') => {
-	if (theme === 'auto') {
-		// 使用系统主题
-		const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'enabled' : 'disabled'
-		document.documentElement.classList.toggle('dark', systemTheme === 'enabled')
+const applyDarkMode = (darkMode: 'enabled' | 'disabled' | 'auto') => {
+	if (darkMode === 'auto') {
+		const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)')
+			.matches
+			? 'enabled'
+			: 'disabled'
+		document.documentElement.classList.toggle(
+			'dark',
+			systemDarkMode === 'enabled'
+		)
 	} else {
-		// 使用指定主题
-		document.documentElement.classList.toggle('dark', theme === 'enabled')
+		document.documentElement.classList.toggle('dark', darkMode === 'enabled')
 	}
 }
 
-// 切换主题
-const toggleTheme = () => {
-	const themes: Array<'enabled' | 'disabled' | 'auto'> = ['disabled', 'enabled', 'auto']
-	const currentIndex = themes.indexOf(currentTheme.value)
-	const nextIndex = (currentIndex + 1) % themes.length
-	currentTheme.value = themes[nextIndex]
-	localStorage.setItem('theme', currentTheme.value)
-	applyTheme(currentTheme.value)
+const toggleDarkMode = () => {
+	const darkModes: Array<'enabled' | 'disabled' | 'auto'> = [
+		'enabled',
+		'disabled',
+		'auto'
+	]
+	const currentIndex = darkModes.indexOf(currentDarkMode.value)
+	const nextIndex = (currentIndex + 1) % darkModes.length
+	currentDarkMode.value = darkModes[nextIndex]
+	localStorage.setItem('dark-mode', currentDarkMode.value)
+	applyDarkMode(currentDarkMode.value)
 }
 
-// 监听系统主题变化（仅在auto模式下）
-const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-	if (currentTheme.value === 'auto') {
+const handleSystemDarkModeChange = (e: MediaQueryListEvent) => {
+	if (currentDarkMode.value === 'auto') {
 		document.documentElement.classList.toggle('dark', e.matches)
 	}
 }
@@ -110,7 +110,9 @@ function show() {
 }
 
 const handleClickOutside = (event: MouseEvent) => {
-	if (!isClickOutsideEnabled.value) return
+	if (!isClickOutsideEnabled.value) {
+		return
+	}
 	if (menuCardRef.value && !menuCardRef.value.contains(event.target as Node)) {
 		showMenuCard.value = false
 		isClickOutsideEnabled.value = false
@@ -119,15 +121,16 @@ const handleClickOutside = (event: MouseEvent) => {
 }
 
 onMounted(() => {
-	initTheme()
-	// 添加系统主题变化监听
-	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', handleSystemThemeChange)
+	initDarkMode()
+	window.matchMedia('(prefers-color-scheme: dark)')
+		.addEventListener('change', handleSystemDarkModeChange)
 })
 
 onUnmounted(() => {
 	document.removeEventListener('click', handleClickOutside)
-	// 移除系统主题变化监听
-	window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', handleSystemThemeChange)
+	window
+		.matchMedia('(prefers-color-scheme: dark)')
+		.removeEventListener('change', handleSystemDarkModeChange)
 })
 
 watch(showMenuCard, (newValue) => {
@@ -144,7 +147,7 @@ const hrefTo = (path) => {
 	backdrop-filter: blur(10px);
 	border-radius: var(--n-radius-quadruple);
 	border: 1px solid
-	color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
+		color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
 	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 	display: flex;
 	flex-direction: column;
