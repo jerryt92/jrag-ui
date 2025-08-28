@@ -116,7 +116,7 @@
 					:placeholder="t('ai.input.placeholder')"
 					type="textarea"
 					:autosize="{ minRows: 5, maxRows: 10 }"
-					:maxlength="4000"
+					:maxlength="102400"
 					show-word-limit
 					@keydown="handleKeydown"
 					@input="handleInput"
@@ -301,7 +301,7 @@ const handleChatResponse = (chatResponseDto: ChatResponseDto) => {
 					}
 				})
 			} else {
-				if (chatResponseDto.message.srcFile) {
+				if (chatResponseDto.message.srcFile && chatResponseDto.message.srcFile.length > 0) {
 					messageContext.value[messageContext.value.length - 1].srcFile =
 						chatResponseDto.message.srcFile
 				}

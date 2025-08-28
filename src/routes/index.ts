@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 import chat from '@/routes/chat'
-import file from '@/routes/kb'
+import kb from '@/routes/kb'
 
 // 业务系统路由定义
 const routes = [
@@ -21,7 +21,7 @@ const routes = [
 		component: () => import('@/pages/HomePage.vue')
 	},
 	...chat,
-	...file
+	...kb
 ] as RouteRecordRaw[]
 
 export default routes
