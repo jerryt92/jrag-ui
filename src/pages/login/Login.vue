@@ -46,24 +46,31 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import {
+	ElButton,
+	ElDialog,
 	ElForm,
 	ElFormItem,
 	ElInput,
-	ElButton,
-	ElDialog,
 	ElMessage
 } from 'element-plus'
 import { login } from '@/api/login.api'
 import SlipCaptcha from '@/pages/login/components/SlipCaptcha.vue'
 import { t } from '@jrag/lib'
+import { loginMode } from '@/main'
 
 const router = useRouter()
 const slideCaptchaRef = ref()
 const loading = ref<boolean>(false)
 const captchaDialogShow = ref<boolean>(false)
+
+onMounted(() => {
+	if (loginMode === 'public') {
+		router.push('/')
+	}
+})
 
 // 表单数据
 const loginData = reactive({

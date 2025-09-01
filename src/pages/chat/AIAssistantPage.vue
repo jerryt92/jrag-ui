@@ -90,7 +90,6 @@ const resize = () => {
 	} /* else if (width < 992) {
 			console.log('平板视图');
 	} */ else {
-		console.log('桌面视图')
 		isMobile.value = false
 		isFullscreen.value = true
 		document.body.style.minWidth = '768px'

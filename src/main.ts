@@ -5,6 +5,7 @@ import { ElLoading } from 'element-plus'
 import { useDarkMode } from '@jrag/hooks'
 
 import './styles/index.scss'
+import { getMode } from '@/api/login.api'
 
 async function APP(){
 	const app = new App({
@@ -29,5 +30,9 @@ async function APP(){
 	app.mount('#app')
 	console.log('---->main app')
 }
-
+export var loginMode: 'public' | 'user'
+getMode().then((res) => {
+	loginMode = res.data.mode
+	console.log('---->loginMode', loginMode)
+})
 APP()

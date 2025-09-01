@@ -19,9 +19,11 @@
 				<li class="menu-card-item" @click="hrefTo('/chat/assistant')">
 					{{ '🤖 ' + t('ai.assistant') }}
 				</li>
-				<li class="menu-card-item" @click="hrefTo('/kb')">
-					{{ '📚 ' + t('kb.knowledge.base') }}
-				</li>
+				<span v-if="loginMode === 'user'">
+					<li class="menu-card-item" @click="hrefTo('/kb')">
+						{{ '📚 ' + t('kb.knowledge.base') }}
+					</li>
+				</span>
 				<hr />
 				<li class="menu-card-item" @click="toggleDarkMode">
 					<span v-show="currentDarkMode === 'disabled'"
@@ -30,12 +32,16 @@
 					<span v-show="currentDarkMode === 'enabled'"
 						>🌙 {{ t('dark.mode.dark') }}</span
 					>
-					<span v-show="currentDarkMode === 'auto'">🌓 {{ t('dark.mode.auto') }}</span>
+					<span v-show="currentDarkMode === 'auto'"
+						>🌓 {{ t('dark.mode.auto') }}</span
+					>
 				</li>
-				<hr />
-				<li class="menu-card-item" @click="hrefTo('/logout')">
-					{{ '⏏️ ' + t('logout') }}
-				</li>
+				<span v-if="loginMode === 'user'">
+					<hr />
+					<li class="menu-card-item" @click="hrefTo('/logout')">
+						{{ '⏏️ ' + t('logout') }}
+					</li>
+				</span>
 			</ul>
 		</div>
 	</div>
@@ -43,6 +49,7 @@
 <script setup lang="ts">
 import { t } from '@jrag/lib'
 import { ref, onUnmounted, watch, onMounted } from 'vue'
+import { loginMode } from '@/main'
 
 defineExpose({
 	show
@@ -122,7 +129,8 @@ const handleClickOutside = (event: MouseEvent) => {
 
 onMounted(() => {
 	initDarkMode()
-	window.matchMedia('(prefers-color-scheme: dark)')
+	window
+		.matchMedia('(prefers-color-scheme: dark)')
 		.addEventListener('change', handleSystemDarkModeChange)
 })
 

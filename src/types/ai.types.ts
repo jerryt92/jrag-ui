@@ -70,9 +70,9 @@ export type HistoryContextItem = {
 	// 聊天上下文ID
 	contextId: string
 	// 标题
-	tittle: string
+	title: string
 	// 最后访问时间
-	lastAccessTime: number
+	lastUpdateTime: number
 }
 
 export type ChatContextDto = {

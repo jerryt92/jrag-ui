@@ -2,13 +2,50 @@ import {
 	ChatContextDto,
 	ChatRequestDto,
 	ContextIdDto,
+	HistoryContextItem,
 	HistoryContextList,
 	MessageFeedbackRequest
 } from '@/types/ai.types'
 import { SSE } from 'sse.js'
 import http from '@jrag/http/loginInterceptor'
+import { loginMode } from '@/main'
+
+const localStorageKey = 'chatContext'
+
+type ChatContextLocalStorageValue = {
+	historyContextItem: HistoryContextItem
+	chatContextDto: ChatContextDto
+}
 
 // 请求
+export const storageChatContextApi = (chatContextDto: ChatContextDto) => {
+	if (loginMode === 'public') {
+		const item: ChatContextLocalStorageValue = {
+			historyContextItem: {
+				contextId: chatContextDto.contextId,
+				title: '',
+				lastUpdateTime: Date.now()
+			},
+			chatContextDto: chatContextDto
+		}
+		for (let i = 0; i < chatContextDto.messages.length; i++) {
+			const message = chatContextDto.messages[i]
+			if (message.role === 'user') {
+				item.historyContextItem.title =
+					message.content.length > 64
+						? message.content.substring(0, 64)
+						: message.content
+				break
+			}
+		}
+		let lsString = localStorage.getItem(localStorageKey)
+		const ls: object = lsString ? JSON.parse(lsString) : {}
+		ls[chatContextDto.contextId] = item
+		localStorage.setItem(localStorageKey, JSON.stringify(ls))
+	}
+	return Promise.resolve()
+}
+
 export const chatSSEClientApi = (chatRequestDto: ChatRequestDto): SSE => {
 	return new SSE('/v1/rest/jrag/chat', {
 		headers: {
@@ -41,41 +78,79 @@ export const getNewContextId = () => {
  * 获取历史对话列表
  */
 export const getHistoryContextList = (offset?: number, limit?: number) => {
-	return http.get<HistoryContextList>(`/v1/rest/jrag/context/list`, {
-		params: {
-			offset,
-			limit
-		}
-	})
+	if (loginMode === 'public') {
+		let lsString = localStorage.getItem(localStorageKey)
+		const ls: object = lsString ? JSON.parse(lsString) : {}
+		const data = {
+			data: Object.values(ls).map(
+				(item) => item.historyContextItem) as HistoryContextItem[]
+		} as HistoryContextList
+		return Promise.resolve({
+			data: data
+		})
+	} else {
+		return http.get<HistoryContextList>(`/v1/rest/jrag/context/list`, {
+			params: {
+				offset,
+				limit
+			}
+		})
+	}
 }
 
 /**
  * 获取历史对话
  */
 export const getHistoryContext = (contextId: string) => {
-	return http.get<ChatContextDto>(`/v1/rest/jrag/context`, {
-		params: {
-			'context-id': contextId
-		}
-	})
+	if (loginMode === 'public') {
+		let lsString = localStorage.getItem(localStorageKey)
+		const ls: object = lsString ? JSON.parse(lsString) : {}
+		return Promise.resolve({
+			data: ls[contextId]?.chatContextDto
+		})
+	} else {
+		return http.get<ChatContextDto>(`/v1/rest/jrag/context`, {
+			params: {
+				'context-id': contextId
+			}
+		})
+	}
 }
 
 /**
  * 添加消息反馈
  */
 export const addMessageFeedback = (feedback: MessageFeedbackRequest) => {
-	return http.post(`/v1/rest/jrag/context/message/feedback`, feedback)
+	if (loginMode === 'user') {
+		return http.post(`/v1/rest/jrag/context/message/feedback`, feedback)
+	} else {
+		return Promise.resolve()
+	}
 }
 
 /**
  * 删除历史对话
  */
 export const deleteHistoryContext = (contextId: string | string[]) => {
-	return http.delete(`/v1/rest/jrag/context`, {
-		params: {
-			'context-id': Array.isArray(contextId) ? contextId.join(',') : contextId
+	if (loginMode === 'public') {
+		let lsString = localStorage.getItem(localStorageKey)
+		const ls: object = lsString ? JSON.parse(lsString) : {}
+		if (Array.isArray(contextId)) {
+			contextId.forEach((id) => {
+				delete ls[id]
+			})
+		} else {
+			delete ls[contextId]
 		}
-	})
+		localStorage.setItem(localStorageKey, JSON.stringify(ls))
+		return Promise.resolve()
+	} else {
+		return http.delete(`/v1/rest/jrag/context`, {
+			params: {
+				'context-id': Array.isArray(contextId) ? contextId.join(',') : contextId
+			}
+		})
+	}
 }
 
 /**
@@ -85,8 +160,8 @@ export const deleteHistoryContext = (contextId: string | string[]) => {
 export const openChatKeepAliveWsClient = (contextId: string) => {
 	return new WebSocket(
 		window.location.origin.replace('http', 'ws') +
-		'/ws/jrag/chat/alive' +
-		'?context-id=' +
-		contextId
+			'/ws/jrag/chat/alive' +
+			'?context-id=' +
+			contextId
 	)
 }

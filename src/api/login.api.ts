@@ -1,5 +1,13 @@
 import http from '@jrag/http/loginInterceptor'
 
+export const getMode = () => {
+	return http.get<
+		{
+			mode: 'public' | 'user'
+		}
+	>('/v1/auth/jrag/mode')
+}
+
 export const login = (
 	username: string,
 	password: string,

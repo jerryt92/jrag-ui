@@ -162,7 +162,8 @@ import {
 	checkApCenterApi,
 	getHistoryContext,
 	getNewContextId,
-	openChatKeepAliveWsClient
+	openChatKeepAliveWsClient,
+	storageChatContextApi
 } from '@/api/ai.api'
 import { SSE } from 'sse.js'
 
@@ -312,6 +313,10 @@ const handleChatResponse = (chatResponseDto: ChatResponseDto) => {
 			}
 		}
 	}
+	storageChatContextApi({
+		contextId: contextId.value,
+		messages: messageContext.value
+	})
 }
 // 滚动到底部
 const scrollToBottom = () => {
