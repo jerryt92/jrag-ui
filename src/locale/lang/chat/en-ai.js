@@ -11,9 +11,11 @@ export default {
 	'ai.delete.warning': 'After deletion, the conversation records cannot be restored or retrieved. Please operate with caution.',
 	'ai.delete.chat.confirm': 'Are you sure to delete this 1 conversation record?',
 	'ai.delete.all.chat.confirm': 'Are you sure to delete all the conversation records?',
-	'ai.hi.assistant': 'Hello, I am Jrag AI',
+	'ai.hi.assistant': 'Hello, I am Data Communication Encyclopedia Assistant.',
 	'ai.already.latest.chat': 'It is the latest conversation',
 	'ai.source': 'Source:',
 	'ai.api.key.invalid': 'AI Service API Key Invalid',
 	'ai.api.key.invalid.desc': 'Please check whether the API key is correct',
+	'ai.hot.question': 'Hot Questions',
+	'ai.refresh.hot.question': 'Change',
 }

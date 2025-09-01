@@ -11,9 +11,11 @@ export default {
 	'ai.delete.warning': '删除后对话记录无法恢复和找回，请谨慎操作',
 	'ai.delete.chat.confirm': '确认删除这1条对话记录吗？',
 	'ai.delete.all.chat.confirm': '确认删除所有对话记录吗？',
-	'ai.hi.assistant': '你好，我是Jrag AI',
+	'ai.hi.assistant': '你好，我是数据通信百科助手',
 	'ai.already.latest.chat': '已是最新对话',
 	'ai.source': '引用来源：',
 	'ai.api.key.invalid': 'AI服务API密钥无效',
 	'ai.api.key.invalid.desc': '请检查API密钥是否正确。',
+	'ai.hot.question': '热门问题',
+	'ai.refresh.hot.question': '换一换',
 }

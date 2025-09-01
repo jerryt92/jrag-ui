@@ -24,6 +24,30 @@
 						<span style="font-size: 100px">🤖</span>
 					</div>
 					<h2 class="title">{{ $t('ai.hi.assistant') }}</h2>
+					<div class="hot-questions">
+						<div class="fx hot-questions-title">
+							<strong class="fx">
+								<el-icon>
+									<ChatLineSquare />
+								</el-icon>
+								{{ $t('ai.hot.question') }}</strong
+							>
+							<span class="change fx" @click="getHotQuestions"
+							>{{ $t('ai.refresh.hot.question')
+								}}<el-icon><Refresh /></el-icon
+								></span>
+						</div>
+						<div class="question-list">
+							<div
+								v-for="(item, index) in hotQuestions"
+								:key="index"
+								class="question"
+								@click="clickHotQuestion(item.question)"
+							>
+								<strong class="qa">HOT</strong>{{ item.question }}
+							</div>
+						</div>
+					</div>
 				</div>
 				<div v-if="messageContext?.length" class="message-list">
 					<div
@@ -69,7 +93,7 @@
 										v-html="md.render(convertSrcFilesToMd(message.srcFile))"
 									/>
 								</div>
-								<div v-show="message?.content && !isWaiting" class="support">
+								<div v-show="loginMode === 'user' && message?.content && !isWaiting" class="support">
 									<span
 										class="feedback-icon-good"
 										:class="{ good: message.feedback === 1 }"
@@ -136,7 +160,12 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowDown, Position } from '@element-plus/icons-vue'
+import {
+	ArrowDown,
+	Position,
+	Refresh,
+	ChatLineSquare
+} from '@element-plus/icons-vue'
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import {
 	ElAvatar,
@@ -162,10 +191,11 @@ import {
 	checkApCenterApi,
 	getHistoryContext,
 	getNewContextId,
-	openChatKeepAliveWsClient,
-	storageChatContextApi
+	getQaTemplate,
+	openChatKeepAliveWsClient, storageChatContextApi
 } from '@/api/ai.api'
 import { SSE } from 'sse.js'
+import { loginMode } from '@/main'
 
 const md = new MarkdownIt({
 	html: true, // 启用 HTML 标签解析
@@ -357,6 +387,16 @@ const handleKeyup = () => {
 	}
 }
 
+const hotQuestions = ref([])
+const getHotQuestions = () => {
+	getQaTemplate().then((res) => {
+		hotQuestions.value = res.data.data
+	})
+}
+const clickHotQuestion = (msg) => {
+	sendMessage(msg)
+}
+
 const handleMsgFeedback = (type, message?) => {
 	message.feedback = type
 	addMessageFeedback({
@@ -387,6 +427,7 @@ const newChat = () => {
 	getNewContextId().then((contextIdDto) => {
 		contextId.value = contextIdDto.data.contextId
 	})
+	getHotQuestions()
 	scrollToBottom()
 }
 
@@ -525,48 +566,47 @@ defineExpose({
 
 	.hot-questions {
 		display: flex;
+		margin-top: 20px;
 		flex-direction: column;
-		box-shadow: 0px 0px 12px var(--el-color-primary-light-7);
-		// width: 350px;
+		background: color-mix(
+				in srgb,
+				var(--n-color-neutral-w),
+				transparent 80%
+		);
+		backdrop-filter: blur(10px);
+		border-radius: var(--n-radius-quadruple);
+		border: 1px solid color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
+		box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+		color: var(--n-color-font-dark);
 		min-width: 350px;
 		max-width: 450px;
 		padding: 20px;
-		border-radius: 15px;
 		max-height: 300px;
 		min-height: 160px;
 		overflow: auto;
-		background-color: #fff;
-
 		.hot-questions-title {
 			justify-content: space-between;
 			margin-bottom: 15px;
-
 			strong {
 				.el-icon {
 					margin-right: 2px;
 				}
 			}
-
 			.change {
-				color: var(--n-color-neutral-5);
 				cursor: pointer;
 				display: flex;
 				justify-content: center;
 				align-items: center;
-
 				&:hover {
 					color: var(--el-color-primary);
 				}
 			}
 		}
-
 		.question-list {
-			display: flex;
 			flex-direction: column;
 			justify-content: center;
-
 			.question {
-				// display: flex;
+				display: flex;
 				margin-bottom: 15px;
 				cursor: pointer;
 				line-height: 1.5;
@@ -575,24 +615,20 @@ defineExpose({
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				width: 100%;
-
 				&:hover {
 					color: var(--el-color-primary);
 				}
-
 				.qa {
 					margin-right: 10px;
 					height: 20px;
 					line-height: 20px;
 					color: var(--el-color-primary);
-					font-family: auto;
 					font-style: italic;
 					background-color: var(--el-color-primary-light-9);
 					display: inline-block;
-					padding: 0 4px 0 2px;
+					padding: 0 4px 0 4px;
 					border-radius: 15px;
 				}
-
 				&:last-child {
 					margin-bottom: 0;
 				}

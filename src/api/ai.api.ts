@@ -4,7 +4,8 @@ import {
 	ContextIdDto,
 	HistoryContextItem,
 	HistoryContextList,
-	MessageFeedbackRequest
+	MessageFeedbackRequest,
+	QaTemplate
 } from '@/types/ai.types'
 import { SSE } from 'sse.js'
 import http from '@jrag/http/loginInterceptor'
@@ -151,6 +152,17 @@ export const deleteHistoryContext = (contextId: string | string[]) => {
 			}
 		})
 	}
+}
+
+/**
+ * 获取热门问题
+ */
+export const getQaTemplate = (limit?: number) => {
+	return http.get<QaTemplate>(`/v1/rest/jrag/qa-template`, {
+		params: {
+			limit
+		}
+	})
 }
 
 /**

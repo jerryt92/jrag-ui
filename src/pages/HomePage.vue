@@ -4,7 +4,7 @@
 		:class="{ 'full-page': isFullscreen, 'mobile-page': isMobile }"
 	>
 		<div class="top-bar">
-			<h3>🤖 Jrag AI</h3>
+			<h3>🤖 数据通信百科助手</h3>
 			<div class="menu-button-box">
 				<span
 					class="menu-button"
