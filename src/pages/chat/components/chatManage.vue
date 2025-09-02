@@ -139,7 +139,7 @@ const goHistoryChat = (constextId) => {
 const getHistoryListData = () => {
 	getHistoryContextList().then((res) => {
 		historyList.value = res.data.data
-		filterList(searchKey.value, res.data.data)
+		filterList(searchKey.value, historyList.value)
 	})
 }
 
