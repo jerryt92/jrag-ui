@@ -140,7 +140,7 @@
 					:placeholder="t('ai.input.placeholder')"
 					type="textarea"
 					:autosize="{ minRows: 5, maxRows: 10 }"
-					:maxlength="102400"
+					:maxlength="1000"
 					show-word-limit
 					@keydown="handleKeydown"
 					@input="handleInput"
