@@ -12,6 +12,13 @@ import { loginMode } from '@/main'
 
 const localStorageKey = 'chatContext'
 
+type ChatContextLocalStorage = {
+	sort: string[]
+	data: {
+		[key: string]: ChatContextLocalStorageValue
+	}
+}
+
 type ChatContextLocalStorageValue = {
 	historyContextItem: HistoryContextItem
 	chatContextDto: ChatContextDto
@@ -39,8 +46,16 @@ export const storageChatContextApi = (chatContextDto: ChatContextDto) => {
 			}
 		}
 		let lsString = localStorage.getItem(localStorageKey)
-		const ls: object = lsString ? JSON.parse(lsString) : {}
-		ls[chatContextDto.contextId] = item
+		const ls: ChatContextLocalStorage = lsString
+			? JSON.parse(lsString)
+			: {
+					sort: [],
+					data: {}
+			  }
+		if (!ls.data[chatContextDto.contextId]) {
+			ls.sort.unshift(chatContextDto.contextId)
+		}
+		ls.data[chatContextDto.contextId] = item
 		localStorage.setItem(localStorageKey, JSON.stringify(ls))
 	}
 	return Promise.resolve()
@@ -79,15 +94,31 @@ export const getNewContextId = () => {
  */
 export const getHistoryContextList = (offset?: number, limit?: number) => {
 	if (loginMode === 'public') {
-		let lsString = localStorage.getItem(localStorageKey)
-		const ls: object = lsString ? JSON.parse(lsString) : {}
-		const data = {
-			data: Object.values(ls).map(
-				(item) => item.historyContextItem) as HistoryContextItem[]
-		} as HistoryContextList
-		return Promise.resolve({
-			data: data
-		})
+		try {
+			let lsString = localStorage.getItem(localStorageKey)
+			const ls: ChatContextLocalStorage = lsString
+				? JSON.parse(lsString)
+				: {
+						sort: [],
+						data: {}
+				  }
+			const historyContextList: HistoryContextList = {
+				data: []
+			}
+			ls.sort.forEach((id) => {
+				historyContextList.data.push(ls.data[id].historyContextItem)
+			})
+			return Promise.resolve({
+				data: historyContextList
+			})
+		} catch (e) {
+			localStorage.removeItem(localStorageKey)
+			return Promise.resolve({
+				data: {
+					data: []
+				}
+			})
+		}
 	} else {
 		return http.get<HistoryContextList>(`/v1/rest/jrag/context/list`, {
 			params: {
@@ -104,9 +135,14 @@ export const getHistoryContextList = (offset?: number, limit?: number) => {
 export const getHistoryContext = (contextId: string) => {
 	if (loginMode === 'public') {
 		let lsString = localStorage.getItem(localStorageKey)
-		const ls: object = lsString ? JSON.parse(lsString) : {}
+		const ls: ChatContextLocalStorage = lsString
+			? JSON.parse(lsString)
+			: {
+					sort: [],
+					data: {}
+			  }
 		return Promise.resolve({
-			data: ls[contextId]?.chatContextDto
+			data: ls.data[contextId]?.chatContextDto
 		})
 	} else {
 		return http.get<ChatContextDto>(`/v1/rest/jrag/context`, {
@@ -134,13 +170,20 @@ export const addMessageFeedback = (feedback: MessageFeedbackRequest) => {
 export const deleteHistoryContext = (contextId: string | string[]) => {
 	if (loginMode === 'public') {
 		let lsString = localStorage.getItem(localStorageKey)
-		const ls: object = lsString ? JSON.parse(lsString) : {}
+		const ls: ChatContextLocalStorage = lsString
+			? JSON.parse(lsString)
+			: {
+					sort: [],
+					data: {}
+			  }
 		if (Array.isArray(contextId)) {
 			contextId.forEach((id) => {
-				delete ls[id]
+				delete ls.data[id]
+				ls.sort = ls.sort.filter((exitId) => exitId !== id)
 			})
 		} else {
-			delete ls[contextId]
+			delete ls.data[contextId]
+			ls.sort = ls.sort.filter((exitId) => exitId !== contextId)
 		}
 		localStorage.setItem(localStorageKey, JSON.stringify(ls))
 		return Promise.resolve()
