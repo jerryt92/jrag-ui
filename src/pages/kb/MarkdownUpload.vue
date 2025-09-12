@@ -55,8 +55,8 @@
 	</div>
 </template>
 
-
-<script setup lang="ts">import { ref } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import { uploadMarkdown } from '@/api/file.api'
 import { ElMessage } from 'element-plus'
 import MenuCard from '@/pages/components/menuCard.vue'
@@ -98,8 +98,9 @@ const handleDragOver = (event: DragEvent) => {
 const validateFile = (selectedFile: File) => {
 	// 检查文件后缀
 	const allowedExtensions = ['md', 'zip', 'tar.gz', 'tar']
-	const fileName = selectedFile.name
-	const isValidExtension = allowedExtensions.some(ext => fileName.endsWith('.' + ext))
+	const isValidExtension = allowedExtensions.some((ext) =>
+		selectedFile.name.endsWith('.' + ext)
+	)
 
 	if (!isValidExtension) {
 		errorMessage.value = '仅支持后缀为 md、zip、tar.gz、tar 的文件'
