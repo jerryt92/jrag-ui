@@ -29,6 +29,7 @@ async function APP(){
 	// 挂载应用
 	app.mount('#app')
 	console.log('---->main app')
+	getMode()
 }
 export var loginMode: 'public' | 'user'
 getMode().then((res) => {
