@@ -56,6 +56,7 @@ import { useRoute } from 'vue-router'
 import { debounce, t } from '@jrag/lib'
 import MenuCard from '@/pages/components/menuCard.vue'
 import { checkApCenterApi } from '@/api/ai.api'
+import { loginMode } from '@/main'
 
 const route = useRoute()
 const menuCardRef = ref(null)

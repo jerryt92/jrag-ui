@@ -9,7 +9,7 @@ import {
 } from '@/types/ai.types'
 import { SSE } from 'sse.js'
 import http from '@jrag/http/loginInterceptor'
-import { getLoginMode } from '@/main'
+import { loginMode } from '@/main'
 
 const localStorageKey = 'chatContext'
 
@@ -27,7 +27,7 @@ type ChatContextLocalStorageValue = {
 
 // 请求
 export const storageChatContextApi = (chatContextDto: ChatContextDto) => {
-	if (getLoginMode() === 'public') {
+	if (loginMode === 'public') {
 		const item: ChatContextLocalStorageValue = {
 			historyContextItem: {
 				contextId: chatContextDto.contextId,
@@ -94,7 +94,7 @@ export const getNewContextId = () => {
  * 获取历史对话列表
  */
 export const getHistoryContextList = (offset?: number, limit?: number) => {
-	if (getLoginMode() === 'public') {
+	if (loginMode === 'public') {
 		try {
 			let lsString = localStorage.getItem(localStorageKey)
 			const ls: ChatContextLocalStorage = lsString
@@ -134,7 +134,7 @@ export const getHistoryContextList = (offset?: number, limit?: number) => {
  * 获取历史对话
  */
 export const getHistoryContext = (contextId: string) => {
-	if (getLoginMode() === 'public') {
+	if (loginMode === 'public') {
 		let lsString = localStorage.getItem(localStorageKey)
 		const ls: ChatContextLocalStorage = lsString
 			? JSON.parse(lsString)
@@ -158,7 +158,7 @@ export const getHistoryContext = (contextId: string) => {
  * 添加消息反馈
  */
 export const addMessageFeedback = (feedback: MessageFeedbackRequest) => {
-	if (getLoginMode() === 'user') {
+	if (loginMode === 'user') {
 		return http.post(`/v1/rest/jrag/context/message/feedback`, feedback)
 	} else {
 		return Promise.resolve()
@@ -169,7 +169,7 @@ export const addMessageFeedback = (feedback: MessageFeedbackRequest) => {
  * 删除历史对话
  */
 export const deleteHistoryContext = (contextId: string | string[]) => {
-	if (getLoginMode() === 'public') {
+	if (loginMode === 'public') {
 		let lsString = localStorage.getItem(localStorageKey)
 		const ls: ChatContextLocalStorage = lsString
 			? JSON.parse(lsString)
