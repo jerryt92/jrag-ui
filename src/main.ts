@@ -38,6 +38,7 @@ export const getLoginMode = () => {
 	} else {
 		getMode().then((res) => {
 			sessionStorage.setItem('login-mode', res.data.mode)
+			return res.data.mode
 		})
 	}
 }
