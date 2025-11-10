@@ -49,6 +49,7 @@
 <script setup lang="ts">
 import { t } from '@jrag/lib'
 import { ref, onUnmounted, watch, onMounted } from 'vue'
+import { loginMode } from '@/main'
 
 defineExpose({
 	show
