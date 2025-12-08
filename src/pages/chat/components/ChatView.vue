@@ -187,15 +187,12 @@ import {
 import { t } from '@jrag/lib'
 import {
 	addMessageFeedback,
-	chatSSEClientApi,
+	chatWebsocketClientApi,
 	checkApCenterApi,
 	getHistoryContext,
 	getNewContextId,
-	getQaTemplate,
-	openChatKeepAliveWsClient, storageChatContextApi
+	storageChatContextApi
 } from '@/api/ai.api'
-import { SSE } from 'sse.js'
-import { loginMode } from '@/main'
 
 const md = new MarkdownIt({
 	html: true, // 启用 HTML 标签解析
@@ -235,61 +232,63 @@ defineProps({
 		default: false
 	}
 })
-let chatSSEClient: SSE
+let chatWebsocketClient: WebSocket
 const sendMessage = (msg?: string) => {
 	if (!isWaiting.value) {
-		if (msg) {
-			inputMessage.value = msg
-		}
-		if (inputMessage.value.trim()) {
-			isWaiting.value = true
-			scrollToBottom()
-			const message: MessageDto = {
-				index: messageContext.value.length,
-				content: inputMessage.value,
-				role: 'user'
+		getNewContextId().then(() => {
+			if (msg) {
+				inputMessage.value = msg
 			}
-			messageContext.value.push(message)
-			inputMessage.value = ''
-			const chatRequestDto: ChatRequestDto = {
-				contextId: contextId.value,
-				messages: messageContext.value
-			}
-			chatSSEClient = chatSSEClientApi(chatRequestDto)
-			// 连接打开时的处理
-			chatSSEClient.onopen = () => {
-				keepAliveWsClient = openChatKeepAliveWsClient(contextId.value)
-				if (isNewLlmResponse.value) {
-					messageContext.value.push({
-						index: messageContext.value.length,
-						role: 'assistant',
-						content: ''
-					})
-					isNewLlmResponse.value = false
-				}
+			if (inputMessage.value.trim()) {
+				isWaiting.value = true
 				scrollToBottom()
-			}
-			// 接收新消息通知
-			chatSSEClient.onmessage = (event) => {
-				try {
-					const chatResponseDto: ChatResponseDto = JSON.parse(event.data)
-					handleChatResponse(chatResponseDto)
-				} catch (error) {
-					console.error('解析SSE消息失败:', error)
+				const message: MessageDto = {
+					index: messageContext.value.length,
+					content: inputMessage.value,
+					role: 'user'
+				}
+				messageContext.value.push(message)
+				inputMessage.value = ''
+				const chatRequestDto: ChatRequestDto = {
+					contextId: contextId.value,
+					messages: messageContext.value
+				}
+				chatWebsocketClient = chatWebsocketClientApi(contextId.value)
+				// 连接打开时的处理
+				chatWebsocketClient.onopen = () => {
+					chatWebsocketClient.send(JSON.stringify(chatRequestDto))
+					if (isNewLlmResponse.value) {
+						messageContext.value.push({
+							index: messageContext.value.length,
+							role: 'assistant',
+							content: ''
+						})
+						isNewLlmResponse.value = false
+					}
+					scrollToBottom()
+				}
+				// 接收新消息通知
+				chatWebsocketClient.onmessage = (event) => {
+					try {
+						const chatResponseDto: ChatResponseDto = JSON.parse(event.data)
+						handleChatResponse(chatResponseDto)
+					} catch (error) {
+						console.error('解析SSE消息失败:', error)
+					}
+				}
+				// 错误处理
+				chatWebsocketClient.onerror = (error: any) => {
+					if (error.responseCode === 401) {
+						window.location.assign('/#/login')
+					} else if (error.responseCode !== 0) {
+						console.error(error)
+						ElMessage.error(t('ai.assistant.service.unavailable'))
+						isWaiting.value = false
+						isNewLlmResponse.value = true
+					}
 				}
 			}
-			// 错误处理
-			chatSSEClient.onerror = (error: any) => {
-				if (error.responseCode === 401) {
-					window.location.assign('/#/login')
-				} else if (error.responseCode !== 0) {
-					console.error(error)
-					ElMessage.error(t('ai.assistant.service.unavailable'))
-					isWaiting.value = false
-					isNewLlmResponse.value = true
-				}
-			}
-		}
+		})
 	} else {
 		ElMessage.info(t('ai.assistant.waiting'))
 	}
@@ -323,7 +322,7 @@ const handleChatResponse = (chatResponseDto: ChatResponseDto) => {
 				isWaiting.value = false
 				isNewLlmResponse.value = true
 				nextTick(() => {
-					chatSSEClient.close()
+					chatWebsocketClient.close()
 					if (
 						keepAliveWsClient &&
 						keepAliveWsClient.readyState === keepAliveWsClient.OPEN
@@ -448,8 +447,8 @@ const historyChat = (historyId) => {
 const interruptChat = () => {
 	isWaiting.value = false
 	isNewLlmResponse.value = true
-	if (chatSSEClient) {
-		chatSSEClient.close()
+	if (chatWebsocketClient) {
+		chatWebsocketClient.close()
 	}
 	if (
 		keepAliveWsClient &&
@@ -738,6 +737,7 @@ defineExpose({
 				bottom: 16px;
 				background: rgba(255, 255, 255, 0);
 			}
+
 			:deep(.el-textarea__inner) {
 				resize: none;
 				background: color-mix(
@@ -859,88 +859,109 @@ defineExpose({
 
 /* Markdown样式 */
 /* 标题 */
-.message-content :deep(h1) {
-	font-size: var(--n-font-size-6);
-	margin-bottom: calc(var(--n-font-size-6) / 2);
-}
+.message-content {
+	:deep(h1) {
+		font-size: var(--n-font-size-6);
+		margin-bottom: calc(var(--n-font-size-6) / 2);
+	}
 
-.message-content :deep(h2) {
-	font-size: var(--n-font-size-5);
-	margin-bottom: calc(var(--n-font-size-5) / 2);
-}
+	:deep(h2) {
+		font-size: var(--n-font-size-5);
+		margin-bottom: calc(var(--n-font-size-5) / 2);
+	}
 
-.message-content :deep(h3) {
-	font-size: var(--n-font-size-4);
-	margin-bottom: calc(var(--n-font-size-4) / 2);
-}
+	:deep(h3) {
+		font-size: var(--n-font-size-4);
+		margin-bottom: calc(var(--n-font-size-4) / 2);
+	}
 
-.message-content :deep(h4) {
-	font-size: var(--n-font-size-3);
-	margin-bottom: calc(var(--n-font-size-3) / 2);
-}
+	:deep(h4) {
+		font-size: var(--n-font-size-3);
+		margin-bottom: calc(var(--n-font-size-3) / 2);
+	}
 
-.message-content :deep(h5) {
-	font-size: var(--n-font-size-2);
-	margin-bottom: calc(var(--n-font-size-2) / 2);
-}
+	:deep(h5) {
+		font-size: var(--n-font-size-2);
+		margin-bottom: calc(var(--n-font-size-2) / 2);
+	}
 
-.message-content :deep(h6) {
-	font-size: var(--n-font-size-1);
-	margin-bottom: calc(var(--n-font-size-1) / 2);
-}
+	:deep(h6) {
+		font-size: var(--n-font-size-1);
+		margin-bottom: calc(var(--n-font-size-1) / 2);
+	}
 
-/* 有序列表 */
-.message-content :deep(ol) {
-	list-style: none; /* 移除默认的列表样式 */
-	padding-left: calc(3 * var(--n-font-size-2));
-}
+	/* 有序列表 */
+	:deep(ol) {
+		list-style: none; /* 移除默认的列表样式 */
+		padding-left: calc(3 * var(--n-font-size-2));
+	}
 
-.message-content :deep(ol li) {
-	list-style: decimal;
-}
+	:deep(ol li) {
+		list-style: decimal;
+	}
 
-/* 无序列表 */
-.message-content :deep(ul) {
-	padding-left: calc(3 * var(--n-font-size-2));
-}
+	/* 无序列表 */
+	:deep(ul) {
+		padding-left: calc(3 * var(--n-font-size-2));
+	}
 
-.message-content :deep(ul li) {
-	list-style: disc;
-}
+	:deep(ul li) {
+		list-style: disc;
+	}
 
-/* 链接 */
-.message-content :deep(a) {
-	color: #2b6afd;
-	text-decoration: none;
-}
+	/* 链接 */
+	:deep(a) {
+		color: #2b6afd;
+		text-decoration: none;
+	}
 
-.message-content :deep(a:hover) {
-	text-decoration: underline;
-}
+	:deep(a:hover) {
+		text-decoration: underline;
+	}
 
-/* 代码 */
-.message-content :deep(code) {
-	background-color: #d4d4d4; /* 深色背景 */
-	padding: 3px;
-	border-radius: 4px;
-	font-family: 'Courier New', Courier, monospace;
-	white-space: pre-wrap; /* 保留空白符序列，但是正常地进行换行 */
-	word-wrap: break-word; /* 在长单词或 URL 地址内部进行换行 */
-}
+	/* 代码 */
+	:deep(code) {
+		background-color: #d4d4d4; /* 深色背景 */
+		padding: 3px;
+		border-radius: 4px;
+		font-family: 'Courier New', Courier, monospace;
+		white-space: pre-wrap; /* 保留空白符序列，但是正常地进行换行 */
+		word-wrap: break-word; /* 在长单词或 URL 地址内部进行换行 */
+	}
 
-.message-content :deep(pre) {
-	background-color: #1e1e1e;
-	color: #e0e0e0; /* 浅色文字 */
-	padding: 1em;
-	margin: 10px 0 10px 0;
-	border-radius: 4px;
-	overflow-x: auto;
-	font-family: monospace;
-}
+	:deep(pre) {
+		background-color: #1e1e1e;
+		color: #e0e0e0; /* 浅色文字 */
+		padding: 1em;
+		margin: 10px 0 10px 0;
+		border-radius: 4px;
+		overflow-x: auto;
+		font-family: monospace;
+	}
 
-.message-content :deep(pre code) {
-	background-color: transparent;
-	padding: 0;
+	:deep(pre code) {
+		background-color: transparent;
+		padding: 0;
+	}
+
+	:deep(img) {
+		max-width: 100%; /* 限制不超过父容器宽度 */
+		height: auto; /* 保持原始比例 */
+		display: block; /* 避免inline元素的底部间隙 */
+	}
+
+	:deep(table.md-table) {
+		border-collapse: collapse;
+		width: 100%;
+		margin: 10px 0;
+	}
+
+	:deep(th.md-th),
+	:deep(td.md-td) {
+		border: 1px solid var(--n-color-neutral-b);
+		padding: 8px 12px;
+		text-align: left;
+	}
 }
 
 .scroll-to-bottom-button {
