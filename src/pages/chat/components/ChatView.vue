@@ -191,6 +191,7 @@ import {
 	checkApCenterApi,
 	getHistoryContext,
 	getNewContextId,
+	getQaTemplate,
 	storageChatContextApi
 } from '@/api/ai.api'
 
