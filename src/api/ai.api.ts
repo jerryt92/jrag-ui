@@ -1,12 +1,10 @@
 import {
 	ChatContextDto,
-	ChatRequestDto,
 	ContextIdDto,
 	HistoryContextItem,
 	HistoryContextList,
 	MessageFeedbackRequest
 } from '@/types/ai.types'
-import { SSE } from 'sse.js'
 import http from '@jrag/http/loginInterceptor'
 import { loginMode } from '@/main'
 
@@ -61,14 +59,12 @@ export const storageChatContextApi = (chatContextDto: ChatContextDto) => {
 	return Promise.resolve()
 }
 
-export const chatSSEClientApi = (chatRequestDto: ChatRequestDto): SSE => {
-	return new SSE('/v1/rest/jrag/chat', {
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		method: 'POST',
-		payload: JSON.stringify(chatRequestDto)
-	})
+export const chatWebsocketClientApi = (contextId: string): WebSocket => {
+	return new WebSocket(
+		window.location.origin.replace('http', 'ws') +
+		'/ws/jrag/chat?context-id=' +
+		contextId
+	)
 }
 
 /**

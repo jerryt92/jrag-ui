@@ -158,14 +158,12 @@ import {
 import { t } from '@jrag/lib'
 import {
 	addMessageFeedback,
-	chatSSEClientApi,
+	chatWebsocketClientApi,
 	checkApCenterApi,
 	getHistoryContext,
 	getNewContextId,
-	openChatKeepAliveWsClient,
 	storageChatContextApi
 } from '@/api/ai.api'
-import { SSE } from 'sse.js'
 
 const md = new MarkdownIt({
 	html: true, // 启用 HTML 标签解析
@@ -224,61 +222,63 @@ defineProps({
 		default: false
 	}
 })
-let chatSSEClient: SSE
+let chatWebsocketClient: WebSocket
 const sendMessage = (msg?: string) => {
 	if (!isWaiting.value) {
-		if (msg) {
-			inputMessage.value = msg
-		}
-		if (inputMessage.value.trim()) {
-			isWaiting.value = true
-			scrollToBottom()
-			const message: MessageDto = {
-				index: messageContext.value.length,
-				content: inputMessage.value,
-				role: 'user'
+		getNewContextId().then(() => {
+			if (msg) {
+				inputMessage.value = msg
 			}
-			messageContext.value.push(message)
-			inputMessage.value = ''
-			const chatRequestDto: ChatRequestDto = {
-				contextId: contextId.value,
-				messages: messageContext.value
-			}
-			chatSSEClient = chatSSEClientApi(chatRequestDto)
-			// 连接打开时的处理
-			chatSSEClient.onopen = () => {
-				keepAliveWsClient = openChatKeepAliveWsClient(contextId.value)
-				if (isNewLlmResponse.value) {
-					messageContext.value.push({
-						index: messageContext.value.length,
-						role: 'assistant',
-						content: ''
-					})
-					isNewLlmResponse.value = false
-				}
+			if (inputMessage.value.trim()) {
+				isWaiting.value = true
 				scrollToBottom()
-			}
-			// 接收新消息通知
-			chatSSEClient.onmessage = (event) => {
-				try {
-					const chatResponseDto: ChatResponseDto = JSON.parse(event.data)
-					handleChatResponse(chatResponseDto)
-				} catch (error) {
-					console.error('解析SSE消息失败:', error)
+				const message: MessageDto = {
+					index: messageContext.value.length,
+					content: inputMessage.value,
+					role: 'user'
+				}
+				messageContext.value.push(message)
+				inputMessage.value = ''
+				const chatRequestDto: ChatRequestDto = {
+					contextId: contextId.value,
+					messages: messageContext.value
+				}
+				chatWebsocketClient = chatWebsocketClientApi(contextId.value)
+				// 连接打开时的处理
+				chatWebsocketClient.onopen = () => {
+					chatWebsocketClient.send(JSON.stringify(chatRequestDto))
+					if (isNewLlmResponse.value) {
+						messageContext.value.push({
+							index: messageContext.value.length,
+							role: 'assistant',
+							content: ''
+						})
+						isNewLlmResponse.value = false
+					}
+					scrollToBottom()
+				}
+				// 接收新消息通知
+				chatWebsocketClient.onmessage = (event) => {
+					try {
+						const chatResponseDto: ChatResponseDto = JSON.parse(event.data)
+						handleChatResponse(chatResponseDto)
+					} catch (error) {
+						console.error('解析SSE消息失败:', error)
+					}
+				}
+				// 错误处理
+				chatWebsocketClient.onerror = (error: any) => {
+					if (error.responseCode === 401) {
+						window.location.assign('/#/login')
+					} else if (error.responseCode !== 0) {
+						console.error(error)
+						ElMessage.error(t('ai.assistant.service.unavailable'))
+						isWaiting.value = false
+						isNewLlmResponse.value = true
+					}
 				}
 			}
-			// 错误处理
-			chatSSEClient.onerror = (error: any) => {
-				if (error.responseCode === 401) {
-					window.location.assign('/#/login')
-				} else if (error.responseCode !== 0) {
-					console.error(error)
-					ElMessage.error(t('ai.assistant.service.unavailable'))
-					isWaiting.value = false
-					isNewLlmResponse.value = true
-				}
-			}
-		}
+		})
 	} else {
 		ElMessage.info(t('ai.assistant.waiting'))
 	}
@@ -312,7 +312,7 @@ const handleChatResponse = (chatResponseDto: ChatResponseDto) => {
 				isWaiting.value = false
 				isNewLlmResponse.value = true
 				nextTick(() => {
-					chatSSEClient.close()
+					chatWebsocketClient.close()
 					if (
 						keepAliveWsClient &&
 						keepAliveWsClient.readyState === keepAliveWsClient.OPEN
@@ -429,8 +429,8 @@ const historyChat = (historyId) => {
 const interruptChat = () => {
 	isWaiting.value = false
 	isNewLlmResponse.value = true
-	if (chatSSEClient) {
-		chatSSEClient.close()
+	if (chatWebsocketClient) {
+		chatWebsocketClient.close()
 	}
 	if (
 		keepAliveWsClient &&
