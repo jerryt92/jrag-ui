@@ -182,6 +182,25 @@ md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
 	tokens[idx].attrPush(['target', '_blank']) // 添加 target="_blank"
 	return self.renderToken(tokens, idx, options)
 }
+// 添加表格渲染支持
+md.renderer.rules.table_open = function () {
+	return '<table class="md-table">'
+}
+md.renderer.rules.thead_open = function () {
+	return '<thead class="md-thead">'
+}
+md.renderer.rules.tbody_open = function () {
+	return '<tbody class="md-tbody">'
+}
+md.renderer.rules.tr_open = function () {
+	return '<tr class="md-tr">'
+}
+md.renderer.rules.th_open = function () {
+	return '<th class="md-th">'
+}
+md.renderer.rules.td_open = function () {
+	return '<td class="md-td">'
+}
 
 const showChatManage = ref(false)
 const chatManageRef = ref(null)
@@ -302,7 +321,10 @@ const handleChatResponse = (chatResponseDto: ChatResponseDto) => {
 					}
 				})
 			} else {
-				if (chatResponseDto.message.srcFile && chatResponseDto.message.srcFile.length > 0) {
+				if (
+					chatResponseDto.message.srcFile &&
+					chatResponseDto.message.srcFile.length > 0
+				) {
 					messageContext.value[messageContext.value.length - 1].srcFile =
 						chatResponseDto.message.srcFile
 				}
@@ -702,6 +724,7 @@ defineExpose({
 				bottom: 16px;
 				background: rgba(255, 255, 255, 0);
 			}
+
 			:deep(.el-textarea__inner) {
 				resize: none;
 				background: color-mix(
@@ -773,6 +796,7 @@ defineExpose({
 
 	.ai-chat-logo {
 		background-color: #7eaaff;
+
 		img {
 			width: 100%;
 			height: 100%;
@@ -823,88 +847,109 @@ defineExpose({
 
 /* Markdown样式 */
 /* 标题 */
-.message-content :deep(h1) {
-	font-size: var(--n-font-size-6);
-	margin-bottom: calc(var(--n-font-size-6) / 2);
-}
+.message-content {
+	:deep(h1) {
+		font-size: var(--n-font-size-6);
+		margin-bottom: calc(var(--n-font-size-6) / 2);
+	}
 
-.message-content :deep(h2) {
-	font-size: var(--n-font-size-5);
-	margin-bottom: calc(var(--n-font-size-5) / 2);
-}
+	:deep(h2) {
+		font-size: var(--n-font-size-5);
+		margin-bottom: calc(var(--n-font-size-5) / 2);
+	}
 
-.message-content :deep(h3) {
-	font-size: var(--n-font-size-4);
-	margin-bottom: calc(var(--n-font-size-4) / 2);
-}
+	:deep(h3) {
+		font-size: var(--n-font-size-4);
+		margin-bottom: calc(var(--n-font-size-4) / 2);
+	}
 
-.message-content :deep(h4) {
-	font-size: var(--n-font-size-3);
-	margin-bottom: calc(var(--n-font-size-3) / 2);
-}
+	:deep(h4) {
+		font-size: var(--n-font-size-3);
+		margin-bottom: calc(var(--n-font-size-3) / 2);
+	}
 
-.message-content :deep(h5) {
-	font-size: var(--n-font-size-2);
-	margin-bottom: calc(var(--n-font-size-2) / 2);
-}
+	:deep(h5) {
+		font-size: var(--n-font-size-2);
+		margin-bottom: calc(var(--n-font-size-2) / 2);
+	}
 
-.message-content :deep(h6) {
-	font-size: var(--n-font-size-1);
-	margin-bottom: calc(var(--n-font-size-1) / 2);
-}
+	:deep(h6) {
+		font-size: var(--n-font-size-1);
+		margin-bottom: calc(var(--n-font-size-1) / 2);
+	}
 
-/* 有序列表 */
-.message-content :deep(ol) {
-	list-style: none; /* 移除默认的列表样式 */
-	padding-left: calc(3 * var(--n-font-size-2));
-}
+	/* 有序列表 */
+	:deep(ol) {
+		list-style: none; /* 移除默认的列表样式 */
+		padding-left: calc(3 * var(--n-font-size-2));
+	}
 
-.message-content :deep(ol li) {
-	list-style: decimal;
-}
+	:deep(ol li) {
+		list-style: decimal;
+	}
 
-/* 无序列表 */
-.message-content :deep(ul) {
-	padding-left: calc(3 * var(--n-font-size-2));
-}
+	/* 无序列表 */
+	:deep(ul) {
+		padding-left: calc(3 * var(--n-font-size-2));
+	}
 
-.message-content :deep(ul li) {
-	list-style: disc;
-}
+	:deep(ul li) {
+		list-style: disc;
+	}
 
-/* 链接 */
-.message-content :deep(a) {
-	color: #2b6afd;
-	text-decoration: none;
-}
+	/* 链接 */
+	:deep(a) {
+		color: #2b6afd;
+		text-decoration: none;
+	}
 
-.message-content :deep(a:hover) {
-	text-decoration: underline;
-}
+	:deep(a:hover) {
+		text-decoration: underline;
+	}
 
-/* 代码 */
-.message-content :deep(code) {
-	background-color: #d4d4d4; /* 深色背景 */
-	padding: 3px;
-	border-radius: 4px;
-	font-family: 'Courier New', Courier, monospace;
-	white-space: pre-wrap; /* 保留空白符序列，但是正常地进行换行 */
-	word-wrap: break-word; /* 在长单词或 URL 地址内部进行换行 */
-}
+	/* 代码 */
+	:deep(code) {
+		background-color: #d4d4d4; /* 深色背景 */
+		padding: 3px;
+		border-radius: 4px;
+		font-family: 'Courier New', Courier, monospace;
+		white-space: pre-wrap; /* 保留空白符序列，但是正常地进行换行 */
+		word-wrap: break-word; /* 在长单词或 URL 地址内部进行换行 */
+	}
 
-.message-content :deep(pre) {
-	background-color: #1e1e1e;
-	color: #e0e0e0; /* 浅色文字 */
-	padding: 1em;
-	margin: 10px 0 10px 0;
-	border-radius: 4px;
-	overflow-x: auto;
-	font-family: monospace;
-}
+	:deep(pre) {
+		background-color: #1e1e1e;
+		color: #e0e0e0; /* 浅色文字 */
+		padding: 1em;
+		margin: 10px 0 10px 0;
+		border-radius: 4px;
+		overflow-x: auto;
+		font-family: monospace;
+	}
 
-.message-content :deep(pre code) {
-	background-color: transparent;
-	padding: 0;
+	:deep(pre code) {
+		background-color: transparent;
+		padding: 0;
+	}
+
+	:deep(img) {
+		max-width: 100%; /* 限制不超过父容器宽度 */
+		height: auto; /* 保持原始比例 */
+		display: block; /* 避免inline元素的底部间隙 */
+	}
+
+	:deep(table.md-table) {
+		border-collapse: collapse;
+		width: 100%;
+		margin: 10px 0;
+	}
+
+	:deep(th.md-th),
+	:deep(td.md-td) {
+		border: 1px solid var(--n-color-neutral-b);
+		padding: 8px 12px;
+		text-align: left;
+	}
 }
 
 .scroll-to-bottom-button {
