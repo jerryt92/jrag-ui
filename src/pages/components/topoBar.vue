@@ -1,6 +1,6 @@
 <template>
 	<div class="top-bar">
-		<h3 class="tittle" @click="goToHome">🤖 Jrag AI</h3>
+		<h3 class="tittle" @click="goToHome">🤖 数据通信百科助手</h3>
 		<div class="menu-button-box">
 			<slot name="external-menu">
 			</slot>
