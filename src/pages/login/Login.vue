@@ -56,10 +56,9 @@ import {
 	ElInput,
 	ElMessage
 } from 'element-plus'
-import { login } from '@/api/login.api'
+import { getLoginMode, login } from '@/api/login.api'
 import SlipCaptcha from '@/pages/login/components/SlipCaptcha.vue'
 import { t } from '@jrag/lib'
-import { loginMode } from '@/main'
 
 const router = useRouter()
 const slideCaptchaRef = ref()
@@ -67,7 +66,7 @@ const loading = ref<boolean>(false)
 const captchaDialogShow = ref<boolean>(false)
 
 onMounted(() => {
-	if (loginMode === 'public') {
+	if (getLoginMode() === 'public') {
 		router.push('/')
 	}
 })

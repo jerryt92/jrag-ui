@@ -11,7 +11,7 @@
 				<h3>{{ t('ai.assistant') }}</h3>
 				<p>{{ t('ai.assistant.desc') }}</p>
 			</div>
-			<div class="feature-card" @click="goTo('/kb')" v-show="loginMode === 'user'">
+			<div class="feature-card" @click="goTo('/kb')" v-show="getLoginMode() === 'user'">
 				<div class="card-icon">📚</div>
 				<h3>{{ t('kb.knowledge.base') }}</h3>
 				<p>{{ t('kb.management') }}</p>
@@ -24,8 +24,8 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { debounce, t } from '@jrag/lib'
 import { checkApCenterApi } from '@/api/ai.api'
-import { loginMode } from '@/main'
 import TopoBar from '@/pages/components/topoBar.vue'
+import { getLoginMode } from '@/api/login.api'
 
 const route = useRoute()
 const isFullscreen = ref(true)
