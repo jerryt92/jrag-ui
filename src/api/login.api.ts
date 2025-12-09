@@ -1,11 +1,21 @@
 import http from '@jrag/http/loginInterceptor'
 
-export const getMode = () => {
+export const loadLoginMode = () => {
+	getLoginModeApi().then(res => {
+		localStorage.setItem('login-mode', res.data.mode);
+	})
+}
+
+const getLoginModeApi = () => {
 	return http.get<
 		{
 			mode: 'public' | 'user'
 		}
 	>('/v1/auth/jrag/mode')
+}
+
+export const getLoginMode = () => {
+	return localStorage.getItem('login-mode')
 }
 
 export const login = (

@@ -19,7 +19,7 @@
 				<li class="menu-card-item" @click="hrefTo('/chat/assistant')">
 					{{ '🤖 ' + t('ai.assistant') }}
 				</li>
-				<span v-if="loginMode === 'user'">
+				<span v-if="getLoginMode() === 'user'">
 					<li class="menu-card-item" @click="hrefTo('/kb')">
 						{{ '📚 ' + t('kb.knowledge.base') }}
 					</li>
@@ -36,7 +36,7 @@
 						>🌓 {{ t('dark.mode.auto') }}</span
 					>
 				</li>
-				<span v-if="loginMode === 'user'">
+				<span v-if="getLoginMode() === 'user'">
 					<hr />
 					<li class="menu-card-item" @click="hrefTo('/logout')">
 						{{ '⏏️ ' + t('logout') }}
@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import { t } from '@jrag/lib'
 import { ref, onUnmounted, watch, onMounted } from 'vue'
-import { loginMode } from '@/main'
+import { getLoginMode } from '@/api/login.api'
 
 defineExpose({
 	show
