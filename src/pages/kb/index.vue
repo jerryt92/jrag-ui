@@ -1,39 +1,7 @@
 <template>
 	<div class="layout-container">
-		<div class="top-bar">
-			<h3>🤖 Jrag AI</h3>
-			<div class="menu-button-box">
-				<span
-					class="menu-button"
-					:class="{ active: showMenuCard }"
-					@click="handleMenuCard"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="feather feather-menu"
-					>
-						<line x1="3" y1="12" x2="21" y2="12"></line>
-						<line x1="3" y1="6" x2="21" y2="6"></line>
-						<line x1="3" y1="18" x2="21" y2="18"></line>
-					</svg>
-				</span>
-			</div>
-		</div>
-
+		<topo-bar/>
 		<div class="content-wrapper">
-			<MenuCard
-				ref="menuCardRef"
-				class="menu-card"
-				@show-change="showMenuCard = $event"
-			/>
 			<!-- 左侧导航栏 -->
 			<el-menu
 				:default-active="activeMenuItem"
@@ -67,10 +35,9 @@
 import { ref, shallowRef } from 'vue'
 import { ElMenu, ElMenuItem } from 'element-plus'
 import KnowledgeBase from '@/pages/kb/KnowledgeBase.vue'
-import MenuCard from '@/pages/components/menuCard.vue'
 import { t } from '@jrag/lib'
 import MarkdownUpload from '@/pages/kb/MarkdownUpload.vue'
-const menuCardRef = ref(null)
+import TopoBar from '@/pages/components/topoBar.vue'
 // 侧边栏状态
 const isSidebarCollapsed = ref(false)
 const activeMenuItem = ref('1-1')
@@ -107,10 +74,6 @@ const handleMenuSelect = (key: string, keyPath: string[]) => {
 			currentComponent.value = KnowledgeBase
 	}
 }
-
-const handleMenuCard = () => {
-	menuCardRef.value.show()
-}
 </script>
 
 <style scoped lang="scss">
@@ -120,53 +83,6 @@ const handleMenuCard = () => {
 	height: 100vh;
 	overflow: hidden;
 
-	.top-bar {
-		position: relative;
-		height: 50px;
-		background: color-mix(in srgb, var(--n-color-neutral-w), transparent 80%);
-		backdrop-filter: blur(10px);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-		box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 0 20px;
-		z-index: 100;
-
-		h3 {
-			font-size: 20px;
-			font-weight: 500;
-			color: var(--n-color-font-dark);
-			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		}
-
-		.menu-button-box {
-			.menu-button {
-				font-size: 24px;
-				cursor: pointer;
-				width: 36px;
-				height: 36px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				color: #666;
-				border-radius: 8px;
-				transition: all 0.3s;
-
-				&:hover {
-					background-color: rgba(0, 0, 0, 0.05);
-				}
-			}
-		}
-	}
-
-	.menu-card {
-		position: fixed;
-		top: 60px;
-		right: 10px;
-		z-index: 100;
-	}
-
 	.content-wrapper {
 		display: flex;
 		flex: 1;
@@ -174,6 +90,7 @@ const handleMenuCard = () => {
 
 		// 侧边栏样式
 		:deep(.el-menu) {
+			padding-top: 60px;
 			border-right: none;
 			height: 100%;
 			// 添加与 MenuCard 相似的背景和边框样式
