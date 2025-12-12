@@ -288,6 +288,22 @@ const sendMessage = (msg?: string) => {
 						isNewLlmResponse.value = true
 					}
 				}
+				// 连接关闭的处理
+				chatWebsocketClient.onclose = () => {
+					if (isWaiting.value) {
+						const errorRes: ChatResponseDto = {
+							message: {
+								index: messageContext.value.length,
+								role: 'assistant',
+								content: t('ai.assistant.service.unavailable'),
+							},
+							done: true,
+							contextId: contextId.value,
+						};
+						handleChatResponse(errorRes)
+						interruptChat();
+					}
+				};
 			}
 		})
 	} else {
