@@ -2,15 +2,15 @@ import type { App as VueApp, Component, Plugin, Ref } from 'vue'
 import { createApp, ref } from 'vue'
 import type { Router, RouteRecordRaw } from 'vue-router'
 import defaultRootComponent from './App.vue'
-import type { LangLoader } from '@jrag/locale'
-import { locale, t } from '@jrag/locale'
+import type { LangLoader } from '@ai-system/locale'
+import { locale, t } from '@ai-system/locale'
 import { createWebRouter } from './router'
 import {
 	eventbus,
 	getLangStorage,
 	setLangStorage,
 	wrapFunction
-} from '@jrag/utils'
+} from '@ai-system/utils'
 
 declare global {
 	interface Window {

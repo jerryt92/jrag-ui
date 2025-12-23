@@ -1,11 +1,10 @@
 import routes from './routes'
 import langLoaders from './locale'
-import { App } from '@jrag/lib'
+import { App } from '@ai-system/lib'
 import { ElLoading } from 'element-plus'
-import { useDarkMode } from '@jrag/hooks'
+import { useDarkMode } from '@ai-system/hooks'
 
 import './styles/index.scss'
-import { loadLoginMode } from '@/api/login.api'
 
 async function APP() {
 	const app = new App({
@@ -29,6 +28,6 @@ async function APP() {
 	// 挂载应用
 	app.mount('#app')
 	console.log('---->main app')
-	loadLoginMode()
 }
+
 APP()

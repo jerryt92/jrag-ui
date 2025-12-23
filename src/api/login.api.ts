@@ -1,22 +1,5 @@
-import http from '@jrag/http/loginInterceptor'
-
-export const loadLoginMode = () => {
-	getLoginModeApi().then(res => {
-		localStorage.setItem('login-mode', res.data.mode);
-	})
-}
-
-const getLoginModeApi = () => {
-	return http.get<
-		{
-			mode: 'public' | 'user'
-		}
-	>('/v1/auth/jrag/mode')
-}
-
-export const getLoginMode = () => {
-	return localStorage.getItem('login-mode')
-}
+import http from '@ai-system/http/loginInterceptor'
+import { globalUrlPrefix, programTag } from '@/oem.js'
 
 export const login = (
 	username: string,
@@ -24,7 +7,7 @@ export const login = (
 	validateCode: string,
 	hash: string
 ) => {
-	return http.post('/v1/auth/jrag/login', {
+	return http.post(`/v1${globalUrlPrefix}auth/${programTag}/login`, {
 		username,
 		password,
 		validateCode,
@@ -33,5 +16,5 @@ export const login = (
 }
 
 export const logout = () => {
-	return http.get('/v1/auth/jrag/logout')
+	return http.get(`/v1${globalUrlPrefix}auth/${programTag}/logout`)
 }

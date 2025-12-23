@@ -1,5 +1,5 @@
 {
-  "name": "jrag-web",
+  "name": "ai-system-ui",
   "private": true,
   "version": "1.0.22-dev3.1.4",
   "type": "module",
@@ -25,7 +25,6 @@
     "mitt": "^3.0.0",
     "qs": "^6.11.2",
     "sass": "^1.84.0",
-    "sse.js": "^2.6.0",
     "vue": "^3.5.15",
     "vue-baidu-map-3x": "^1.0.35",
     "vue-diff": "^1.2.4",

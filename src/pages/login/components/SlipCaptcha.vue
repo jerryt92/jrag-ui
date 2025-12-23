@@ -61,7 +61,8 @@
 import { ref, onMounted, reactive, onDeactivated, watch } from 'vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { t } from '@jrag/lib'
+import { t } from '@ai-system/lib'
+import { globalUrlPrefix } from '../../../oem.js'
 
 const isLoading = ref(false)
 
@@ -172,7 +173,7 @@ function updateSlideInfo() {
 			sliderUrl: string
 			sliderSize: number
 			sliderY: number
-		}>('/v1/auth/captcha/slide?' + new Date().getTime())
+		}>(`/v1${globalUrlPrefix}auth/captcha/slide?` + new Date().getTime())
 		.then((res) => {
 			slideInfo.value.hash = res.data.hash
 			slideInfo.value.puzzleUrl = res.data.puzzleUrl
@@ -188,7 +189,7 @@ function verifySlideCaptcha(sliderX: number, hash: string) {
 	return axios.get<{
 		result: boolean
 		code: string
-	}>('/v1/auth/captcha/slide/validate', {
+	}>(`/v1${globalUrlPrefix}auth/captcha/slide/validate`, {
 		params: {
 			'slider-x': sliderX,
 			hash
@@ -276,6 +277,14 @@ onDeactivated(() => {
 		.puzzle-image {
 			border-radius: 4px;
 		}
+
+		.slider-block {
+			z-index: 2;
+			border-radius: 4px;
+			will-change: transform;
+			backface-visibility: hidden;
+			transform: translateZ(0);
+		}
 	}
 
 	@keyframes result-show {
@@ -338,7 +347,11 @@ onDeactivated(() => {
 		left: 0;
 		height: 35px;
 		width: 35px;
-		background-color: var(--el-color-primary);
+		background-color: color-mix(
+			in srgb,
+			var(--el-color-primary),
+			transparent 10%
+		);
 		cursor: pointer;
 		z-index: 11;
 		user-select: none;
@@ -348,7 +361,7 @@ onDeactivated(() => {
 		&:hover,
 		&:active {
 			background-color: var(--el-color-primary);
-			box-shadow: 0 0 5px var(--el-color-primary);
+			box-shadow: 0 0 10px var(--el-color-primary);
 		}
 	}
 }

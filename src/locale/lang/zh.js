@@ -2,11 +2,25 @@ import zhAi from './chat/zh-ai.js'
 import zhKb from './knowledgeBase/zh-kb.js'
 
 export default {
-  'common.submit': '提交',
+	'common.submit': '提交',
 	'common.delete': '删除',
 	'common.cancel': '取消',
+	'common.edit': '编辑',
+	'common.refresh': '刷新',
 	'common.ok': '确定',
+	'common.success': '成功',
+	'common.fail': '失败',
 	'common.system.options': '系统菜单',
+	'common.add': '新增',
+	'common.search': '搜索',
+	'common.placeholder': '请输入内容',
+	'common.search.placeholder.keyword': '请输入关键字',
+	'common.input.required': '请输入内容',
+	'common.yes': '是',
+	'common.no': '否',
+	'common.selected.file': '已选择文件',
+	'common.create.time': '创建时间',
+	'common.update.time': '更新时间',
 	'homepage': '首页',
 	'login.fail': '用户名或密码错误',
 	'captcha.tip': '请拖动滑块对齐图像以登录',
@@ -16,5 +30,5 @@ export default {
 	'dark.mode.dark': '深色',
 	'dark.mode.auto': '自动',
 	...zhAi,
-	...zhKb,
+	...zhKb
 }

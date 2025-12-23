@@ -15,7 +15,7 @@
 					{{ t('kb.knowledge.list') }}
 				</el-menu-item>
 				<el-menu-item index="2">
-					{{ t('kb.knowledge.upload.markdown') }}
+					{{ t('kb.knowledge.hit.test') }}
 				</el-menu-item>
 			</el-menu>
 			<!-- 主内容区域 -->
@@ -34,16 +34,16 @@
 <script setup lang="ts">
 import { ref, shallowRef } from 'vue'
 import { ElMenu, ElMenuItem } from 'element-plus'
-import KnowledgeBase from '@/pages/kb/KnowledgeBase.vue'
-import { t } from '@jrag/lib'
-import MarkdownUpload from '@/pages/kb/MarkdownUpload.vue'
+import KnowledgeBaseList from '@/pages/kb/pages/KnowledgeBaseList.vue'
+import { t } from '@ai-system/lib'
 import TopoBar from '@/pages/components/topoBar.vue'
+import HitTest from '@/pages/kb/pages/HitTest.vue'
 // 侧边栏状态
 const isSidebarCollapsed = ref(false)
-const activeMenuItem = ref('1-1')
+const activeMenuItem = ref('1')
 
 // 当前显示的组件
-const currentComponent = shallowRef(null)
+const currentComponent = shallowRef(KnowledgeBaseList)
 
 // 切换侧边栏显示状态
 const toggleSidebar = () => {
@@ -65,13 +65,13 @@ const handleMenuSelect = (key: string, keyPath: string[]) => {
 	// 根据选择的菜单项切换组件
 	switch (key) {
 		case '1':
-			currentComponent.value = KnowledgeBase
+			currentComponent.value = KnowledgeBaseList
 			break
 		case '2':
-			currentComponent.value = MarkdownUpload
+			currentComponent.value = HitTest
 			break
 		default:
-			currentComponent.value = KnowledgeBase
+			currentComponent.value = KnowledgeBaseList
 	}
 }
 </script>
@@ -119,6 +119,7 @@ const handleMenuSelect = (key: string, keyPath: string[]) => {
 			margin: 5px 5px;
 		}
 		.main-content {
+			padding-top: 50px;
 			flex: 1;
 			display: flex;
 			flex-direction: column;

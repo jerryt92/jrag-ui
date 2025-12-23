@@ -1,4 +1,4 @@
-import { isUndefined, isFunction } from '@jrag/utils'
+import { isUndefined, isFunction } from '@ai-system/utils'
 
 export function memo(fn: (...args: any[]) => any): any {
 	let cacheValue: any

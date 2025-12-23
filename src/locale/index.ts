@@ -1,4 +1,4 @@
-import type { TranslatePair } from '@jrag/locale'
+import type { TranslatePair } from '@ai-system/locale'
 
 export const langLoader =  async (lang: string): Promise<TranslatePair> => {
 	const localePath = `./lang/${lang}.js`
