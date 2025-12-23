@@ -26,8 +26,8 @@
 		"lib": ["es2020", "esnext", "dom"],
 		"paths": {
 			"@/*": ["src/*"],
-			"@jrag/lib": ["lib/index.ts"],
-			"@jrag/*": ["lib/*"]
+			"@ai-system/lib": ["lib/index.ts"],
+			"@ai-system/*": ["lib/*"]
 		}
 	}
 }

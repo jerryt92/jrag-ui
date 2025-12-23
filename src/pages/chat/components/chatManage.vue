@@ -71,7 +71,7 @@ import {
 	ElMessage
 } from 'element-plus'
 import { getHistoryContextList, deleteHistoryContext } from '@/api/ai.api'
-import { t } from '@jrag/lib'
+import { t } from '@ai-system/lib'
 
 const props = defineProps({
 	newChat: {
@@ -139,7 +139,7 @@ const goHistoryChat = (constextId) => {
 const getHistoryListData = () => {
 	getHistoryContextList().then((res) => {
 		historyList.value = res.data.data
-		filterList(searchKey.value, historyList.value)
+		filterList(searchKey.value, res.data.data)
 	})
 }
 

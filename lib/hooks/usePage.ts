@@ -17,7 +17,7 @@ import {
 	s8,
 	routePathToPageName,
 	delUrlParams
-} from '@jrag/utils'
+} from '@ai-system/utils'
 import type { Ref, ComputedRef } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 

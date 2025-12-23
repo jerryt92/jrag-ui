@@ -8,10 +8,11 @@
 
 <script lang="ts" setup>
 import { ElConfigProvider } from 'element-plus'
-import { useElementLocale } from '@jrag/hooks'
+import { useElementLocale } from '@ai-system/hooks'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-
+import { t } from '@ai-system/lib'
+document.getElementsByTagName('title')[0].innerHTML = t('ai.center.title')
 const { elLocale } = useElementLocale()
 
 const route = useRoute()

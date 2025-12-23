@@ -29,7 +29,7 @@
 import ChatView from './components/ChatView.vue'
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { debounce } from '@jrag/lib'
+import { debounce } from '@ai-system/lib'
 import TopoBar from '@/pages/components/topoBar.vue'
 
 const route = useRoute()
@@ -60,6 +60,7 @@ const resize = () => {
 	} /* else if (width < 992) {
 			console.log('平板视图');
 	} */ else {
+		console.log('桌面视图')
 		isMobile.value = false
 		isFullscreen.value = true
 		document.body.style.minWidth = '768px'

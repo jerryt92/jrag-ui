@@ -1,6 +1,6 @@
 import {
 	t
-} from '@jrag/lib'
+} from '@ai-system/lib'
 /**
  * @param {string} path
  * @returns {Boolean}

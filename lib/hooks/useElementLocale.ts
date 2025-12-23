@@ -1,7 +1,7 @@
 import zh from 'element-plus/dist/locale/zh-cn'
 import en from 'element-plus/dist/locale/en'
 import { ref } from 'vue'
-import { memo, getLangStorage } from '@jrag/utils'
+import { memo, getLangStorage } from '@ai-system/utils'
 
 const elLangs = {
 	zh,

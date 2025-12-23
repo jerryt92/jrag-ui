@@ -1,4 +1,4 @@
-import { getPermissionStorage, getPermissionAllStorage } from '@jrag/utils'
+import { getPermissionStorage, getPermissionAllStorage } from '@ai-system/utils'
 
 interface PermissionApi {
 	/**

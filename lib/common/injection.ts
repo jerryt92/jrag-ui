@@ -1,5 +1,5 @@
 import { ElMessageBox, ElMessage, ElLoading } from 'element-plus'
-import { t } from '@jrag/locale'
+import { t } from '@ai-system/locale'
 
 class BaseFeedbackService {
 	error(msg: string): void {

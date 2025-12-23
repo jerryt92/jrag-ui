@@ -3,7 +3,7 @@
 		class="ai-assistant-page"
 		:class="{ 'full-page': isFullscreen, 'mobile-page': isMobile }"
 	>
-		<topo-bar/>
+		<topo-bar />
 		<!-- 功能导航卡片 -->
 		<div class="feature-cards">
 			<div class="feature-card" @click="goTo('/chat/assistant')">
@@ -11,7 +11,7 @@
 				<h3>{{ t('ai.assistant') }}</h3>
 				<p>{{ t('ai.assistant.desc') }}</p>
 			</div>
-			<div class="feature-card" @click="goTo('/kb')" v-show="getLoginMode() === 'user'">
+			<div class="feature-card" @click="goTo('/kb')">
 				<div class="card-icon">📚</div>
 				<h3>{{ t('kb.knowledge.base') }}</h3>
 				<p>{{ t('kb.management') }}</p>
@@ -22,10 +22,9 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { debounce, t } from '@jrag/lib'
-import { checkApCenterApi } from '@/api/ai.api'
+import { debounce, t } from '@ai-system/lib'
 import TopoBar from '@/pages/components/topoBar.vue'
-import { getLoginMode } from '@/api/login.api'
+import { getNewContextId } from '@/api/ai.api'
 
 const route = useRoute()
 const isFullscreen = ref(true)
@@ -42,12 +41,14 @@ const resize = () => {
 		document.body.clientWidth
 
 	if (width < 768 || route.query?.isMobile) {
+		console.log('移动端视图')
 		isMobile.value = true
 		isFullscreen.value = false
 		document.body.style.minWidth = '0px'
 	} /* else if (width < 992) {
-			// 平板视图
+			console.log('平板视图');
 	} */ else {
+		console.log('桌面视图')
 		isMobile.value = false
 		isFullscreen.value = true
 		document.body.style.minWidth = '768px'
@@ -72,7 +73,7 @@ const handleMobileSafariHeight = () => {
 }
 
 onMounted(() => {
-	checkApCenterApi()
+	getNewContextId()
 	resize()
 	handleMobileSafariHeight()
 	window.addEventListener(

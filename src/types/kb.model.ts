@@ -1,0 +1,139 @@
+export interface KnowledgeGetListDto {
+	data?: KnowledgeDto[]
+}
+
+export interface KnowledgeDto {
+	/**
+	 * 知识ID（文本块的SHA-1）
+	 */
+	textChunkId?: string
+
+	/**
+	 * 知识概要（用于嵌入后检索的文本）
+	 */
+	outline?: string[]
+
+	/**
+	 * 文本块
+	 */
+	textChunk?: string
+
+	/**
+	 * 嵌入模型名称
+	 */
+	embeddingModel?: string
+
+	/**
+	 * 嵌入模型提供商名称
+	 */
+	embeddingProvider?: string
+
+	/**
+	 * 嵌入向量的维度
+	 */
+	dimension?: number
+
+	/**
+	 * 描述
+	 */
+	description?: string
+
+	/**
+	 * 文件名
+	 */
+	fileName?: string
+
+	/**
+	 * 文件ID
+	 */
+	fileId?: number
+}
+
+export interface KnowledgeRetrieveResponseDto {
+	data: KnowledgeRetrieveItemDto[]
+}
+
+export interface KnowledgeRetrieveItemDto {
+	/**
+	 * 文本块的 SHA-1 哈希值
+	 */
+	hash?: string
+
+	/**
+	 * 匹配度 [-1, 1]
+	 */
+	score?: number
+
+	/**
+	 * 距离度量类型
+	 * - L2: 欧几里得距离
+	 * - IP: 内积
+	 * - COSINE: 余弦相似度
+	 * - JACCARD: 杰卡德相似系数
+	 * - HAMMING: 汉明距离
+	 */
+	metricType?: 'L2' | 'IP' | 'COSINE' | 'JACCARD' | 'HAMMING'
+
+	/**
+	 * 嵌入模型名称
+	 */
+	embeddingModel?: string
+
+	/**
+	 * 嵌入模型提供商名称
+	 */
+	embeddingProvider?: string
+
+	/**
+	 * 嵌入向量的维度
+	 */
+	dimension?: number
+
+	/**
+	 * 嵌入文本值（知识概要）
+	 */
+	outline?: string
+
+	/**
+	 * 文本块内容
+	 */
+	textChunk?: string
+
+	/**
+	 * 文件名
+	 */
+	textChunkId?: string
+}
+
+
+export interface KnowledgeAddDto {
+	/**
+	 * 知识概要（用于嵌入后检索的文本）
+	 */
+	outline?: string[];
+
+	/**
+	 * 文本块
+	 */
+	textChunk?: string;
+
+	/**
+	 * 描述
+	 */
+	description?: string;
+
+	/**
+	 * 文件ID
+	 */
+	fileId?: number;
+
+	/**
+	 * 分类
+	 */
+	classify?: string;
+
+	/**
+	 * 文件位置
+	 */
+	fileLocation?: string;
+}

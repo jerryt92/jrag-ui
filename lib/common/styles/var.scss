@@ -18,11 +18,11 @@
 
 // 默认浅色主题
 :root {
-  // 基础主题色
   --el-color-primary: #5182e4; // 主色
-  --el-color-success: #52AC82; // 主色
-  --el-color-warning: #DCB447; // 主色
-  --el-color-error: #f36b6b; // 主色
+
+  --el-color-success: #52AC82; // 成功色
+  --el-color-warning: #DCB447; // 警告色
+  --el-color-error: #f36b6b; // 错误色
   --el-color-info: #637A9E; // 主色
   --n-color-neutral-w: #fff;
   --n-color-neutral-b: #000000;
@@ -108,10 +108,9 @@
 // 深色主题
 html.dark {
   // 基础主题色
-  --el-color-primary: #5182e4; // 主色
-  --el-color-success: #52AC82; // 主色
-  --el-color-warning: #DCB447; // 主色
-  --el-color-error: #f36b6b; // 主色
+  --el-color-success: #52AC82; // 成功色
+  --el-color-warning: #DCB447; // 警告色
+  --el-color-error: #f36b6b; // 错误色
   --el-color-info: #637A9E; // 主色
   --n-color-neutral-w: #1a1a1a;
   --n-color-neutral-b: #ffffff;
@@ -133,24 +132,4 @@ html.dark {
   --n-color-opacity-2: rgba(200, 200, 200, 0.55); // 主要用于弹框 抽屉的mask 滚动条hover
   --n-color-opacity-3: rgba(255, 255, 255, 0.12); // 主要用于box-shadow的color;
   --n-color-opacity-4: rgba(255, 255, 255, 0.4); // 主要用于滚动条;
-}
-
-html.orange {
-  --el-color-primary: #409eff;
-  --el-color-primary-light-3: #f58c64;
-  --el-color-primary-light-5: #f8ad91;
-  --el-color-primary-light-7: #fbcebd;
-  --el-color-primary-light-8: #fcded3;
-  --el-color-primary-light-9: #feefe9;
-  --el-color-primary-dark-2: #c1481b;
-}
-
-html.blue {
-  --el-color-primary: #2b6afd;
-  --el-color-primary-light-3: #6b97fe;
-  --el-color-primary-light-5: #95b5fe;
-  --el-color-primary-light-7: #bfd2fe;
-  --el-color-primary-light-8: #d5e1ff;
-  --el-color-primary-light-9: #eaf0ff;
-  --el-color-primary-dark-2: #2255ca;
 }

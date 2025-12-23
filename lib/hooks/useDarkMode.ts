@@ -1,5 +1,5 @@
 import { onUnmounted, ref, watch } from 'vue'
-import { memo } from '@jrag/utils'
+import { memo } from '@ai-system/utils'
 
 // 检查是否支持深色模式
 const isDarkModeSupported = () => {

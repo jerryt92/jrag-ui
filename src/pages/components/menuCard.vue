@@ -19,11 +19,9 @@
 				<li class="menu-card-item" @click="hrefTo('/chat/assistant')">
 					{{ '🤖 ' + t('ai.assistant') }}
 				</li>
-				<span v-if="getLoginMode() === 'user'">
-					<li class="menu-card-item" @click="hrefTo('/kb')">
-						{{ '📚 ' + t('kb.knowledge.base') }}
-					</li>
-				</span>
+				<li class="menu-card-item" @click="hrefTo('/kb')">
+					{{ '📚 ' + t('kb.knowledge.base') }}
+				</li>
 				<hr />
 				<li class="menu-card-item" @click="toggleDarkMode">
 					<span v-show="currentDarkMode === 'disabled'"
@@ -36,20 +34,17 @@
 						>🌓 {{ t('dark.mode.auto') }}</span
 					>
 				</li>
-				<span v-if="getLoginMode() === 'user'">
-					<hr />
-					<li class="menu-card-item" @click="hrefTo('/logout')">
-						{{ '⏏️ ' + t('logout') }}
-					</li>
-				</span>
+				<hr />
+				<li class="menu-card-item" @click="hrefTo('/logout')">
+					{{ '⏏️ ' + t('logout') }}
+				</li>
 			</ul>
 		</div>
 	</div>
 </template>
 <script setup lang="ts">
-import { t } from '@jrag/lib'
+import { t } from '@ai-system/lib'
 import { ref, onUnmounted, watch, onMounted } from 'vue'
-import { getLoginMode } from '@/api/login.api'
 
 defineExpose({
 	show
@@ -183,6 +178,7 @@ const hrefTo = (path) => {
 		list-style: none;
 		padding: 0;
 		margin: 0;
+
 		hr {
 			border: none;
 			height: 1px;

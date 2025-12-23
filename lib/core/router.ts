@@ -8,8 +8,8 @@ import {
 	isFunction,
 	joinUrl,
 	routePathToPageName
-} from '@jrag/utils'
-import { t } from '@jrag/locale'
+} from '@ai-system/utils'
+import { t } from '@ai-system/locale'
 import type { Router, RouteRecordRaw } from 'vue-router'
 
 function optimizeRoutes(routes: RouteRecordRaw[]) {

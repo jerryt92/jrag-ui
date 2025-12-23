@@ -32,6 +32,10 @@ export type ChatRequestDto = {
 	// 上下文ID
 	contextId: string
 	messages: MessageDto[]
+	// 是否检索知识库
+	retrievalKb: boolean;
+	// 系统提示词
+	systemPrompt: 'GENERAL_ASSISTANT' | 'TOOL_USE';
 }
 
 export type MessageFeedbackRequest = {
@@ -70,9 +74,9 @@ export type HistoryContextItem = {
 	// 聊天上下文ID
 	contextId: string
 	// 标题
-	title: string
+	tittle: string
 	// 最后访问时间
-	lastUpdateTime: number
+	lastAccessTime: number
 }
 
 export type ChatContextDto = {

@@ -116,8 +116,8 @@ export function viteConfig(
 						'dist/index-en.html',
 						content
 							.replace(
-								'jrag_language_variable = "zh"',
-								'jrag_language_variable = "en" // change file size.'
+								'ai_system_language_variable = "zh"',
+								'ai_system_language_variable = "en" // change file size.'
 							)
 							.replace('class="app-zh"', 'class="app-en"')
 							.replace('lang="zh"', 'lang="en"')
@@ -183,8 +183,8 @@ export function viteConfig(
 		resolve: {
 			alias: {
 				'@': path.join(rootDir, 'src'),
-				'@jrag/lib': path.join(rootDir, 'lib/index.ts'),
-				'@jrag': path.join(rootDir, 'lib')
+				'@ai-system/lib': path.join(rootDir, 'lib/index.ts'),
+				'@ai-system': path.join(rootDir, 'lib')
 			},
 			dedupe: ['vue', 'vue-router']
 		},

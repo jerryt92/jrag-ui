@@ -1,6 +1,5 @@
 //重置的element-plus样式
 .el-button {
-  background-color: color-mix(in srgb, var(--el-color-primary), transparent 10%);
   backdrop-filter: blur(10px);
   border: none;
 
@@ -77,7 +76,7 @@
     margin-bottom: 10px;
 
     .el-form-item__label {
-      color: rgba(0, 0, 0, 0.85); //#666;
+      color: var(--n-color-neutral-b);
       padding: 0 8px 0 0;
 
       .icon {
@@ -165,17 +164,23 @@
 .el-textarea__inner {
   background-color: color-mix(in srgb, var(--n-color-neutral-w), transparent 10%);
   color: var(--n-color-font-dark);
+  resize: none;
 }
 
 .el-dialog {
-  background: color-mix(in srgb, var(--n-color-neutral-w), transparent 90%);
+  background: color-mix(in srgb, var(--n-color-neutral-w), transparent 75%);
   backdrop-filter: blur(10px);
   border-radius: var(--n-radius-quadruple);
   border: 1px solid color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
   min-width: 600px;
 
+  .el-dialog__title {
+    color: var(--n-color-font-dark);
+    font-weight: bolder;
+  }
+
   .el-dialog__close {
-    color: color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
+    color: color-mix(in srgb, var(--n-color-font-dark), transparent 50%);
     text-shadow: var(--el-color-primary-light-3);
   }
 
@@ -196,8 +201,11 @@
   .el-form-item {
     margin-bottom: 0;
   }
-
+  background-color: var(--n-color-neutral-w);
+  color: var(--n-color-neutral-5);
   .el-table__cell {
+    background-color: var(--n-color-neutral-w) !important;
+    border-color: var(--n-color-neutral-3) !important;
     .el-button {
       .iconfont {
         font-size: 14px;
@@ -213,7 +221,7 @@
 
   .el-table__empty-block {
     height: 135px !important;
-
+    background-color: var(--n-color-neutral-w);
   }
 }
 

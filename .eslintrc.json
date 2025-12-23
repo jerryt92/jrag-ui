@@ -1,6 +1,6 @@
 {
 	"root": true,
-	"extends": ["jrag"],
+	"extends": ["ai-system"],
 	"rules": {
 		"vue/multi-word-component-names": "off"
 	}
