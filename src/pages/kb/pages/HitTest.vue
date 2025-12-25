@@ -12,7 +12,23 @@
 						:label="t('kb.knowledge.hit.test.score')"
 						width="180"
 						:formatter="(row) => row.score.toFixed(2)"
-					/>
+					>
+						<template #header>
+							<div class="header-with-tooltip">
+								<span>{{ t('kb.knowledge.hit.test.score') }}</span>
+								<el-tooltip
+									effect="dark"
+									placement="top"
+									:raw-content="true"
+									:content="t('kb.knowledge.hit.test.score.tip')"
+								>
+									<el-icon class="info-icon">
+										<QuestionFilled />
+									</el-icon>
+								</el-tooltip>
+							</div>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="metricType"
 						:label="t('kb.knowledge.hit.test.metricType')"
@@ -118,8 +134,7 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-import {
+<script setup lang="ts">import {
 	ElButton,
 	ElForm,
 	ElFormItem,
@@ -127,12 +142,15 @@ import {
 	ElInputNumber,
 	ElPopover,
 	ElTable,
-	ElTableColumn
+	ElTableColumn,
+	ElTooltip,
+	ElIcon,
 } from 'element-plus'
 import { ref } from 'vue'
 import { t } from '@ai-system/lib'
 import { retrieveKnowledge } from '@/api/kb/kb.api'
 import { KnowledgeRetrieveItemDto } from '@/types/kb.model'
+import { QuestionFilled } from '@element-plus/icons-vue'
 
 // 表单数据
 const formData = ref({
@@ -187,17 +205,22 @@ const handleKeyup = () => {
 
 </script>
 
-<style scoped lang="scss">
-.hit-test-container {
+<style scoped lang="scss">.hit-test-container {
 	font-family: Arial, sans-serif;
 	height: 100%;
+
+	.header-with-tooltip {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
 
 	.hit-test-result {
 		padding: 20px;
 		background-color: color-mix(
-			in srgb,
-			var(--n-color-neutral-w),
-			transparent 30%
+				in srgb,
+				var(--n-color-neutral-w),
+				transparent 30%
 		);
 		backdrop-filter: blur(10px);
 		border-radius: var(--n-radius-triple);
@@ -233,9 +256,9 @@ const handleKeyup = () => {
 		flex-direction: column;
 		box-sizing: border-box;
 		background-color: color-mix(
-			in srgb,
-			var(--n-color-neutral-w),
-			transparent 30%
+				in srgb,
+				var(--n-color-neutral-w),
+				transparent 30%
 		);
 		backdrop-filter: blur(10px);
 		border-radius: var(--n-radius-triple);
@@ -284,16 +307,16 @@ const handleKeyup = () => {
 
 					:deep(.el-textarea__inner) {
 						background: color-mix(
-							in srgb,
-							var(--n-color-neutral-w),
-							transparent 80%
+								in srgb,
+								var(--n-color-neutral-w),
+								transparent 80%
 						);
 						backdrop-filter: blur(10px);
 						padding: 15px 20px;
 						border-color: color-mix(
-							in srgb,
-							var(--n-color-neutral-w),
-							transparent 80%
+								in srgb,
+								var(--n-color-neutral-w),
+								transparent 80%
 						);
 						word-wrap: break-word;
 						word-break: break-all;
@@ -302,11 +325,11 @@ const handleKeyup = () => {
 
 					:hover {
 						box-shadow: 0px 0px 12px
-							color-mix(
+						color-mix(
 								in srgb,
 								var(--el-color-primary-light-3),
 								transparent 10%
-							);
+						);
 					}
 				}
 			}

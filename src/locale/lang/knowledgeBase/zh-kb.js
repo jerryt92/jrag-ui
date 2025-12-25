@@ -17,7 +17,12 @@ export default {
 	'kb.knowledge.hit.test' :'命中测试',
 	'kb.knowledge.hit.test.text' :'命中测试文本',
 	'kb.knowledge.hit.test.text.placeholder' :'请输入测试文本',
-	'kb.knowledge.hit.test.score' :'匹配度分数 (-1~1)',
+	'kb.knowledge.hit.test.score' :'匹配度分数',
+	'kb.knowledge.hit.test.score.tip' :'不同模型匹配度分数范围不同：' +
+		'<br/>L2 : [0, ∞)' +
+		'<br/>IP : [-1, 1]' +
+		'<br/>COSINE : [-1, 1]' +
+		'<br/>JACCARD : [0, 1]',
 	'kb.knowledge.hit.test.metricType' :'检索指标',
 	'kb.knowledge.hit.test.is.hit' :'是否被RAG检索到',
 	'kb.create.username': '创建者',

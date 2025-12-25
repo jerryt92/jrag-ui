@@ -17,7 +17,12 @@ export default {
 	'kb.knowledge.hit.test': 'Hit Test',
 	'kb.knowledge.hit.test.text': 'Hit Test Text',
 	'kb.knowledge.hit.test.text.placeholder': 'Please enter the text to be tested',
-	'kb.knowledge.hit.test.score': 'Matching Score (-1 to 1)',
+	'kb.knowledge.hit.test.score': 'Matching Score',
+	'kb.knowledge.hit.test.score.tip' :'The difference between the score of different models is large:' +
+		'<br/>L2 : [0, ∞)' +
+		'<br/>IP : [-1, 1]' +
+		'<br/>COSINE : [-1, 1]' +
+		'<br/>JACCARD : [0, 1]',
 	'kb.knowledge.hit.test.metricType': 'Retrieve Metric Type',
 	'kb.knowledge.hit.test.is.hit' :'Is retrieved by RAG',
 	'kb.create.username': 'Creator',
