@@ -19,6 +19,7 @@ export default {
 	'common.yes': '是',
 	'common.no': '否',
 	'common.selected.file': '已选择文件',
+	'common.file.change': '文件已改变，请重新选择',
 	'common.create.time': '创建时间',
 	'common.update.time': '更新时间',
 	'homepage': '首页',

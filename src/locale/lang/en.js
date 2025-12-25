@@ -19,6 +19,7 @@ export default {
 	'common.yes': 'Yes',
 	'common.no': 'No',
 	'common.selected.file': 'Selected File',
+	'common.file.change': 'File changed, please click submit',
 	'common.create.time': 'Create Time',
 	'common.update.time': 'Update Time',
 	'homepage': 'Homepage',
