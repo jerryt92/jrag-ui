@@ -12,30 +12,28 @@
 		<div class="menu-card-content">
 			<ul class="menu-card-list">
 				<hr />
-				<li class="menu-card-item" @click="hrefTo('/')">
+				<li class="menu-card-item" @click="goTo('/')">
 					{{ '🏠 ' + t('homepage') }}
 				</li>
 				<hr />
-				<li class="menu-card-item" @click="hrefTo('/chat/assistant')">
+				<li class="menu-card-item" @click="goTo('/chat/assistant')">
 					{{ '🤖 ' + t('ai.assistant') }}
 				</li>
-				<li class="menu-card-item" @click="hrefTo('/kb')">
+				<li class="menu-card-item" @click="goTo('/kb')">
 					{{ '📚 ' + t('kb.knowledge.base') }}
 				</li>
 				<hr />
 				<li class="menu-card-item" @click="toggleDarkMode">
 					<span v-show="currentDarkMode === 'disabled'"
-						>☀️ {{ t('dark.mode.light') }}</span
+					>☀️ {{ t('dark.mode.light') }}</span
 					>
 					<span v-show="currentDarkMode === 'enabled'"
-						>🌙 {{ t('dark.mode.dark') }}</span
+					>🌙 {{ t('dark.mode.dark') }}</span
 					>
-					<span v-show="currentDarkMode === 'auto'"
-						>🌓 {{ t('dark.mode.auto') }}</span
-					>
+					<span v-show="currentDarkMode === 'auto'">🌓 {{ t('dark.mode.auto') }}</span>
 				</li>
 				<hr />
-				<li class="menu-card-item" @click="hrefTo('/logout')">
+				<li class="menu-card-item" @click="goTo('/logout')">
 					{{ '⏏️ ' + t('logout') }}
 				</li>
 			</ul>
@@ -45,6 +43,7 @@
 <script setup lang="ts">
 import { t } from '@ai-system/lib'
 import { ref, onUnmounted, watch, onMounted } from 'vue'
+import { goTo } from '@/routes'
 
 defineExpose({
 	show
@@ -124,8 +123,7 @@ const handleClickOutside = (event: MouseEvent) => {
 
 onMounted(() => {
 	initDarkMode()
-	window
-		.matchMedia('(prefers-color-scheme: dark)')
+	window.matchMedia('(prefers-color-scheme: dark)')
 		.addEventListener('change', handleSystemDarkModeChange)
 })
 
@@ -140,9 +138,6 @@ watch(showMenuCard, (newValue) => {
 	emit('show-change', newValue)
 })
 
-const hrefTo = (path) => {
-	window.location.href = '/#' + path
-}
 </script>
 <style lang="scss" scoped>
 .menu-card-card {
@@ -150,7 +145,7 @@ const hrefTo = (path) => {
 	backdrop-filter: blur(10px);
 	border-radius: var(--n-radius-quadruple);
 	border: 1px solid
-		color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
+	color-mix(in srgb, var(--n-color-neutral-4), transparent 50%);
 	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 	display: flex;
 	flex-direction: column;
@@ -178,7 +173,6 @@ const hrefTo = (path) => {
 		list-style: none;
 		padding: 0;
 		margin: 0;
-
 		hr {
 			border: none;
 			height: 1px;

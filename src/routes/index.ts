@@ -25,3 +25,7 @@ const routes = [
 ] as RouteRecordRaw[]
 
 export default routes
+
+export const goTo = (path: string) => {
+	location.hash = path
+}

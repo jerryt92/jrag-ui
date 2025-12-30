@@ -1,6 +1,6 @@
 <template>
 	<div class="top-bar">
-		<h3 class="tittle" @click="goToHome">🤖 {{ topBarTittle }}</h3>
+		<h3 class="tittle" @click="goTo('/')">🤖 {{ topBarTittle }}</h3>
 		<div class="menu-button-box">
 			<slot name="external-menu"> </slot>
 			<span
@@ -38,13 +38,10 @@
 import { ref } from 'vue'
 import MenuCard from '@/pages/components/menuCard.vue'
 import { topBarTittle } from '@/oem'
+import { goTo } from '@/routes'
 
 const showMenuCard = ref(false)
 const menuCardRef = ref(null)
-
-const goToHome = () => {
-	window.location.href = '/'
-}
 
 const handleMenuCard = () => {
 	menuCardRef.value.show()

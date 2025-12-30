@@ -62,7 +62,7 @@ import { ref, onMounted, reactive, onDeactivated, watch } from 'vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import { t } from '@ai-system/lib'
-import { globalUrlPrefix } from '../../../oem.js'
+import { globalUrlPrefix, programTag } from '../../../oem.js'
 
 const isLoading = ref(false)
 
@@ -173,7 +173,7 @@ function updateSlideInfo() {
 			sliderUrl: string
 			sliderSize: number
 			sliderY: number
-		}>(`/v1${globalUrlPrefix}auth/captcha/slide?` + new Date().getTime())
+		}>(`/v1${globalUrlPrefix}auth/${programTag}/captcha/slide?` + new Date().getTime())
 		.then((res) => {
 			slideInfo.value.hash = res.data.hash
 			slideInfo.value.puzzleUrl = res.data.puzzleUrl
@@ -189,7 +189,7 @@ function verifySlideCaptcha(sliderX: number, hash: string) {
 	return axios.get<{
 		result: boolean
 		code: string
-	}>(`/v1${globalUrlPrefix}auth/captcha/slide/validate`, {
+	}>(`/v1${globalUrlPrefix}auth/${programTag}/captcha/slide/validate`, {
 		params: {
 			'slider-x': sliderX,
 			hash
@@ -348,9 +348,9 @@ onDeactivated(() => {
 		height: 35px;
 		width: 35px;
 		background-color: color-mix(
-			in srgb,
-			var(--el-color-primary),
-			transparent 10%
+				in srgb,
+				var(--el-color-primary),
+				transparent 10%
 		);
 		cursor: pointer;
 		z-index: 11;

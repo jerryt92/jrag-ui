@@ -11,8 +11,8 @@ import { globalUrlPrefix, programTag } from '@/oem.js'
 export const chatWebsocketClientApi = (contextId: string): WebSocket => {
 	return new WebSocket(
 		window.location.origin.replace('http', 'ws') +
-			`/ws${globalUrlPrefix}${programTag}/chat?context-id=` +
-			contextId
+		`/ws${globalUrlPrefix}rest/${programTag}/chat?context-id=` +
+		contextId
 	)
 }
 

@@ -3,7 +3,7 @@
 		class="ai-assistant-page"
 		:class="{ 'full-page': isFullscreen, 'mobile-page': isMobile }"
 	>
-		<topo-bar />
+		<topo-bar/>
 		<!-- 功能导航卡片 -->
 		<div class="feature-cards">
 			<div class="feature-card" @click="goTo('/chat/assistant')">
@@ -25,14 +25,11 @@ import { useRoute } from 'vue-router'
 import { debounce, t } from '@ai-system/lib'
 import TopoBar from '@/pages/components/topoBar.vue'
 import { getNewContextId } from '@/api/ai.api'
+import { goTo } from '@/routes'
 
 const route = useRoute()
 const isFullscreen = ref(true)
 const isMobile = ref(false)
-
-const goTo = (path: string) => {
-	window.location.href = '/#' + path
-}
 
 const resize = () => {
 	const width =

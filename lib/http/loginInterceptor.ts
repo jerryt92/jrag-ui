@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import { goTo } from '@/routes'
 
 const http = axios.create({
 	baseURL: '/',
@@ -17,7 +18,7 @@ http.interceptors.response.use(
 
 		// 判断状态码是否为 401
 		if (status === 401 || status === 403) {
-			window.location.assign('/#/login')
+			goTo('login')
 		}
 
 		if (status === 400 || status === 500) {
