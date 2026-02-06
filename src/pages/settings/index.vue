@@ -124,6 +124,28 @@
 						</el-button>
 					</div>
 				</el-tab-pane>
+				<el-tab-pane :label="t('settings.rag.section')" name="rag">
+					<el-form :model="ragForm" label-width="220px">
+						<el-form-item :label="t('settings.rag.topk')">
+							<el-input-number v-model="ragForm.topK" :min="1" />
+						</el-form-item>
+						<el-form-item :label="t('settings.rag.metric.type')">
+							<el-select v-model="ragForm.metricType" class="settings-select">
+								<el-option label="COSINE" value="COSINE" />
+								<el-option label="IP" value="IP" />
+								<el-option label="L2" value="L2" />
+							</el-select>
+						</el-form-item>
+						<el-form-item :label="t('settings.rag.metric.score.expr')">
+							<el-input v-model="ragForm.metricScoreExpr" />
+						</el-form-item>
+					</el-form>
+					<div class="settings-actions">
+						<el-button type="primary" :loading="saving" @click="saveSettings">
+							{{ t('settings.save') }}
+						</el-button>
+					</div>
+				</el-tab-pane>
 			</el-tabs>
 		</div>
 	</div>
@@ -172,6 +194,10 @@ const KEY_EMBEDDING_OPENAI_BASE_URL = 'embedding-open-ai-base-url'
 const KEY_EMBEDDING_OPENAI_EMBEDDINGS_PATH = 'embedding-open-ai-embeddings-path'
 const KEY_EMBEDDING_OPENAI_KEY = 'embedding-open-ai-key'
 
+const KEY_RETRIEVE_TOP_K = 'RETRIEVE_TOP_K'
+const KEY_RETRIEVE_METRIC_TYPE = 'RETRIEVE_METRIC_TYPE'
+const KEY_RETRIEVE_METRIC_SCORE_COMPARE_EXPR = 'RETRIEVE_METRIC_SCORE_COMPARE_EXPR'
+
 const activeTab = ref('llm')
 const loading = ref(false)
 const saving = ref(false)
@@ -203,6 +229,12 @@ const embeddingForm = ref({
 	openAiKey: ''
 })
 const embeddingSnapshot = ref('')
+
+const ragForm = ref({
+	topK: 5,
+	metricType: 'COSINE',
+	metricScoreExpr: '> 0.7'
+})
 
 const parseBoolean = (value?: string, fallback = false) => {
 	if (value === undefined || value === null) {
@@ -250,7 +282,10 @@ const loadSettings = async () => {
 			KEY_EMBEDDING_OPENAI_MODEL_NAME,
 			KEY_EMBEDDING_OPENAI_BASE_URL,
 			KEY_EMBEDDING_OPENAI_EMBEDDINGS_PATH,
-			KEY_EMBEDDING_OPENAI_KEY
+			KEY_EMBEDDING_OPENAI_KEY,
+			KEY_RETRIEVE_TOP_K,
+			KEY_RETRIEVE_METRIC_TYPE,
+			KEY_RETRIEVE_METRIC_SCORE_COMPARE_EXPR
 		]
 		const res = await getProperties(keys)
 		const data = resolvePropertyMap(res)
@@ -308,6 +343,11 @@ const loadSettings = async () => {
 		embeddingForm.value.openAiKey =
 			data[KEY_EMBEDDING_OPENAI_KEY] || embeddingForm.value.openAiKey
 		embeddingSnapshot.value = JSON.stringify(embeddingForm.value)
+		ragForm.value.topK = parseNumber(KEY_RETRIEVE_TOP_K in data ? data[KEY_RETRIEVE_TOP_K] : undefined, ragForm.value.topK)
+		ragForm.value.metricType =
+			data[KEY_RETRIEVE_METRIC_TYPE] || ragForm.value.metricType
+		ragForm.value.metricScoreExpr =
+			data[KEY_RETRIEVE_METRIC_SCORE_COMPARE_EXPR] || ragForm.value.metricScoreExpr
 	} catch (error) {
 		ElMessage.error(t('settings.load.failed'))
 	} finally {
@@ -391,6 +431,18 @@ const buildPayload = () => {
 		{
 			propertyName: KEY_EMBEDDING_OPENAI_KEY,
 			propertyValue: toValue(embeddingForm.value.openAiKey)
+		},
+		{
+			propertyName: KEY_RETRIEVE_TOP_K,
+			propertyValue: toValue(ragForm.value.topK)
+		},
+		{
+			propertyName: KEY_RETRIEVE_METRIC_TYPE,
+			propertyValue: toValue(ragForm.value.metricType)
+		},
+		{
+			propertyName: KEY_RETRIEVE_METRIC_SCORE_COMPARE_EXPR,
+			propertyValue: toValue(ragForm.value.metricScoreExpr)
 		}
 	]
 }
