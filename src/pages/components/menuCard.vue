@@ -22,6 +22,9 @@
 				<li class="menu-card-item" @click="goTo('/kb')">
 					{{ '📚 ' + t('kb.knowledge.base') }}
 				</li>
+				<li class="menu-card-item" @click="goTo('/settings')">
+					{{ '⚙️ ' + t('settings.title') }}
+				</li>
 				<hr />
 				<li class="menu-card-item" @click="toggleDarkMode">
 					<span v-show="currentDarkMode === 'disabled'"

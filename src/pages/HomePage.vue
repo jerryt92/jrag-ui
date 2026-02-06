@@ -16,6 +16,11 @@
 				<h3>{{ t('kb.knowledge.base') }}</h3>
 				<p>{{ t('kb.management') }}</p>
 			</div>
+			<div class="feature-card" @click="goTo('/settings')">
+				<div class="card-icon">⚙️</div>
+				<h3>{{ t('settings.title') }}</h3>
+				<p>{{ t('settings.desc') }}</p>
+			</div>
 		</div>
 	</div>
 </template>
