@@ -1,0 +1,1 @@
+import{h as p}from"../index-9ed092b7.js";import{g as r,p as s}from"./oem-517c1d66.js";const t=t=>p.post(`/v1${r}rest/${s}/property/get`,t),o=t=>p.put(`/v1${r}rest/${s}/property`,t);export{t as g,o as p};
