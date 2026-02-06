@@ -17,6 +17,9 @@
 				<el-menu-item index="2">
 					{{ t('kb.knowledge.hit.test') }}
 				</el-menu-item>
+				<el-menu-item index="3">
+					{{ t('settings.rag.section') }}
+				</el-menu-item>
 			</el-menu>
 			<!-- 主内容区域 -->
 			<main class="main-content">
@@ -38,6 +41,7 @@ import KnowledgeBaseList from '@/pages/kb/pages/KnowledgeBaseList.vue'
 import { t } from '@ai-system/lib'
 import TopoBar from '@/pages/components/topoBar.vue'
 import HitTest from '@/pages/kb/pages/HitTest.vue'
+import RagSettings from '@/pages/kb/pages/RagSettings.vue'
 // 侧边栏状态
 const isSidebarCollapsed = ref(false)
 const activeMenuItem = ref('1')
@@ -69,6 +73,9 @@ const handleMenuSelect = (key: string, keyPath: string[]) => {
 			break
 		case '2':
 			currentComponent.value = HitTest
+			break
+		case '3':
+			currentComponent.value = RagSettings
 			break
 		default:
 			currentComponent.value = KnowledgeBaseList

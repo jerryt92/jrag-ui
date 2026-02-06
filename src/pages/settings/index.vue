@@ -129,12 +129,32 @@
 						<el-form-item :label="t('settings.rag.topk')">
 							<el-input-number v-model="ragForm.topK" :min="1" />
 						</el-form-item>
-						<el-form-item :label="t('settings.rag.metric.type')">
+						<el-form-item :label="t('settings.rag.metric.type.dense')">
 							<el-select v-model="ragForm.metricType" class="settings-select">
 								<el-option label="COSINE" value="COSINE" />
 								<el-option label="IP" value="IP" />
 								<el-option label="L2" value="L2" />
 							</el-select>
+						</el-form-item>
+						<el-form-item :label="t('settings.rag.metric.type.sparse')">
+							<el-select :model-value="'BM25'" class="settings-select" disabled>
+								<el-option label="BM25" value="BM25" />
+							</el-select>
+						</el-form-item>
+						<el-form-item :label="t('settings.rag.weight.label')">
+							<div class="rag-weight-slider">
+								<el-slider
+									v-model="denseWeightPercent"
+									:min="0"
+									:max="100"
+									:show-tooltip="true"
+									:format-tooltip="formatWeightTooltip"
+								/>
+								<div class="rag-weight-values">
+									<span>{{ t('settings.rag.weight.dense') }}: {{ denseWeightPercent }}%</span>
+									<span>{{ t('settings.rag.weight.sparse') }}: {{ 100 - denseWeightPercent }}%</span>
+								</div>
+							</div>
 						</el-form-item>
 						<el-form-item :label="t('settings.rag.metric.score.expr')">
 							<el-input v-model="ragForm.metricScoreExpr" />
@@ -152,7 +172,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import {
 	ElButton,
 	ElForm,
@@ -161,6 +181,7 @@ import {
 	ElInputNumber,
 	ElOption,
 	ElSelect,
+	ElSlider,
 	ElSwitch,
 	ElTabPane,
 	ElTabs,
@@ -197,6 +218,8 @@ const KEY_EMBEDDING_OPENAI_KEY = 'embedding-open-ai-key'
 const KEY_RETRIEVE_TOP_K = 'RETRIEVE_TOP_K'
 const KEY_RETRIEVE_METRIC_TYPE = 'RETRIEVE_METRIC_TYPE'
 const KEY_RETRIEVE_METRIC_SCORE_COMPARE_EXPR = 'RETRIEVE_METRIC_SCORE_COMPARE_EXPR'
+const KEY_RETRIEVE_DENSE_WEIGHT = 'RETRIEVE_DENSE_WEIGHT'
+const KEY_RETRIEVE_SPARSE_WEIGHT = 'RETRIEVE_SPARSE_WEIGHT'
 
 const activeTab = ref('llm')
 const loading = ref(false)
@@ -233,7 +256,9 @@ const embeddingSnapshot = ref('')
 const ragForm = ref({
 	topK: 5,
 	metricType: 'COSINE',
-	metricScoreExpr: '> 0.7'
+	metricScoreExpr: '> 0.7',
+	denseWeight: 0.5,
+	sparseWeight: 0.5
 })
 
 const parseBoolean = (value?: string, fallback = false) => {
@@ -249,6 +274,34 @@ const parseNumber = (value?: string, fallback: number) => {
 	}
 	const parsed = Number(value)
 	return Number.isFinite(parsed) ? parsed : fallback
+}
+
+const normalizeRagWeights = () => {
+	const dense = ragForm.value.denseWeight
+	const sparse = ragForm.value.sparseWeight
+	const total = dense + sparse
+	if (!Number.isFinite(total) || total <= 0) {
+		ragForm.value.denseWeight = 0.5
+		ragForm.value.sparseWeight = 0.5
+		return
+	}
+	ragForm.value.denseWeight = dense / total
+	ragForm.value.sparseWeight = sparse / total
+}
+
+const denseWeightPercent = computed({
+	get: () => Math.round(ragForm.value.denseWeight * 100),
+	set: (value: number) => {
+		const clamped = Math.min(100, Math.max(0, value))
+		ragForm.value.denseWeight = clamped / 100
+		ragForm.value.sparseWeight = (100 - clamped) / 100
+	}
+})
+
+const formatWeightTooltip = (value: number) => {
+	const densePercent = Math.min(100, Math.max(0, Math.round(value)))
+	const sparsePercent = 100 - densePercent
+	return `${t('settings.rag.weight.dense')}: ${densePercent}% / ${t('settings.rag.weight.sparse')}: ${sparsePercent}%`
 }
 
 const resolvePropertyMap = (res: any) => {
@@ -285,7 +338,9 @@ const loadSettings = async () => {
 			KEY_EMBEDDING_OPENAI_KEY,
 			KEY_RETRIEVE_TOP_K,
 			KEY_RETRIEVE_METRIC_TYPE,
-			KEY_RETRIEVE_METRIC_SCORE_COMPARE_EXPR
+			KEY_RETRIEVE_METRIC_SCORE_COMPARE_EXPR,
+			KEY_RETRIEVE_DENSE_WEIGHT,
+			KEY_RETRIEVE_SPARSE_WEIGHT
 		]
 		const res = await getProperties(keys)
 		const data = resolvePropertyMap(res)
@@ -348,6 +403,15 @@ const loadSettings = async () => {
 			data[KEY_RETRIEVE_METRIC_TYPE] || ragForm.value.metricType
 		ragForm.value.metricScoreExpr =
 			data[KEY_RETRIEVE_METRIC_SCORE_COMPARE_EXPR] || ragForm.value.metricScoreExpr
+		ragForm.value.denseWeight = parseNumber(
+			KEY_RETRIEVE_DENSE_WEIGHT in data ? data[KEY_RETRIEVE_DENSE_WEIGHT] : undefined,
+			ragForm.value.denseWeight
+		)
+		ragForm.value.sparseWeight = parseNumber(
+			KEY_RETRIEVE_SPARSE_WEIGHT in data ? data[KEY_RETRIEVE_SPARSE_WEIGHT] : undefined,
+			ragForm.value.sparseWeight
+		)
+		normalizeRagWeights()
 	} catch (error) {
 		ElMessage.error(t('settings.load.failed'))
 	} finally {
@@ -356,6 +420,7 @@ const loadSettings = async () => {
 }
 
 const buildPayload = () => {
+	normalizeRagWeights()
 	const toValue = (value: unknown) => {
 		if (value === undefined || value === null) {
 			return ''
@@ -443,6 +508,14 @@ const buildPayload = () => {
 		{
 			propertyName: KEY_RETRIEVE_METRIC_SCORE_COMPARE_EXPR,
 			propertyValue: toValue(ragForm.value.metricScoreExpr)
+		},
+		{
+			propertyName: KEY_RETRIEVE_DENSE_WEIGHT,
+			propertyValue: toValue(ragForm.value.denseWeight)
+		},
+		{
+			propertyName: KEY_RETRIEVE_SPARSE_WEIGHT,
+			propertyValue: toValue(ragForm.value.sparseWeight)
 		}
 	]
 }
@@ -539,5 +612,17 @@ onMounted(() => {
 	justify-content: flex-end;
 	margin-top: 10px;
 	padding-bottom: 10px;
+}
+
+.rag-weight-slider {
+	width: 320px;
+
+	.rag-weight-values {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 6px;
+		color: var(--n-color-neutral-6);
+		font-size: 12px;
+	}
 }
 </style>

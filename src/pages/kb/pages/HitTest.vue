@@ -8,32 +8,6 @@
 					v-loading="loading"
 					border
 				>
-					<el-table-column
-						:label="t('kb.knowledge.hit.test.score')"
-						width="180"
-						:formatter="(row) => row.score.toFixed(2)"
-					>
-						<template #header>
-							<div class="header-with-tooltip">
-								<span>{{ t('kb.knowledge.hit.test.score') }}</span>
-								<el-tooltip
-									effect="dark"
-									placement="top"
-									:raw-content="true"
-									:content="t('kb.knowledge.hit.test.score.tip')"
-								>
-									<el-icon class="info-icon">
-										<QuestionFilled />
-									</el-icon>
-								</el-tooltip>
-							</div>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="metricType"
-						:label="t('kb.knowledge.hit.test.metricType')"
-						width="150"
-					/>
 					<el-table-column :label="t('kb.outline')" width="300">
 						<template #default="item">
 							<el-popover
@@ -53,6 +27,47 @@
 							</el-popover>
 						</template>
 					</el-table-column>
+					<el-table-column
+						prop="denseMetricType"
+						:label="t('kb.knowledge.hit.test.dense.metric')"
+						width="170"
+					/>
+					<el-table-column
+						:label="t('kb.knowledge.hit.test.dense.score')"
+						width="170"
+						:formatter="(row) => formatScore(row.denseScore)"
+					>
+						<template #header>
+							<div class="header-with-tooltip">
+								<span>{{ t('kb.knowledge.hit.test.dense.score') }}</span>
+								<el-tooltip
+									effect="dark"
+									placement="top"
+									:raw-content="true"
+									:content="t('kb.knowledge.hit.test.score.tip')"
+								>
+									<el-icon class="info-icon">
+										<QuestionFilled />
+									</el-icon>
+								</el-tooltip>
+							</div>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="sparseMetricType"
+						:label="t('kb.knowledge.hit.test.sparse.metric')"
+						width="170"
+					/>
+					<el-table-column
+						:label="t('kb.knowledge.hit.test.sparse.score')"
+						width="170"
+						:formatter="(row) => formatScore(row.sparseScore)"
+					/>
+					<el-table-column
+						:label="t('kb.knowledge.hit.test.hybrid.score')"
+						width="170"
+						:formatter="(row) => formatScore(row.hybridScore ?? row.score)"
+					/>
 					<el-table-column :label="t('kb.textChunk')" width="400">
 						<template #default="item">
 							<el-popover
@@ -164,6 +179,13 @@ const formRef = ref<InstanceType<typeof ElForm>>()
 const loading = ref(false)
 const retrieveResultList = ref<KnowledgeRetrieveItemDto[]>([])
 
+const formatScore = (value?: number) => {
+	if (!Number.isFinite(value)) {
+		return '-'
+	}
+	return value!.toFixed(4)
+}
+
 const onSubmit = async () => {
 	if (!formRef.value) return
 	await formRef.value.validate(async (valid) => {
@@ -202,7 +224,6 @@ const handleKeyup = () => {
 		onSubmit()
 	}
 }
-
 </script>
 
 <style scoped lang="scss">.hit-test-container {
@@ -226,6 +247,7 @@ const handleKeyup = () => {
 		border-radius: var(--n-radius-triple);
 		min-height: 300px;
 		height: calc(100% - 235px - 20px);
+
 
 		.table-wrapper {
 			height: 100%;

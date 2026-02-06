@@ -65,6 +65,21 @@ export interface KnowledgeRetrieveItemDto {
 	score?: number
 
 	/**
+	 * 混合检索得分
+	 */
+	hybridScore?: number
+
+	/**
+	 * 稠密向量检索得分
+	 */
+	denseScore?: number
+
+	/**
+	 * 稀疏向量检索得分
+	 */
+	sparseScore?: number
+
+	/**
 	 * 距离度量类型
 	 * - L2: 欧几里得距离
 	 * - IP: 内积
@@ -73,6 +88,16 @@ export interface KnowledgeRetrieveItemDto {
 	 * - HAMMING: 汉明距离
 	 */
 	metricType?: 'L2' | 'IP' | 'COSINE' | 'JACCARD' | 'HAMMING'
+
+	/**
+	 * 稠密向量检索指标
+	 */
+	denseMetricType?: 'L2' | 'IP' | 'COSINE' | 'JACCARD' | 'HAMMING'
+
+	/**
+	 * 稀疏向量检索指标
+	 */
+	sparseMetricType?: 'BM25'
 
 	/**
 	 * 嵌入模型名称

@@ -24,6 +24,11 @@ export default {
 		'<br/>COSINE : [-1, 1]' +
 		'<br/>JACCARD : [0, 1]',
 	'kb.knowledge.hit.test.metricType': 'Retrieve Metric Type',
+	'kb.knowledge.hit.test.dense.metric': 'Dense vector (semantic) metric',
+	'kb.knowledge.hit.test.dense.score': 'Dense vector (semantic) score',
+	'kb.knowledge.hit.test.sparse.metric': 'Sparse vector (keyword) metric',
+	'kb.knowledge.hit.test.sparse.score': 'Sparse vector (keyword) score',
+	'kb.knowledge.hit.test.hybrid.score': 'Hybrid score',
 	'kb.knowledge.hit.test.is.hit' :'Is retrieved by RAG',
 	'kb.create.username': 'Creator',
 	'kb.download.json.template': 'Download JSON Template',

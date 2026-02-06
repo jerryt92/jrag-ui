@@ -24,6 +24,11 @@ export default {
 		'<br/>COSINE : [-1, 1]' +
 		'<br/>JACCARD : [0, 1]',
 	'kb.knowledge.hit.test.metricType' :'检索指标',
+	'kb.knowledge.hit.test.dense.metric': '稠密向量（语义）指标',
+	'kb.knowledge.hit.test.dense.score': '稠密向量（语义）分数',
+	'kb.knowledge.hit.test.sparse.metric': '稀疏向量（关键词）指标',
+	'kb.knowledge.hit.test.sparse.score': '稀疏向量（关键词）分数',
+	'kb.knowledge.hit.test.hybrid.score': '混合检索分数',
 	'kb.knowledge.hit.test.is.hit' :'是否被RAG检索到',
 	'kb.create.username': '创建者',
 	'kb.download.json.template': '下载JSON模板',
