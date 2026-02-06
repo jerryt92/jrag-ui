@@ -1,0 +1,1 @@
+import{h as a}from"../index-c9af1b46.js";import{g as o,p as s}from"./oem-517c1d66.js";const t=(t,e,r,m)=>a.post(`/v1${o}auth/${s}/login`,{username:t,password:e,validateCode:r,hash:m}),e=()=>a.get(`/v1${o}auth/${s}/logout`);export{e as a,t as l};
