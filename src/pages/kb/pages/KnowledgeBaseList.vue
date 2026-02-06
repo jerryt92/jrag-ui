@@ -125,6 +125,13 @@
 						<el-button type="primary" link @click="handleEdit(scope.row)">
 							{{ t('common.edit') }}
 						</el-button>
+						<el-button
+							type="danger"
+							link
+							@click="handleDeleteSingle(scope.row)"
+						>
+							{{ t('common.delete') }}
+						</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -277,6 +284,20 @@ const handleDelete = () => {
 	).then(async () => {
 			const ids = selectedRows.value.map(row => row.textChunkId)
 			await deleteKnowledge(ids)
+			ElMessage.success('删除成功')
+			loadKnowledge()
+		})
+		.catch(() => {})
+}
+
+const handleDeleteSingle = (row: any) => {
+	if (!row?.textChunkId) return
+	ElMessageBox.confirm(
+		'确认删除该条数据吗？',
+		'警告',
+		{ confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
+	).then(async () => {
+			await deleteKnowledge([row.textChunkId])
 			ElMessage.success('删除成功')
 			loadKnowledge()
 		})
