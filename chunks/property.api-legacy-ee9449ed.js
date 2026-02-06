@@ -1,1 +1,0 @@
-System.register(["../index-legacy-94af24f8.js","./oem-legacy-aacc897f.js"],(function(t){"use strict";var e,c,n;return{setters:[function(t){e=t.h},function(t){c=t.g,n=t.p}],execute:function(){t("g",(function(t){return e.post("/v1".concat(c,"rest/").concat(n,"/property/get"),t)})),t("p",(function(t){return e.put("/v1".concat(c,"rest/").concat(n,"/property"),t)}))}}}));

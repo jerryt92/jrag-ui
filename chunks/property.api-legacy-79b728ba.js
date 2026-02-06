@@ -1,0 +1,1 @@
+System.register(["../index-legacy-cb9b3a41.js","./oem-legacy-aacc897f.js"],(function(t){"use strict";var c,e,n;return{setters:[function(t){c=t.h},function(t){e=t.g,n=t.p}],execute:function(){t("g",(function(t){return c.post("/v1".concat(e,"rest/").concat(n,"/property/get"),t)})),t("p",(function(t){return c.put("/v1".concat(e,"rest/").concat(n,"/property"),t)}))}}}));
