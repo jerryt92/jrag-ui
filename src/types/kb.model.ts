@@ -133,6 +133,11 @@ export interface KnowledgeRetrieveItemDto {
 
 export interface KnowledgeAddDto {
 	/**
+	 * 知识ID（文本块的SHA-1）
+	 */
+	id?: string;
+
+	/**
 	 * 知识概要（用于嵌入后检索的文本）
 	 */
 	outline?: string[];

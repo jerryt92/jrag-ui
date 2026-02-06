@@ -6,6 +6,7 @@ export default {
 	'common.delete': 'Delete',
 	'common.cancel': 'Cancel',
 	'common.edit': 'Edit',
+	'common.action': 'Action',
 	'common.refresh': 'Refresh',
 	'common.ok': 'OK',
 	'common.success': 'Success',

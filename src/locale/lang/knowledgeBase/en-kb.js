@@ -10,6 +10,7 @@ export default {
 	'kb.outline': 'Embedding Text',
 	'kb.knowledge.list': 'Knowledge List',
 	'kb.knowledge.add': 'Add Knowledge',
+	'kb.knowledge.edit': 'Edit Knowledge',
 	'kb.knowledge.add.qa': 'Question and Answer',
 	'kb.question': 'Question',
 	'kb.answer': 'Answer',

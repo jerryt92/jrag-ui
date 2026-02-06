@@ -6,6 +6,7 @@ export default {
 	'common.delete': '删除',
 	'common.cancel': '取消',
 	'common.edit': '编辑',
+	'common.action': '操作',
 	'common.refresh': '刷新',
 	'common.ok': '确定',
 	'common.success': '成功',

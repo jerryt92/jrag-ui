@@ -115,6 +115,18 @@
 					:label="t('kb.create.username')"
 					width="150"
 				/>
+				<el-table-column
+					:label="t('common.action')"
+					width="120"
+					align="center"
+					fixed="right"
+				>
+					<template #default="scope">
+						<el-button type="primary" link @click="handleEdit(scope.row)">
+							{{ t('common.edit') }}
+						</el-button>
+					</template>
+				</el-table-column>
 			</el-table>
 		</div>
 		<div class="pagination-wrapper">
@@ -129,6 +141,11 @@
 			/>
 		</div>
 		<KbAddDialog v-model="addDialogVisible" @addSuccess="addSuccess" />
+		<KbEditDialog
+			v-model="editDialogVisible"
+			:knowledge="editingRow"
+			@edit-success="editSuccess"
+		/>
 	</div>
 </template>
 
@@ -158,8 +175,13 @@ const selectedRows = ref<any[]>([]) // 选中的行数据
 const KbAddDialog = defineAsyncComponent(
 	() => import('../components/KbAddDialog.vue')
 )
+const KbEditDialog = defineAsyncComponent(
+	() => import('../components/KbEditDialog.vue')
+)
 
 const addDialogVisible = ref(false)
+const editDialogVisible = ref(false)
+const editingRow = ref<any | null>(null)
 
 // 加载数据
 const loadKnowledge = async () => {
@@ -234,6 +256,11 @@ const addSuccess = () => {
 	loadKnowledge()
 }
 
+const editSuccess = () => {
+	editDialogVisible.value = false
+	loadKnowledge()
+}
+
 // 事件处理：多选变化
 const handleSelectionChange = (selection: any[]) => {
 	selectedRows.value = selection
@@ -258,8 +285,11 @@ const handleDelete = () => {
 
 // 事件处理：单行编辑
 const handleEdit = (row: any) => {
-	// TODO: 打开编辑弹窗
-	console.log('Edit', row)
+	editingRow.value = {
+		...row,
+		outline: row.outline ? [...row.outline] : []
+	}
+	editDialogVisible.value = true
 }
 
 onMounted(() => {

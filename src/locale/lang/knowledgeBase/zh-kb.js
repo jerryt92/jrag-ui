@@ -10,6 +10,7 @@ export default {
 	'kb.outline': '嵌入文本值',
 	'kb.knowledge.list': '知识列表',
 	'kb.knowledge.add': '新增知识',
+	'kb.knowledge.edit': '编辑知识',
 	'kb.knowledge.add.qa': 'QA对',
 	'kb.question': '问题',
 	'kb.answer': '答案',
