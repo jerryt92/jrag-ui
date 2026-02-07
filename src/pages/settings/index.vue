@@ -6,183 +6,27 @@
 				<h2>{{ t('settings.title') }}</h2>
 			</div>
 			<el-tabs v-model="activeTab" class="settings-tabs">
-				<el-tab-pane :label="t('settings.llm.section')" name="llm">
-					<el-form :model="llmForm" label-width="180px">
-						<div class="section-title">{{ t('settings.basic.section') }}</div>
-						<el-form-item :label="t('settings.provider')">
-							<el-select v-model="llmForm.provider" class="settings-select">
-								<el-option
-									:label="t('settings.provider.openai')"
-									value="open-ai"
-								/>
-								<el-option
-									:label="t('settings.provider.ollama')"
-									value="ollama"
-								/>
-							</el-select>
-						</el-form-item>
-						<el-form-item :label="t('settings.use.rag')">
-							<el-switch v-model="llmForm.useRag" />
-						</el-form-item>
-						<el-form-item :label="t('settings.use.tools')">
-							<el-switch v-model="llmForm.useTools" />
-						</el-form-item>
-						<el-form-item :label="t('settings.temperature')">
-							<el-input-number
-								v-model="llmForm.temperature"
-								:min="0"
-								:max="2"
-								:step="0.1"
-							/>
-						</el-form-item>
-
-						<div class="section-title">{{ t('settings.ollama.section') }}</div>
-						<div class="section-desc">{{ t('settings.ollama.desc') }}</div>
-						<el-form-item :label="t('settings.model.name')">
-							<el-input v-model="llmForm.ollamaModelName" />
-						</el-form-item>
-						<el-form-item :label="t('settings.base.url')">
-							<el-input v-model="llmForm.ollamaBaseUrl" />
-						</el-form-item>
-						<el-form-item :label="t('settings.keep.alive.seconds')">
-							<el-input-number v-model="llmForm.ollamaKeepAliveSeconds" :min="1" />
-						</el-form-item>
-						<el-form-item :label="t('settings.context.length')">
-							<el-input-number v-model="llmForm.ollamaContextLength" :min="1" />
-						</el-form-item>
-
-						<div class="section-title">{{ t('settings.openai.section') }}</div>
-						<div class="section-desc">{{ t('settings.openai.desc') }}</div>
-						<el-form-item :label="t('settings.model.name')">
-							<el-input v-model="llmForm.openAiModelName" />
-						</el-form-item>
-						<el-form-item :label="t('settings.base.url')">
-							<el-input v-model="llmForm.openAiBaseUrl" />
-						</el-form-item>
-						<el-form-item :label="t('settings.completions.path')">
-							<el-input v-model="llmForm.openAiCompletionsPath" />
-						</el-form-item>
-						<el-form-item :label="t('settings.api.key')">
-							<el-input v-model="llmForm.openAiKey" type="password" show-password />
-						</el-form-item>
-						<el-form-item :label="t('settings.context.length')">
-							<el-input-number v-model="llmForm.openAiContextLength" :min="1" />
-						</el-form-item>
-					</el-form>
-					<div class="settings-actions">
-						<el-button type="primary" :loading="saving" @click="saveSettings">
-							{{ t('settings.save') }}
-						</el-button>
-					</div>
-				</el-tab-pane>
-				<el-tab-pane :label="t('settings.embedding.section')" name="embedding">
-					<el-form :model="embeddingForm" label-width="180px">
-						<div class="section-title">{{ t('settings.basic.section') }}</div>
-						<el-form-item :label="t('settings.provider')">
-							<el-select v-model="embeddingForm.provider" class="settings-select">
-								<el-option
-									:label="t('settings.provider.openai')"
-									value="open-ai"
-								/>
-								<el-option
-									:label="t('settings.provider.ollama')"
-									value="ollama"
-								/>
-							</el-select>
-						</el-form-item>
-
-						<div class="section-title">{{ t('settings.ollama.section') }}</div>
-						<div class="section-desc">{{ t('settings.ollama.desc') }}</div>
-						<el-form-item :label="t('settings.model.name')">
-							<el-input v-model="embeddingForm.ollamaModelName" />
-						</el-form-item>
-						<el-form-item :label="t('settings.base.url')">
-							<el-input v-model="embeddingForm.ollamaBaseUrl" />
-						</el-form-item>
-						<el-form-item :label="t('settings.keep.alive.seconds')">
-							<el-input-number v-model="embeddingForm.ollamaKeepAliveSeconds" :min="1" />
-						</el-form-item>
-
-						<div class="section-title">{{ t('settings.openai.section') }}</div>
-						<div class="section-desc">{{ t('settings.openai.desc') }}</div>
-						<el-form-item :label="t('settings.model.name')">
-							<el-input v-model="embeddingForm.openAiModelName" />
-						</el-form-item>
-						<el-form-item :label="t('settings.base.url')">
-							<el-input v-model="embeddingForm.openAiBaseUrl" />
-						</el-form-item>
-						<el-form-item :label="t('settings.embeddings.path')">
-							<el-input v-model="embeddingForm.openAiEmbeddingsPath" />
-						</el-form-item>
-						<el-form-item :label="t('settings.api.key')">
-							<el-input v-model="embeddingForm.openAiKey" type="password" show-password />
-						</el-form-item>
-					</el-form>
-					<div class="settings-actions">
-						<el-button type="primary" :loading="saving" @click="saveSettings">
-							{{ t('settings.save') }}
-						</el-button>
-					</div>
-				</el-tab-pane>
-				<el-tab-pane :label="t('settings.rag.section')" name="rag">
-					<el-form :model="ragForm" label-width="220px">
-						<el-form-item :label="t('settings.rag.topk')">
-							<el-input-number v-model="ragForm.topK" :min="1" />
-						</el-form-item>
-						<el-form-item :label="t('settings.rag.metric.type.dense')">
-							<el-select v-model="ragForm.metricType" class="settings-select">
-								<el-option label="COSINE" value="COSINE" />
-								<el-option label="IP" value="IP" />
-								<el-option label="L2" value="L2" />
-							</el-select>
-						</el-form-item>
-						<el-form-item :label="t('settings.rag.metric.type.sparse')">
-							<el-select :model-value="'BM25'" class="settings-select" disabled>
-								<el-option label="BM25" value="BM25" />
-							</el-select>
-						</el-form-item>
-						<el-form-item :label="t('settings.rag.weight.label')">
-							<div class="rag-weight-slider">
-								<el-slider
-									v-model="denseWeightPercent"
-									:min="0"
-									:max="100"
-									:show-tooltip="true"
-									:format-tooltip="formatWeightTooltip"
-								/>
-								<div class="rag-weight-values">
-									<span>{{ t('settings.rag.weight.dense') }}: {{ denseWeightPercent }}%</span>
-									<span>{{ t('settings.rag.weight.sparse') }}: {{ 100 - denseWeightPercent }}%</span>
-								</div>
-							</div>
-						</el-form-item>
-						<el-form-item :label="t('settings.rag.metric.score.expr')">
-							<el-input v-model="ragForm.metricScoreExpr" />
-						</el-form-item>
-					</el-form>
-					<div class="settings-actions">
-						<el-button type="primary" :loading="saving" @click="saveSettings">
-							{{ t('settings.save') }}
-						</el-button>
-					</div>
-				</el-tab-pane>
+			<el-tab-pane :label="t('settings.llm.section')" name="llm">
+				<LlmSettingsPanel :form="llmForm" :saving="saving" @save="saveSettings" />
+			</el-tab-pane>
+			<el-tab-pane :label="t('settings.embedding.section')" name="embedding">
+				<EmbeddingSettingsPanel
+					:form="embeddingForm"
+					:saving="saving"
+					@save="saveSettings"
+				/>
+			</el-tab-pane>
+			<el-tab-pane :label="t('settings.rag.section')" name="rag">
+				<RagSettingsPanel :form="ragForm" :saving="saving" @save="saveSettings" />
+			</el-tab-pane>
 			</el-tabs>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import {
-	ElButton,
-	ElForm,
-	ElFormItem,
-	ElInput,
-	ElInputNumber,
-	ElOption,
-	ElSelect,
-	ElSlider,
-	ElSwitch,
 	ElTabPane,
 	ElTabs,
 	ElMessage,
@@ -190,6 +34,9 @@ import {
 } from 'element-plus'
 import { t } from '@ai-system/lib'
 import TopoBar from '@/pages/components/topoBar.vue'
+import EmbeddingSettingsPanel from './components/EmbeddingSettingsPanel.vue'
+import LlmSettingsPanel from './components/LlmSettingsPanel.vue'
+import RagSettingsPanel from './components/RagSettingsPanel.vue'
 import { getProperties, putProperties } from '@/api/property.api'
 
 const KEY_LLM_PROVIDER = 'llm-provider'
@@ -287,21 +134,6 @@ const normalizeRagWeights = () => {
 	}
 	ragForm.value.denseWeight = dense / total
 	ragForm.value.sparseWeight = sparse / total
-}
-
-const denseWeightPercent = computed({
-	get: () => Math.round(ragForm.value.denseWeight * 100),
-	set: (value: number) => {
-		const clamped = Math.min(100, Math.max(0, value))
-		ragForm.value.denseWeight = clamped / 100
-		ragForm.value.sparseWeight = (100 - clamped) / 100
-	}
-})
-
-const formatWeightTooltip = (value: number) => {
-	const densePercent = Math.min(100, Math.max(0, Math.round(value)))
-	const sparsePercent = 100 - densePercent
-	return `${t('settings.rag.weight.dense')}: ${densePercent}% / ${t('settings.rag.weight.sparse')}: ${sparsePercent}%`
 }
 
 const resolvePropertyMap = (res: any) => {
@@ -591,38 +423,4 @@ onMounted(() => {
 	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 }
 
-.settings-select {
-	width: 240px;
-}
-
-.section-title {
-	margin: 20px 0 10px;
-	font-weight: 600;
-	color: var(--n-color-font-dark);
-}
-
-.section-desc {
-	margin-bottom: 10px;
-	color: var(--n-color-neutral-5);
-	font-size: 13px;
-}
-
-.settings-actions {
-	display: flex;
-	justify-content: flex-end;
-	margin-top: 10px;
-	padding-bottom: 10px;
-}
-
-.rag-weight-slider {
-	width: 320px;
-
-	.rag-weight-values {
-		display: flex;
-		justify-content: space-between;
-		margin-top: 6px;
-		color: var(--n-color-neutral-6);
-		font-size: 12px;
-	}
-}
 </style>
