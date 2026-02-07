@@ -19,11 +19,13 @@ export default {
 	'kb.knowledge.hit.test.text': 'Hit Test Text',
 	'kb.knowledge.hit.test.text.placeholder': 'Please enter the text to be tested',
 	'kb.knowledge.hit.test.score': 'Matching Score',
-	'kb.knowledge.hit.test.score.tip' :'The difference between the score of different models is large:' +
+'kb.knowledge.hit.test.dense.score.tip' :'Because score ranges differ by metric:' +
 		'<br/>L2 : [0, ∞)' +
 		'<br/>IP : [-1, 1]' +
 		'<br/>COSINE : [-1, 1]' +
-		'<br/>JACCARD : [0, 1]',
+		'<br/>JACCARD : [0, 1]' +
+		'<br/>All results are normalized to [0, 100]',
+'kb.knowledge.hit.test.sparse.score.tip' :'Sparse retrieval scores are normalized to [0, 100]',
 	'kb.knowledge.hit.test.metricType': 'Retrieve Metric Type',
 	'kb.knowledge.hit.test.dense.metric': 'Dense vector (semantic) metric',
 	'kb.knowledge.hit.test.dense.score': 'Dense vector (semantic) score',

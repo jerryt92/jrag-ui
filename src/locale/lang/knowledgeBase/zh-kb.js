@@ -19,11 +19,13 @@ export default {
 	'kb.knowledge.hit.test.text' :'命中测试文本',
 	'kb.knowledge.hit.test.text.placeholder' :'请输入测试文本',
 	'kb.knowledge.hit.test.score' :'匹配度分数',
-	'kb.knowledge.hit.test.score.tip' :'不同模型匹配度分数范围不同：' +
+'kb.knowledge.hit.test.dense.score.tip' :'由于不同指标匹配度分数范围不同：' +
 		'<br/>L2 : [0, ∞)' +
 		'<br/>IP : [-1, 1]' +
 		'<br/>COSINE : [-1, 1]' +
-		'<br/>JACCARD : [0, 1]',
+		'<br/>JACCARD : [0, 1]' +
+		'<br/>结果均已进行[0, 100]归一化处理',
+'kb.knowledge.hit.test.sparse.score.tip' :'稀疏向量检索结果均已进行[0, 100]归一化处理',
 	'kb.knowledge.hit.test.metricType' :'检索指标',
 	'kb.knowledge.hit.test.dense.metric': '稠密向量（语义）指标',
 	'kb.knowledge.hit.test.dense.score': '稠密向量（语义）分数',

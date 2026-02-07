@@ -44,7 +44,7 @@
 									effect="dark"
 									placement="top"
 									:raw-content="true"
-									:content="t('kb.knowledge.hit.test.score.tip')"
+									:content="t('kb.knowledge.hit.test.dense.score.tip')"
 								>
 									<el-icon class="info-icon">
 										<QuestionFilled />
@@ -62,7 +62,23 @@
 						:label="t('kb.knowledge.hit.test.sparse.score')"
 						width="170"
 						:formatter="(row) => formatScore(row.sparseScore)"
-					/>
+					>
+						<template #header>
+							<div class="header-with-tooltip">
+								<span>{{ t('kb.knowledge.hit.test.sparse.score') }}</span>
+								<el-tooltip
+									effect="dark"
+									placement="top"
+									:raw-content="true"
+									:content="t('kb.knowledge.hit.test.sparse.score.tip')"
+								>
+									<el-icon class="info-icon">
+										<QuestionFilled />
+									</el-icon>
+								</el-tooltip>
+							</div>
+						</template>
+					</el-table-column>
 					<el-table-column
 						:label="t('kb.knowledge.hit.test.hybrid.score')"
 						width="170"
