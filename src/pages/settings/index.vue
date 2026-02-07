@@ -5,7 +5,7 @@
 			<div class="settings-header">
 				<h2>{{ t('settings.title') }}</h2>
 			</div>
-			<el-tabs v-model="activeTab" class="settings-tabs">
+		<el-tabs v-model="activeTab" class="settings-tabs">
 			<el-tab-pane :label="t('settings.llm.section')" name="llm">
 				<LlmSettingsPanel :form="llmForm" :saving="saving" @save="saveSettings" />
 			</el-tab-pane>
@@ -19,7 +19,10 @@
 			<el-tab-pane :label="t('settings.rag.section')" name="rag">
 				<RagSettingsPanel :form="ragForm" :saving="saving" @save="saveSettings" />
 			</el-tab-pane>
-			</el-tabs>
+			<el-tab-pane :label="t('user.management.title')" name="user">
+				<UserManagementPanel />
+			</el-tab-pane>
+		</el-tabs>
 		</div>
 	</div>
 </template>
@@ -37,6 +40,7 @@ import TopoBar from '@/pages/components/topoBar.vue'
 import EmbeddingSettingsPanel from './components/EmbeddingSettingsPanel.vue'
 import LlmSettingsPanel from './components/LlmSettingsPanel.vue'
 import RagSettingsPanel from './components/RagSettingsPanel.vue'
+import UserManagementPanel from './components/UserManagementPanel.vue'
 import { getProperties, putProperties } from '@/api/property.api'
 
 const KEY_LLM_PROVIDER = 'llm-provider'

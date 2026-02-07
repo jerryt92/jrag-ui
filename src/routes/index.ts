@@ -4,6 +4,7 @@ import chat from '@/routes/chat'
 import kb from '@/routes/kb'
 import mcp from '@/routes/mcp'
 import settings from '@/routes/settings'
+import account from '@/routes/account'
 
 // 业务系统路由定义
 const routes = [
@@ -25,7 +26,8 @@ const routes = [
 	...chat,
 	...kb,
 	...mcp,
-	...settings
+	...settings,
+	...account
 ] as RouteRecordRaw[]
 
 export default routes

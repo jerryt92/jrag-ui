@@ -61,7 +61,7 @@ import {
 import { getSessionInfo, login } from '@/api/login.api'
 import SlipCaptcha from '@/pages/login/components/SlipCaptcha.vue'
 import { t } from '@ai-system/lib'
-import { setUserRole } from '@/utils/role'
+import { setSessionInfo } from '@/utils/role'
 
 const router = useRouter()
 const slideCaptchaRef = ref()
@@ -92,14 +92,14 @@ const slideCaptchaSuccess = (e) => {
 		.then(async () => {
 			try {
 				const sessionResponse = await getSessionInfo()
-				setUserRole(sessionResponse.data.role)
+				setSessionInfo(sessionResponse.data)
 				if (sessionResponse.data.role > 1) {
 					router.push('/chat/assistant')
 				} else {
 					router.push('/')
 				}
 			} catch (error) {
-				setUserRole(null)
+				setSessionInfo(null)
 				router.push('/')
 			}
 		})

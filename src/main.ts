@@ -4,7 +4,7 @@ import { App } from '@ai-system/lib'
 import { ElLoading } from 'element-plus'
 import { useDarkMode } from '@ai-system/hooks'
 import { getSessionInfo } from '@/api/login.api'
-import { setUserRole } from '@/utils/role'
+import { setSessionInfo } from '@/utils/role'
 
 import './styles/index.scss'
 
@@ -30,9 +30,9 @@ async function APP() {
 	if (!isAuthRoute) {
 		try {
 			const sessionResponse = await getSessionInfo()
-			setUserRole(sessionResponse.data.role)
+			setSessionInfo(sessionResponse.data)
 		} catch (error) {
-			setUserRole(null)
+			setSessionInfo(null)
 		}
 	}
 

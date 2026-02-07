@@ -28,7 +28,6 @@
 				<li class="menu-card-item" v-if="canAccessAdmin" @click="goTo('/settings')">
 					{{ '⚙️ ' + t('settings.title') }}
 				</li>
-				<hr />
 				<li class="menu-card-item" @click="toggleDarkMode">
 					<span v-show="currentDarkMode === 'disabled'"
 					>☀️ {{ t('dark.mode.light') }}</span
@@ -39,6 +38,9 @@
 					<span v-show="currentDarkMode === 'auto'">🌓 {{ t('dark.mode.auto') }}</span>
 				</li>
 				<hr />
+				<li class="menu-card-item" @click="goTo('/account')">
+					{{ '🔐 ' + t('account.title') }}
+				</li>
 				<li class="menu-card-item" @click="goTo('/logout')">
 					{{ '⏏️ ' + t('logout') }}
 				</li>

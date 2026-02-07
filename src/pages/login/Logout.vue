@@ -4,12 +4,12 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { logout } from '@/api/login.api'
-import { setUserRole } from '@/utils/role'
+import { setSessionInfo } from '@/utils/role'
 
 const router = useRouter()
 onMounted(() => {
 	logout().then(() => {
-		setUserRole(null)
+		setSessionInfo(null)
 		router.push('/login')
 	})
 })
