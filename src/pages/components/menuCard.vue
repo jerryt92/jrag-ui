@@ -22,6 +22,9 @@
 				<li class="menu-card-item" @click="goTo('/kb')">
 					{{ '📚 ' + t('kb.knowledge.base') }}
 				</li>
+				<li class="menu-card-item" @click="goTo('/mcp')">
+					{{ '🧩 ' + t('mcp.title') }}
+				</li>
 				<li class="menu-card-item" @click="goTo('/settings')">
 					{{ '⚙️ ' + t('settings.title') }}
 				</li>

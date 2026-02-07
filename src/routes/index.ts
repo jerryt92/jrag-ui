@@ -2,6 +2,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 import chat from '@/routes/chat'
 import kb from '@/routes/kb'
+import mcp from '@/routes/mcp'
 import settings from '@/routes/settings'
 
 // 业务系统路由定义
@@ -23,6 +24,7 @@ const routes = [
 	},
 	...chat,
 	...kb,
+	...mcp,
 	...settings
 ] as RouteRecordRaw[]
 
