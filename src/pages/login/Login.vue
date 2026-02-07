@@ -58,9 +58,10 @@ import {
 	ElDialog,
 	ElMessage
 } from 'element-plus'
-import { login } from '@/api/login.api'
+import { getSessionInfo, login } from '@/api/login.api'
 import SlipCaptcha from '@/pages/login/components/SlipCaptcha.vue'
 import { t } from '@ai-system/lib'
+import { setUserRole } from '@/utils/role'
 
 const router = useRouter()
 const slideCaptchaRef = ref()
@@ -88,8 +89,19 @@ const handleSubmit = () => {
 const slideCaptchaSuccess = (e) => {
 	loading.value = true
 	login(loginData.username, loginData.password, e.code, e.hash)
-		.then(() => {
-			router.push('/')
+		.then(async () => {
+			try {
+				const sessionResponse = await getSessionInfo()
+				setUserRole(sessionResponse.data.role)
+				if (sessionResponse.data.role > 1) {
+					router.push('/chat/assistant')
+				} else {
+					router.push('/')
+				}
+			} catch (error) {
+				setUserRole(null)
+				router.push('/')
+			}
 		})
 		.catch((e) => {
 			console.log(e)

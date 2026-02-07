@@ -18,3 +18,13 @@ export const login = (
 export const logout = () => {
 	return http.get(`/v1${globalUrlPrefix}auth/${programTag}/logout`)
 }
+
+export interface SessionInfo {
+	userId: string
+	username: string
+	role: number
+}
+
+export const getSessionInfo = () => {
+	return http.get<SessionInfo>(`/v1${globalUrlPrefix}rest/${programTag}/session`)
+}

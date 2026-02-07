@@ -6,22 +6,22 @@
 		<topo-bar/>
 		<!-- 功能导航卡片 -->
 		<div class="feature-cards">
-			<div class="feature-card" @click="goTo('/chat/assistant')">
+			<div class="feature-card" v-if="canAccessChat" @click="goTo('/chat/assistant')">
 				<div class="card-icon">🤖</div>
 				<h3>{{ t('ai.assistant') }}</h3>
 				<p>{{ t('ai.assistant.desc') }}</p>
 			</div>
-			<div class="feature-card" @click="goTo('/kb')">
+			<div class="feature-card" v-if="canAccessAdmin" @click="goTo('/kb')">
 				<div class="card-icon">📚</div>
 				<h3>{{ t('kb.knowledge.base') }}</h3>
 				<p>{{ t('kb.management') }}</p>
 			</div>
-			<div class="feature-card" @click="goTo('/mcp')">
+			<div class="feature-card" v-if="canAccessAdmin" @click="goTo('/mcp')">
 				<div class="card-icon">🧩</div>
 				<h3>{{ t('mcp.title') }}</h3>
 				<p>{{ t('mcp.desc') }}</p>
 			</div>
-			<div class="feature-card" @click="goTo('/settings')">
+			<div class="feature-card" v-if="canAccessAdmin" @click="goTo('/settings')">
 				<div class="card-icon">⚙️</div>
 				<h3>{{ t('settings.title') }}</h3>
 				<p>{{ t('settings.desc') }}</p>
@@ -30,16 +30,19 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { debounce, t } from '@ai-system/lib'
 import TopoBar from '@/pages/components/topoBar.vue'
 import { getNewContextId } from '@/api/ai.api'
 import { goTo } from '@/routes'
+import { hasRoleAccess } from '@/utils/role'
 
 const route = useRoute()
 const isFullscreen = ref(true)
 const isMobile = ref(false)
+const canAccessChat = computed(() => hasRoleAccess(2))
+const canAccessAdmin = computed(() => hasRoleAccess(1))
 
 const resize = () => {
 	const width =

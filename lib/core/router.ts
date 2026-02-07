@@ -11,6 +11,7 @@ import {
 } from '@ai-system/utils'
 import { t } from '@ai-system/locale'
 import type { Router, RouteRecordRaw } from 'vue-router'
+import { hasRoleAccess } from '@/utils/role'
 
 function optimizeRoutes(routes: RouteRecordRaw[]) {
 	deepForEach(routes, (route, level, isLeaf, parent) => {
@@ -42,6 +43,13 @@ export function createWebRouter({ routes, routeBase, routeType }): Router {
 	})
 
 	router.beforeEach((to) => {
+		const adminOnlyPrefixes = ['/kb', '/mcp', '/settings']
+		if (
+			adminOnlyPrefixes.some((prefix) => to.path.startsWith(prefix)) &&
+			!hasRoleAccess(1)
+		) {
+			return '/chat/assistant'
+		}
 		if (to.meta.title) {
 			document.title = `${t(to.meta.title as string)}`
 		} else {

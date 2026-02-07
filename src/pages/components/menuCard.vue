@@ -16,16 +16,16 @@
 					{{ '🏠 ' + t('homepage') }}
 				</li>
 				<hr />
-				<li class="menu-card-item" @click="goTo('/chat/assistant')">
+				<li class="menu-card-item" v-if="canAccessChat" @click="goTo('/chat/assistant')">
 					{{ '🤖 ' + t('ai.assistant') }}
 				</li>
-				<li class="menu-card-item" @click="goTo('/kb')">
+				<li class="menu-card-item" v-if="canAccessAdmin" @click="goTo('/kb')">
 					{{ '📚 ' + t('kb.knowledge.base') }}
 				</li>
-				<li class="menu-card-item" @click="goTo('/mcp')">
+				<li class="menu-card-item" v-if="canAccessAdmin" @click="goTo('/mcp')">
 					{{ '🧩 ' + t('mcp.title') }}
 				</li>
-				<li class="menu-card-item" @click="goTo('/settings')">
+				<li class="menu-card-item" v-if="canAccessAdmin" @click="goTo('/settings')">
 					{{ '⚙️ ' + t('settings.title') }}
 				</li>
 				<hr />
@@ -48,8 +48,9 @@
 </template>
 <script setup lang="ts">
 import { t } from '@ai-system/lib'
-import { ref, onUnmounted, watch, onMounted } from 'vue'
+import { computed, ref, onUnmounted, watch, onMounted } from 'vue'
 import { goTo } from '@/routes'
+import { hasRoleAccess } from '@/utils/role'
 
 defineExpose({
 	show
@@ -61,6 +62,8 @@ const showMenuCard = ref(false)
 const menuCardRef = ref<HTMLElement | null>(null)
 const isClickOutsideEnabled = ref(false)
 const currentDarkMode = ref<'enabled' | 'disabled' | 'auto'>('auto')
+const canAccessChat = computed(() => hasRoleAccess(2))
+const canAccessAdmin = computed(() => hasRoleAccess(1))
 
 const initDarkMode = () => {
 	const savedDarkMode = localStorage.getItem('dark-mode') as

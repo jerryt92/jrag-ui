@@ -3,6 +3,8 @@ import langLoaders from './locale'
 import { App } from '@ai-system/lib'
 import { ElLoading } from 'element-plus'
 import { useDarkMode } from '@ai-system/hooks'
+import { getSessionInfo } from '@/api/login.api'
+import { setUserRole } from '@/utils/role'
 
 import './styles/index.scss'
 
@@ -22,6 +24,17 @@ async function APP() {
 
 	// 启用深色模式支持
 	const { currentTheme } = useDarkMode()
+
+	const isAuthRoute =
+		location.hash.includes('/login') || location.hash.includes('/logout')
+	if (!isAuthRoute) {
+		try {
+			const sessionResponse = await getSessionInfo()
+			setUserRole(sessionResponse.data.role)
+		} catch (error) {
+			setUserRole(null)
+		}
+	}
 
 	// 挂载路由
 	app.createRouter(routes)
