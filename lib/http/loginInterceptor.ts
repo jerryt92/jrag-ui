@@ -25,7 +25,7 @@ http.interceptors.response.use(
 			goTo('/chat/assistant')
 		}
 
-		if (status === 400 || status === 500) {
+		if (status === 400 || status === 500 || status === 503) {
 			if (error.response.data.message) {
 				ElMessage.error(status + ' : ' + error.response.data.message)
 			}

@@ -53,6 +53,10 @@ export type ChatResponseDto = {
 	done: boolean
 	// 上下文ID
 	contextId: string
+	// 错误标识
+	error?: boolean
+	errorCode?: string
+	errorMessage?: string
 }
 
 export type WsResponse = {

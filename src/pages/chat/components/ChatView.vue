@@ -316,6 +316,24 @@ const sendMessage = (msg?: string) => {
 }
 // 处理响应
 const handleChatResponse = (chatResponseDto: ChatResponseDto) => {
+	if (chatResponseDto.error) {
+		const errorCode = Number(chatResponseDto.errorCode)
+		if (errorCode === 401 || errorCode === 403) {
+			ElMessage.error(t('ai.api.key.invalid'))
+		} else if (errorCode === 503) {
+			ElMessage.error(t('ai.assistant.service.unavailable'))
+		} else if (chatResponseDto.errorMessage) {
+			ElMessage.error(chatResponseDto.errorMessage)
+		} else {
+			ElMessage.error(t('ai.assistant.service.unavailable'))
+		}
+		isWaiting.value = false
+		isNewLlmResponse.value = true
+		nextTick(() => {
+			chatWebsocketClient?.close()
+		})
+		return
+	}
 	checkScroll()
 	if (isAtBottom.value) {
 		scrollToBottom()
