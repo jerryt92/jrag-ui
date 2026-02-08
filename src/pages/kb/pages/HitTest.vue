@@ -2,6 +2,23 @@
 	<div class="hit-test-container">
 		<div class="hit-test-result">
 			<div class="table-wrapper">
+				<div class="table-header">
+					<span class="table-header-title">{{ t('settings.rag.weight.label') }}</span>
+					<div class="rag-weight-slider compact">
+						<el-slider
+							:model-value="denseWeightPercent"
+							:min="0"
+							:max="100"
+							:show-tooltip="true"
+							:format-tooltip="formatWeightTooltip"
+							disabled
+						/>
+						<div class="rag-weight-values">
+							<span>{{ t('settings.rag.weight.dense') }}: {{ denseWeightPercent }}%</span>
+							<span>{{ t('settings.rag.weight.sparse') }}: {{ sparseWeightPercent }}%</span>
+						</div>
+					</div>
+				</div>
 				<el-table
 					ref="tableRef"
 					:data="retrieveResultList"  style="width: 100%; height: 100%"
@@ -172,16 +189,21 @@
 	ElInput,
 	ElInputNumber,
 	ElPopover,
+	ElSlider,
 	ElTable,
 	ElTableColumn,
 	ElTooltip,
 	ElIcon,
 } from 'element-plus'
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { t } from '@ai-system/lib'
 import { retrieveKnowledge } from '@/api/kb/kb.api'
+import { getProperties } from '@/api/property.api'
 import { KnowledgeRetrieveItemDto } from '@/types/kb.model'
 import { QuestionFilled } from '@element-plus/icons-vue'
+
+const KEY_RETRIEVE_DENSE_WEIGHT = 'RETRIEVE_DENSE_WEIGHT'
+const KEY_RETRIEVE_SPARSE_WEIGHT = 'RETRIEVE_SPARSE_WEIGHT'
 
 // 表单数据
 const formData = ref({
@@ -194,6 +216,49 @@ const formRef = ref<InstanceType<typeof ElForm>>()
 
 const loading = ref(false)
 const retrieveResultList = ref<KnowledgeRetrieveItemDto[]>([])
+
+const ragWeights = ref({
+	denseWeight: 0.5,
+	sparseWeight: 0.5
+})
+
+const normalizeRagWeights = () => {
+	const dense = ragWeights.value.denseWeight
+	const sparse = ragWeights.value.sparseWeight
+	const total = dense + sparse
+	if (!Number.isFinite(total) || total <= 0) {
+		ragWeights.value.denseWeight = 0.5
+		ragWeights.value.sparseWeight = 0.5
+		return
+	}
+	ragWeights.value.denseWeight = dense / total
+	ragWeights.value.sparseWeight = sparse / total
+}
+
+const parseNumber = (value: string | undefined, fallback: number) => {
+	if (value === undefined || value === null) {
+		return fallback
+	}
+	const parsed = Number(value)
+	return Number.isFinite(parsed) ? parsed : fallback
+}
+
+const resolvePropertyMap = (res: any) => {
+	if (res?.data?.data) {
+		return res.data.data
+	}
+	return res?.data ?? {}
+}
+
+const denseWeightPercent = computed(() =>
+	Math.round(ragWeights.value.denseWeight * 100)
+)
+const sparseWeightPercent = computed(() => 100 - denseWeightPercent.value)
+const formatWeightTooltip = (value: number) => {
+	const densePercent = Math.min(100, Math.max(0, Math.round(value)))
+	const sparsePercent = 100 - densePercent
+	return `${t('settings.rag.weight.dense')}: ${densePercent}% / ${t('settings.rag.weight.sparse')}: ${sparsePercent}%`
+}
 
 const formatScore = (value?: number) => {
 	if (!Number.isFinite(value)) {
@@ -240,6 +305,31 @@ const handleKeyup = () => {
 		onSubmit()
 	}
 }
+
+const loadRagWeights = async () => {
+	try {
+		const res = await getProperties([
+			KEY_RETRIEVE_DENSE_WEIGHT,
+			KEY_RETRIEVE_SPARSE_WEIGHT
+		])
+		const data = resolvePropertyMap(res)
+		ragWeights.value.denseWeight = parseNumber(
+			KEY_RETRIEVE_DENSE_WEIGHT in data ? data[KEY_RETRIEVE_DENSE_WEIGHT] : undefined,
+			ragWeights.value.denseWeight
+		)
+		ragWeights.value.sparseWeight = parseNumber(
+			KEY_RETRIEVE_SPARSE_WEIGHT in data ? data[KEY_RETRIEVE_SPARSE_WEIGHT] : undefined,
+			ragWeights.value.sparseWeight
+		)
+		normalizeRagWeights()
+	} catch (error) {
+		console.error('加载检索权重失败:', error)
+	}
+}
+
+onMounted(() => {
+	loadRagWeights()
+})
 </script>
 
 <style scoped lang="scss">.hit-test-container {
@@ -270,6 +360,55 @@ const handleKeyup = () => {
 			border-radius: var(--n-radius-triple);
 			flex: 1; // 占据剩余所有高度
 			overflow: hidden; // 防止溢出，强制在内部滚动
+			display: flex;
+			flex-direction: column;
+
+			.table-header {
+				display: flex;
+				align-items: center;
+					justify-content: flex-start;
+					gap: 12px;
+				padding: 8px 12px;
+				border-bottom: 1px solid var(--el-border-color-lighter);
+				background-color: var(--el-fill-color-lighter);
+
+				.table-header-title {
+					font-weight: 600;
+					color: var(--n-color-font-dark);
+					white-space: nowrap;
+				}
+
+				.rag-weight-slider {
+						flex: 0 0 auto;
+				}
+			}
+
+			.rag-weight-slider {
+					width: 280px;
+
+				:deep(.el-slider__runway) {
+						background-color: #f4a340;
+				}
+
+					:deep(.el-slider__bar) {
+						background-color: var(--el-slider-main-bg-color);
+					}
+
+				.rag-weight-values {
+					display: flex;
+					justify-content: space-between;
+					margin-top: 4px;
+					color: var(--n-color-neutral-6);
+					font-size: 12px;
+				}
+
+				&.compact {
+					.rag-weight-values {
+						margin-top: 2px;
+					}
+				}
+			}
+
 			// 穿透 element-plus 样式，确保表格高度占满
 			:deep(.el-table) {
 				height: 100% !important;
@@ -300,6 +439,19 @@ const handleKeyup = () => {
 		);
 		backdrop-filter: blur(10px);
 		border-radius: var(--n-radius-triple);
+
+		.rag-weight-summary {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-bottom: 12px;
+			font-size: 14px;
+			color: var(--n-color-font-dark);
+
+			.label {
+				font-weight: 600;
+			}
+		}
 
 		:deep(.el-form-item__label) {
 			color: var(--n-color-font-dark);
