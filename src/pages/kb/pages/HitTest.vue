@@ -84,6 +84,12 @@
 						width="170"
 						:formatter="(row) => formatScore(row.hybridScore ?? row.score)"
 					/>
+					<el-table-column
+						prop="isFiltered"
+						:label="t('kb.knowledge.hit.test.is.hit')"
+						width="150"
+						:formatter="(row) => row.isFiltered ? t('common.no') : t('common.yes')"
+					/>
 					<el-table-column :label="t('kb.textChunk')" width="400">
 						<template #default="item">
 							<el-popover
@@ -101,12 +107,6 @@
 							</el-popover>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="isFiltered"
-						:label="t('kb.knowledge.hit.test.is.hit')"
-						width="150"
-						:formatter="(row) => row.isFiltered ? t('common.no') : t('common.yes')"
-					/>
 					<el-table-column
 						prop="dimension"
 						:label="t('kb.dimension')"
