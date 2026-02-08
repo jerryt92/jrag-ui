@@ -51,6 +51,7 @@ const KEY_LLM_OLLAMA_MODEL_NAME = 'llm-ollama-model-name'
 const KEY_LLM_OLLAMA_BASE_URL = 'llm-ollama-base-url'
 const KEY_LLM_OLLAMA_KEEP_ALIVE_SECONDS = 'llm-ollama-keep-alive-seconds'
 const KEY_LLM_OLLAMA_CONTEXT_LENGTH = 'llm-ollama-context-length'
+const KEY_LLM_OLLAMA_KEY = 'llm-ollama-key'
 const KEY_LLM_OPENAI_MODEL_NAME = 'llm-open-ai-model-name'
 const KEY_LLM_OPENAI_BASE_URL = 'llm-open-ai-base-url'
 const KEY_LLM_OPENAI_COMPLETIONS_PATH = 'llm-open-ai-completions-path'
@@ -61,6 +62,7 @@ const KEY_EMBEDDING_PROVIDER = 'embedding-provider'
 const KEY_EMBEDDING_OLLAMA_MODEL_NAME = 'embedding-ollama-model-name'
 const KEY_EMBEDDING_OLLAMA_BASE_URL = 'embedding-ollama-base-url'
 const KEY_EMBEDDING_OLLAMA_KEEP_ALIVE_SECONDS = 'embedding-ollama-keep_alive_seconds'
+const KEY_EMBEDDING_OLLAMA_KEY = 'embedding-ollama-key'
 const KEY_EMBEDDING_OPENAI_MODEL_NAME = 'embedding-open-ai-model-name'
 const KEY_EMBEDDING_OPENAI_BASE_URL = 'embedding-open-ai-base-url'
 const KEY_EMBEDDING_OPENAI_EMBEDDINGS_PATH = 'embedding-open-ai-embeddings-path'
@@ -85,6 +87,7 @@ const llmForm = ref({
 	ollamaBaseUrl: 'http://172.16.8.107:11434',
 	ollamaKeepAliveSeconds: 3600,
 	ollamaContextLength: 32768,
+	ollamaKey: '',
 	openAiModelName: 'qwen-plus',
 	openAiBaseUrl: 'https://dashscope.aliyuncs.com',
 	openAiCompletionsPath: '/compatible-mode/v1/chat/completions',
@@ -97,6 +100,7 @@ const embeddingForm = ref({
 	ollamaModelName: 'nomic-embed-text:latest',
 	ollamaBaseUrl: 'http://127.0.0.1:11434',
 	ollamaKeepAliveSeconds: 3600,
+	ollamaKey: '',
 	openAiModelName: 'text-embedding-v4',
 	openAiBaseUrl: 'https://dashscope.aliyuncs.com',
 	openAiEmbeddingsPath: '/compatible-mode/v1/embeddings',
@@ -159,6 +163,7 @@ const loadSettings = async () => {
 			KEY_LLM_OLLAMA_BASE_URL,
 			KEY_LLM_OLLAMA_KEEP_ALIVE_SECONDS,
 			KEY_LLM_OLLAMA_CONTEXT_LENGTH,
+			KEY_LLM_OLLAMA_KEY,
 			KEY_LLM_OPENAI_MODEL_NAME,
 			KEY_LLM_OPENAI_BASE_URL,
 			KEY_LLM_OPENAI_COMPLETIONS_PATH,
@@ -168,6 +173,7 @@ const loadSettings = async () => {
 			KEY_EMBEDDING_OLLAMA_MODEL_NAME,
 			KEY_EMBEDDING_OLLAMA_BASE_URL,
 			KEY_EMBEDDING_OLLAMA_KEEP_ALIVE_SECONDS,
+			KEY_EMBEDDING_OLLAMA_KEY,
 			KEY_EMBEDDING_OPENAI_MODEL_NAME,
 			KEY_EMBEDDING_OPENAI_BASE_URL,
 			KEY_EMBEDDING_OPENAI_EMBEDDINGS_PATH,
@@ -202,6 +208,7 @@ const loadSettings = async () => {
 			data[KEY_LLM_OLLAMA_CONTEXT_LENGTH],
 			llmForm.value.ollamaContextLength
 		)
+		llmForm.value.ollamaKey = data[KEY_LLM_OLLAMA_KEY] || llmForm.value.ollamaKey
 		llmForm.value.openAiModelName =
 			data[KEY_LLM_OPENAI_MODEL_NAME] || llmForm.value.openAiModelName
 		llmForm.value.openAiBaseUrl =
@@ -224,6 +231,8 @@ const loadSettings = async () => {
 			data[KEY_EMBEDDING_OLLAMA_KEEP_ALIVE_SECONDS],
 			embeddingForm.value.ollamaKeepAliveSeconds
 		)
+		embeddingForm.value.ollamaKey =
+			data[KEY_EMBEDDING_OLLAMA_KEY] || embeddingForm.value.ollamaKey
 		embeddingForm.value.openAiModelName =
 			data[KEY_EMBEDDING_OPENAI_MODEL_NAME] || embeddingForm.value.openAiModelName
 		embeddingForm.value.openAiBaseUrl =
@@ -284,6 +293,7 @@ const buildPayload = () => {
 			propertyName: KEY_LLM_OLLAMA_CONTEXT_LENGTH,
 			propertyValue: toValue(llmForm.value.ollamaContextLength)
 		},
+		{ propertyName: KEY_LLM_OLLAMA_KEY, propertyValue: toValue(llmForm.value.ollamaKey) },
 		{
 			propertyName: KEY_LLM_OPENAI_MODEL_NAME,
 			propertyValue: toValue(llmForm.value.openAiModelName)
@@ -316,6 +326,10 @@ const buildPayload = () => {
 		{
 			propertyName: KEY_EMBEDDING_OLLAMA_KEEP_ALIVE_SECONDS,
 			propertyValue: toValue(embeddingForm.value.ollamaKeepAliveSeconds)
+		},
+		{
+			propertyName: KEY_EMBEDDING_OLLAMA_KEY,
+			propertyValue: toValue(embeddingForm.value.ollamaKey)
 		},
 		{
 			propertyName: KEY_EMBEDDING_OPENAI_MODEL_NAME,

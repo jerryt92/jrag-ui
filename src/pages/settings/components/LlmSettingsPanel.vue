@@ -25,6 +25,9 @@
 		<el-form-item :label="t('settings.base.url')">
 			<el-input v-model="form.ollamaBaseUrl" />
 		</el-form-item>
+		<el-form-item :label="t('settings.ollama.api.key')">
+			<el-input v-model="form.ollamaKey" type="password" show-password />
+		</el-form-item>
 		<el-form-item :label="t('settings.keep.alive.seconds')">
 			<el-input-number v-model="form.ollamaKeepAliveSeconds" :min="1" />
 		</el-form-item>
@@ -80,6 +83,7 @@ type LlmForm = {
 	ollamaBaseUrl: string
 	ollamaKeepAliveSeconds: number
 	ollamaContextLength: number
+	ollamaKey: string
 	openAiModelName: string
 	openAiBaseUrl: string
 	openAiCompletionsPath: string

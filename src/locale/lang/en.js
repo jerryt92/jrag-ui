@@ -65,6 +65,7 @@ export default {
 	'settings.completions.path': 'Completions Path',
 	'settings.embeddings.path': 'Embeddings Path',
 	'settings.api.key': 'API Key',
+	'settings.ollama.api.key': 'Ollama API Key',
 	'settings.ollama.section': 'Ollama Settings',
 	'settings.ollama.desc': 'Effective when provider is Ollama',
 	'settings.openai.section': 'OpenAI Compatible Settings',
