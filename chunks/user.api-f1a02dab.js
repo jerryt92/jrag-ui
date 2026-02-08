@@ -1,1 +1,0 @@
-import{e as s,g as e,p as r}from"../index-1945d2f6.js";const t=()=>s.get(`/v1${e}rest/${r}/users`),a=t=>s.post(`/v1${e}rest/${r}/users`,t),$=t=>s.delete(`/v1${e}rest/${r}/users`,{params:{"user-id":t}}),u=t=>s.put(`/v1${e}rest/${r}/users/role`,t),p=t=>s.put(`/v1${e}rest/${r}/users/password`,t);export{p as a,a as c,$ as d,t as g,u};
