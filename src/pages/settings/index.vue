@@ -106,6 +106,7 @@ const embeddingForm = ref({
 	openAiEmbeddingsPath: '/compatible-mode/v1/embeddings',
 	openAiKey: ''
 })
+const embeddingSnapshot = ref('')
 const ragMetricSnapshot = ref('')
 
 const ragForm = ref({
@@ -243,6 +244,7 @@ const loadSettings = async () => {
 			embeddingForm.value.openAiEmbeddingsPath
 		embeddingForm.value.openAiKey =
 			data[KEY_EMBEDDING_OPENAI_KEY] || embeddingForm.value.openAiKey
+		embeddingSnapshot.value = JSON.stringify(embeddingForm.value)
 		ragForm.value.topK = parseNumber(KEY_RETRIEVE_TOP_K in data ? data[KEY_RETRIEVE_TOP_K] : undefined, ragForm.value.topK)
 		ragForm.value.metricType =
 			data[KEY_RETRIEVE_METRIC_TYPE] || ragForm.value.metricType
@@ -375,6 +377,10 @@ const isRagMetricTypeChanged = () => {
 	return ragMetricSnapshot.value !== ragForm.value.metricType
 }
 
+const isEmbeddingChanged = () => {
+	return embeddingSnapshot.value !== JSON.stringify(embeddingForm.value)
+}
+
 const confirmEmbeddingRebuild = async () => {
 	await ElMessageBox.confirm(
 		t('settings.embedding.rebuild.confirm'),
@@ -390,10 +396,11 @@ const confirmEmbeddingRebuild = async () => {
 const saveSettings = async () => {
 	saving.value = true
 	try {
-		if (isRagMetricTypeChanged()) {
+		if (isRagMetricTypeChanged() || isEmbeddingChanged()) {
 			await confirmEmbeddingRebuild()
 		}
 		await putProperties(buildPayload())
+		embeddingSnapshot.value = JSON.stringify(embeddingForm.value)
 		ragMetricSnapshot.value = ragForm.value.metricType
 		ElMessage.success(t('settings.save.success'))
 	} catch (error) {
