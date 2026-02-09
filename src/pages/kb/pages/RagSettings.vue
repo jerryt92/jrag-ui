@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { t } from '@ai-system/lib'
 import RagSettingsPanel from '@/pages/settings/components/RagSettingsPanel.vue'
 import { getProperties, putProperties } from '@/api/property.api'
@@ -32,6 +32,7 @@ const ragForm = ref({
 	denseWeight: 0.5,
 	sparseWeight: 0.5
 })
+const ragMetricSnapshot = ref(ragForm.value.metricType)
 
 const normalizeRagWeights = () => {
 	const dense = ragForm.value.denseWeight
@@ -89,6 +90,7 @@ const loadRagSettings = async () => {
 			ragForm.value.sparseWeight
 		)
 		normalizeRagWeights()
+		ragMetricSnapshot.value = ragForm.value.metricType
 	} catch (error) {
 		ElMessage.error(t('settings.load.failed'))
 	} finally {
@@ -96,9 +98,28 @@ const loadRagSettings = async () => {
 	}
 }
 
+const isRagMetricTypeChanged = () => {
+	return ragMetricSnapshot.value !== ragForm.value.metricType
+}
+
+const confirmEmbeddingRebuild = async () => {
+	await ElMessageBox.confirm(
+		t('settings.embedding.rebuild.confirm'),
+		t('settings.embedding.rebuild.title'),
+		{
+			confirmButtonText: t('settings.embedding.rebuild.confirm.ok'),
+			cancelButtonText: t('settings.embedding.rebuild.confirm.cancel'),
+			type: 'warning'
+		}
+	)
+}
+
 const saveRagSettings = async () => {
 	saving.value = true
 	try {
+		if (isRagMetricTypeChanged()) {
+			await confirmEmbeddingRebuild()
+		}
 		normalizeRagWeights()
 		await putProperties([
 			{ propertyName: KEY_RETRIEVE_TOP_K, propertyValue: String(ragForm.value.topK) },
@@ -110,9 +131,12 @@ const saveRagSettings = async () => {
 			{ propertyName: KEY_RETRIEVE_DENSE_WEIGHT, propertyValue: String(ragForm.value.denseWeight) },
 			{ propertyName: KEY_RETRIEVE_SPARSE_WEIGHT, propertyValue: String(ragForm.value.sparseWeight) }
 		])
+		ragMetricSnapshot.value = ragForm.value.metricType
 		ElMessage.success(t('settings.save.success'))
 	} catch (error) {
-		ElMessage.error(t('settings.save.failed'))
+		if (error !== 'cancel') {
+			ElMessage.error(t('settings.save.failed'))
+		}
 	} finally {
 		saving.value = false
 	}
