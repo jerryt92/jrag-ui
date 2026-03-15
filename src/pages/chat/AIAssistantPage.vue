@@ -9,7 +9,7 @@
 					v-show="isMobile"
 					v-draggable="{ device: 'mobile' }"
 					class="menu-button"
-					:class="{ active: chatManageActive }"
+					:class="{ active: chatManageActive, disabled: isChatBusy }"
 					@click="handleChatManage"
 				>
 				⌥
@@ -27,7 +27,7 @@
 </template>
 <script setup lang="ts">
 import ChatView from './components/ChatView.vue'
-import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { debounce } from '@ai-system/lib'
 import TopoBar from '@/pages/components/topoBar.vue'
@@ -36,8 +36,13 @@ const route = useRoute()
 const chatViewRef = ref(null)
 const isFullscreen = ref(true)
 const isMobile = ref(false)
+const chatManageActive = computed(() => !!chatViewRef.value?.showChatManage)
+const isChatBusy = computed(() => !!chatViewRef.value?.isWaiting)
 
 const handleChatManage = () => {
+	if (isChatBusy.value) {
+		return
+	}
 	chatViewRef.value.showChatManage = !chatViewRef.value.showChatManage
 	if (chatViewRef.value.showChatManage) {
 		nextTick(() => {
@@ -146,6 +151,12 @@ onUnmounted(() => {
 		&.active {
 			color: var(--el-color-primary);
 			background-color: rgba(var(--el-color-primary-rgb), 0.1);
+		}
+
+		&.disabled {
+			cursor: not-allowed;
+			opacity: 0.5;
+			pointer-events: none;
 		}
 	}
 }

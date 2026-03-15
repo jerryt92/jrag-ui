@@ -11,6 +11,7 @@
 			:history-chat="historyChat"
 			:curr-context-id="contextId"
 			:message-context="messageContext"
+			:is-busy="isWaiting"
 			@show-chat-manage="(val) => (showChatManage = val)"
 		/>
 		<div
@@ -147,13 +148,19 @@
 					@keyup="handleKeyup"
 				/>
 				<ElButton
-					type="primary"
+					:type="isWaiting ? 'danger' : 'primary'"
 					class="chat-button"
-					:icon="Position"
 					circle
-					:disabled="!inputMessage?.length"
-					@click="sendMessage()"
-				></ElButton>
+					:disabled="!isWaiting && !inputMessage?.length"
+					@click="isWaiting ? interruptChat() : sendMessage()"
+				>
+					<ElIcon v-if="isWaiting">
+						<span class="stop-square"></span>
+					</ElIcon>
+					<ElIcon v-else>
+						<Position />
+					</ElIcon>
+				</ElButton>
 			</div>
 		</div>
 	</div>
@@ -507,6 +514,7 @@ onUnmounted(() => {
 defineExpose({
 	showChatManage,
 	chatManageRef,
+	isWaiting,
 	getHistoryListData: () => chatManageRef.value.getHistoryListData(),
 	newChat
 })
@@ -800,6 +808,14 @@ defineExpose({
 		position: absolute;
 		right: 20px;
 		bottom: 15px;
+	}
+
+	.stop-square {
+		display: inline-block;
+		width: 12px;
+		height: 12px;
+		border-radius: 2px;
+		background-color: currentColor;
 	}
 }
 

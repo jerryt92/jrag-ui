@@ -1,6 +1,6 @@
 <template>
 	<div class="chat-manage-container">
-		<div class="chat-manage-card">
+		<div class="chat-manage-card" :class="{ 'is-busy': isBusy }">
 			<div class="chat-manage-header">
 				<el-input
 					v-if="showSearchInput"
@@ -9,20 +9,27 @@
 					class="search-input"
 					:placeholder="$t('ai.search.history.context')"
 					:suffix-icon="Search"
+					:disabled="isBusy"
 					autofocus
 					@blur="showSearchInput = false"
 				/>
 				<template v-else>
-					<el-button type="primary" class="add" round @click="addNewChat">
+					<el-button type="primary" class="add" round :disabled="isBusy" @click="addNewChat">
 						<i class="iconfont icon-chat-new"></i>{{ $t('ai.add.new.chat') }}
 					</el-button>
-					<el-button class="search-button" :icon="Search" circle @click="handleShowSearch()" />
+					<el-button
+						class="search-button"
+						:icon="Search"
+						circle
+						:disabled="isBusy"
+						@click="handleShowSearch()"
+					/>
 				</template>
 			</div>
 			<div v-show="filteredHistoryList?.length" class="chat-list">
 				<div class="list-title fx">
 					<div class="text">{{ $t('ai.history.chat') }}</div>
-					<div class="delete" @click="deleteHistoryChat()">
+					<div class="delete" :class="{ disabled: isBusy }" @click="deleteHistoryChat()">
 						<i class="iconfont icon-trash-alt"></i
 						>{{ $t('ai.delete.all.chat') }}
 					</div>
@@ -32,19 +39,25 @@
 						v-for="(item, index) in filteredHistoryList"
 						:key="index"
 						class="list-item fx"
-						:class="{ active: checkedHistoryId === item.contextId }"
+						:class="{ active: checkedHistoryId === item.contextId, disabled: isBusy }"
 					>
-						<div class="cont fx" style="height: 100%;" @click="goHistoryChat(item.contextId)">
+						<div
+							class="cont fx"
+							:class="{ disabled: isBusy }"
+							style="height: 100%;"
+							@click="goHistoryChat(item.contextId)"
+						>
 							<i class="iconfont icon-lishiduihua"></i>
 							<p>{{ item.title }}</p>
 						</div>
-						<el-dropdown trigger="hover" :teleported="false">
-							<span class="el-dropdown-link">
+						<el-dropdown trigger="hover" :teleported="false" :disabled="isBusy">
+							<span class="el-dropdown-link" :class="{ disabled: isBusy }">
 								<span class="iconfont icon-vgengduo">...</span>
 							</span>
 							<template #dropdown>
 								<el-dropdown-menu>
 									<el-dropdown-item
+										:disabled="isBusy"
 										@click.stop="deleteHistoryChat(item.contextId)"
 										><i class="iconfont icon-trash-alt"></i>
 										{{ t('common.delete') }}
@@ -91,6 +104,10 @@ const props = defineProps({
 	messageContext: {
 		type: Array,
 		default: () => []
+	},
+	isBusy: {
+		type: Boolean,
+		default: false
 	}
 })
 const searchInputRef = ref()
@@ -108,7 +125,35 @@ watch(
 		checkedHistoryId.value = val
 	}
 )
+
+watch(
+	() => props.isBusy,
+	(val) => {
+		if (val) {
+			showSearchInput.value = false
+		}
+	}
+)
+
+const showWaitingMessage = () => {
+	ElMessage({
+		message: t('ai.assistant.waiting'),
+		type: 'info'
+	})
+}
+
+const blockWhenBusy = () => {
+	if (!props.isBusy) {
+		return false
+	}
+	showWaitingMessage()
+	return true
+}
+
 const handleShowSearch = () => {
+	if (blockWhenBusy()) {
+		return
+	}
 	showSearchInput.value = true
 	nextTick(() => {
 		searchKey.value = ''
@@ -116,6 +161,9 @@ const handleShowSearch = () => {
 	})
 }
 const addNewChat = () => {
+	if (blockWhenBusy()) {
+		return
+	}
 	emit('showChatManage', false)
 	if (!props.messageContext?.length) {
 		ElMessage({
@@ -130,6 +178,9 @@ const addNewChat = () => {
 }
 
 const goHistoryChat = (constextId) => {
+	if (blockWhenBusy()) {
+		return
+	}
 	emit('showChatManage', false)
 	checkedHistoryId.value = constextId
 	props.historyChat(constextId)
@@ -144,6 +195,9 @@ const getHistoryListData = () => {
 }
 
 const deleteHistoryChat = (contextId?) => {
+	if (blockWhenBusy()) {
+		return
+	}
 	const contextIds = []
 	if (contextId) {
 		contextIds.push(contextId)
@@ -217,6 +271,10 @@ defineExpose({
 		left: 0;
 		width: 100%;
 		max-width: 360px;
+
+		&.is-busy {
+			opacity: 0.8;
+		}
 	}
 
 	.chat-manage-header {
@@ -287,6 +345,12 @@ defineExpose({
 					color: var(--el-color-primary);
 				}
 			}
+
+			.delete.disabled {
+				cursor: not-allowed;
+				opacity: 0.5;
+				pointer-events: none;
+			}
 		}
 
 		.list-content {
@@ -315,6 +379,10 @@ defineExpose({
 					box-shadow: 0px 0px 12px var(--el-color-primary-light-3);
 				}
 
+				&.disabled {
+					cursor: default;
+				}
+
 				.cont {
 					width: calc(100% - 20px);
 					flex-grow: 1;
@@ -324,6 +392,13 @@ defineExpose({
 						text-overflow: ellipsis;
 						white-space: nowrap;
 					}
+				}
+
+				.cont.disabled,
+				.el-dropdown-link.disabled {
+					cursor: not-allowed;
+					opacity: 0.5;
+					pointer-events: none;
 				}
 
 				.el-dropdown {
