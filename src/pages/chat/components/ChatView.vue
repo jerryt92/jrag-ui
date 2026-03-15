@@ -94,28 +94,45 @@
 										v-html="md.render(convertSrcFilesToMd(message.srcFile))"
 									/>
 								</div>
-								<div v-show="message?.content && !isWaiting" class="support">
-									<span
-										class="feedback-icon-good"
-										:class="{ good: message.feedback === 1 }"
-										@click="handleMsgFeedback(1, message)"
-										>👍</span
-									>
-									&nbsp;
-									<span
-										class="feedback-icon-bad"
-										:class="{ bad: message.feedback === 2 }"
-										@click="handleMsgFeedback(2, message)"
-										>👎</span
-									>
+								<div v-show="message?.content" class="message-actions">
+									<div v-show="!isWaiting" class="support">
+										<span
+											class="feedback-icon-good"
+											:class="{ good: message.feedback === 1 }"
+											@click="handleMsgFeedback(1, message)"
+											>👍</span
+										>
+										&nbsp;
+										<span
+											class="feedback-icon-bad"
+											:class="{ bad: message.feedback === 2 }"
+											@click="handleMsgFeedback(2, message)"
+											>👎</span
+										>
+									</div>
+									<el-button
+										class="copy-button"
+										text
+										size="small"
+										:icon="DocumentCopy"
+										@click="copyMessage(message.content)"
+									/>
 								</div>
 							</div>
 						</template>
 						<template v-else-if="message.role === 'user'">
-							<div
-								class="message-content"
-								v-html="md.render(message.content)"
-							></div>
+							<div class="message-content">
+								<div v-html="md.render(message.content)"></div>
+								<div v-show="message?.content" class="message-actions">
+									<el-button
+										class="copy-button"
+										text
+										size="small"
+										:icon="DocumentCopy"
+										@click="copyMessage(message.content)"
+									/>
+								</div>
+							</div>
 							<div class="avatar-wrap">
 								<el-avatar :size="50">
 									<img src="/src/assets/avatar.png" />
@@ -170,6 +187,7 @@
 import {
 	ArrowDown,
 	ChatLineSquare,
+	DocumentCopy,
 	Position,
 	Refresh
 } from '@element-plus/icons-vue'
@@ -463,6 +481,40 @@ const handleMsgFeedback = (type, message?) => {
 	})
 }
 
+const fallbackCopyText = (text: string) => {
+	const textarea = document.createElement('textarea')
+	textarea.value = text
+	textarea.setAttribute('readonly', 'true')
+	textarea.style.position = 'absolute'
+	textarea.style.left = '-9999px'
+	document.body.appendChild(textarea)
+	textarea.select()
+	document.execCommand('copy')
+	document.body.removeChild(textarea)
+}
+
+const copyMessage = async (content?: string) => {
+	if (!content) {
+		return
+	}
+	try {
+		if (navigator.clipboard?.writeText) {
+			await navigator.clipboard.writeText(content)
+		} else {
+			fallbackCopyText(content)
+		}
+		ElMessage.success('复制成功')
+	} catch (error) {
+		try {
+			fallbackCopyText(content)
+			ElMessage.success('复制成功')
+		} catch (fallbackError) {
+			console.error('复制失败:', error, fallbackError)
+			ElMessage.error('复制失败')
+		}
+	}
+}
+
 const newChat = () => {
 	interruptChat()
 	inputMessage.value = ''
@@ -720,9 +772,20 @@ defineExpose({
 					font-size: var(--n-font-size-1);
 				}
 
+				.message-actions {
+					display: flex;
+					justify-content: flex-end;
+					align-items: center;
+					gap: 8px;
+					margin-top: 10px;
+
+					.copy-button {
+						padding: 0;
+					}
+				}
+
 				.support {
 					text-align: right;
-					margin-top: 10px;
 
 					.feedback-icon-good {
 						cursor: pointer;
@@ -758,6 +821,16 @@ defineExpose({
 
 			.message-content {
 				background-color: #d8d8f6; //#cfe6fc;
+
+				.message-actions {
+					display: flex;
+					justify-content: flex-end;
+					margin-top: 10px;
+
+					.copy-button {
+						padding: 0;
+					}
+				}
 			}
 		}
 	}
