@@ -105,7 +105,7 @@ export default {
 	'account.password.update.failed': '修改密码失败',
 	'login.fail': '用户名或密码错误',
 	'login.submit': '登录',
-	'login.notRobot': '我不是机器人',
+	'login.click.captcha': '点击进行人机验证',
 	'login.verifying': '验证中',
 	'login.powFail': '验证未通过，请重试',
 	'captcha.tip': '请拖动滑块对齐图像以登录',

@@ -105,7 +105,7 @@ export default {
 	'account.password.update.failed': 'Failed to update password',
 	'login.fail': 'Username or password error',
 	'login.submit': 'Log in',
-	'login.notRobot': "I'm not a robot",
+	'login.click.captcha': "Click to complete the Captcha",
 	'login.verifying': 'Verifying',
 	'login.powFail': 'Verification failed. Please try again.',
 	'captcha.tip': 'Please slide the block to the right to log in',

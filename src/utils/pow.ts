@@ -1,4 +1,7 @@
-import {loadCryptoJs} from './cryptoJsLoader'
+import CryptoJS from 'crypto-js'
+
+const MAX_NONCE = 5_000_000
+const BATCH_SIZE = 200_000
 
 function hasLeadingZeroNibblesInWords(words: number[], zeroNibbles: number) {
 	for (let nibbleIndex = 0; nibbleIndex < zeroNibbles; nibbleIndex++) {
@@ -10,22 +13,36 @@ function hasLeadingZeroNibblesInWords(words: number[], zeroNibbles: number) {
 	return true
 }
 
-export async function solvePow(hash: string, powSalt: string, difficulty: number): Promise<string> {
+function yieldToMainThread() {
+	return new Promise((resolve) => {
+		setTimeout(resolve, 0)
+	})
+}
+
+export async function solvePow(
+	hash: string,
+	powSalt: string,
+	difficulty: number
+): Promise<string | null> {
 	const normalizedDifficulty = Math.max(0, difficulty)
 	const inputPrefix = `${hash}:${powSalt}:`
 	if (normalizedDifficulty === 0) return '0'
 
-	const cryptoJs = await loadCryptoJs()
-	if (cryptoJs?.SHA256) {
-		for (let nonce = 0; nonce < 5_000_000; nonce++) {
-			const nonceText = nonce.toString(16)
-			if (hasLeadingZeroNibblesInWords(cryptoJs.SHA256(inputPrefix + nonceText).words, normalizedDifficulty)) {
-				return nonceText
-			}
+	await yieldToMainThread()
+
+	for (let nonce = 0; nonce < MAX_NONCE; nonce++) {
+		const nonceText = nonce.toString(16)
+		if (
+			hasLeadingZeroNibblesInWords(
+				CryptoJS.SHA256(inputPrefix + nonceText).words,
+				normalizedDifficulty
+			)
+		) {
+			return nonceText
 		}
-		throw new Error('PoW solve failed')
+		if (nonce > 0 && nonce % BATCH_SIZE === 0) {
+			await yieldToMainThread()
+		}
 	}
-
-	throw new Error('SHA-256 unavailable: CryptoJS is unavailable')
+	return null
 }
-

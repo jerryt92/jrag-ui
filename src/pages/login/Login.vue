@@ -32,7 +32,7 @@
 				>
 					<template v-if="captchaToken">{{ t('login.submit') }}</template>
 					<template v-else-if="powLoading">{{ t('login.verifying') }}</template>
-					<template v-else-if="challengeData">{{ t('login.notRobot') }}</template>
+					<template v-else-if="challengeData">{{ t('login.click.captcha') }}</template>
 				</el-button>
 			</el-form-item>
 		</el-form>
