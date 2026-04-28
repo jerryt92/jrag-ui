@@ -7,10 +7,10 @@
 			label-position="left"
 			label-width="0px"
 			class="login-form"
-			@keyup.enter="handleSubmit"
+			@keyup.enter="handlePrimaryAction"
 		>
 			<div class="logo-container">
-				<h2 class="logo-text">{{t('ai.center.title')}}</h2>
+				<h2 class="logo-text">{{ t('ai.center.title') }}</h2>
 			</div>
 			<el-form-item prop="username">
 				<el-input v-model="loginData.username" placeholder="用户名"></el-input>
@@ -23,8 +23,16 @@
 				></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" @click="handleSubmit" class="submit-btn">
-					登录
+				<el-button
+					:type="captchaToken ? 'primary' : challengeData ? 'default' : 'info'"
+					class="submit-btn"
+					:loading="powLoading || loading || challengeLoading"
+					:icon="!captchaToken && !challengeData ? Refresh : undefined"
+					@click="handlePrimaryAction"
+				>
+					<template v-if="captchaToken">{{ t('login.submit') }}</template>
+					<template v-else-if="powLoading">{{ t('login.verifying') }}</template>
+					<template v-else-if="challengeData">{{ t('login.notRobot') }}</template>
 				</el-button>
 			</el-form-item>
 		</el-form>
@@ -35,7 +43,7 @@
 			align-center
 			:loading="loading"
 			show-close
-			@close="loading = false"
+			@close="onCaptchaDialogClose"
 			draggable
 		>
 			<SlipCaptcha
@@ -48,7 +56,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import axios from 'axios'
+import { Refresh } from '@element-plus/icons-vue'
+import { nextTick, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import {
 	ElForm,
@@ -58,58 +68,178 @@ import {
 	ElDialog,
 	ElMessage
 } from 'element-plus'
+import type { FormInstance } from 'element-plus'
+import {
+	getPowCaptcha,
+	verifyPowCaptcha,
+	type PowCaptchaResp
+} from '@/api/captcha.api'
 import { getSessionInfo, login } from '@/api/login.api'
 import SlipCaptcha from '@/pages/login/components/SlipCaptcha.vue'
+
 import { t } from '@ai-system/lib'
 import { setSessionInfo } from '@/utils/role'
+import { solvePow } from '@/utils/pow'
 
 const router = useRouter()
-const slideCaptchaRef = ref()
+const loginForm = ref<FormInstance>()
+const slideCaptchaRef = ref<{ updateSlideCaptcha: () => void }>()
 const loading = ref<boolean>(false)
+const powLoading = ref<boolean>(false)
 const captchaDialogShow = ref<boolean>(false)
+const powFailCount = ref(0)
+const captchaToken = ref<{ code: string; hash: string } | null>(null)
+const challengeData = ref<PowCaptchaResp | null>(null)
+const challengeLoading = ref(false)
 
-// 表单数据
 const loginData = reactive({
 	username: '',
 	password: ''
 })
 
-// 验证规则
 const rules = {
 	username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
 	password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 }
 
-// 提交处理函数
-const handleSubmit = () => {
-	captchaDialogShow.value = true
-	slideCaptchaRef.value.updateSlideCaptcha()
+function onCaptchaDialogClose() {
+	loading.value = false
 }
 
-const slideCaptchaSuccess = (e) => {
+function onPowVerifyFailed() {
+	powFailCount.value += 1
+	ElMessage.error(t('login.powFail'))
+	if (powFailCount.value >= 3) {
+		powFailCount.value = 0
+		captchaDialogShow.value = true
+		nextTick(() => {
+			slideCaptchaRef.value?.updateSlideCaptcha()
+		})
+	}
+}
+
+async function loadPowChallenge() {
+	if (challengeLoading.value) return
+	challengeLoading.value = true
+	try {
+		const { data } = await getPowCaptcha()
+		challengeData.value = data
+	} catch (e) {
+		console.error(e)
+		challengeData.value = null
+	} finally {
+		challengeLoading.value = false
+	}
+}
+
+async function runPowVerify() {
+	if (!challengeData.value || powLoading.value || captchaToken.value) return
+	powLoading.value = true
+	const challenge = challengeData.value
+	try {
+		const powNonce = await solvePow(
+			challenge.hash,
+			challenge.powSalt,
+			challenge.powDifficulty
+		)
+		if (powNonce === null) {
+			onPowVerifyFailed()
+			challengeData.value = null
+			void loadPowChallenge()
+			return
+		}
+		const verifyRes = await verifyPowCaptcha(challenge.hash, powNonce)
+		if (verifyRes.data.result && verifyRes.data.code) {
+			captchaToken.value = {
+				code: verifyRes.data.code,
+				hash: challenge.hash
+			}
+			powFailCount.value = 0
+		} else {
+			onPowVerifyFailed()
+			challengeData.value = null
+			void loadPowChallenge()
+		}
+	} catch (e) {
+		console.error(e)
+		ElMessage.error(t('login.powFail'))
+		challengeData.value = null
+		void loadPowChallenge()
+	} finally {
+		powLoading.value = false
+	}
+}
+
+onMounted(() => {
+	void loadPowChallenge()
+})
+
+function slideCaptchaSuccess(e: { code: string; hash: string }) {
+	captchaToken.value = { code: e.code, hash: e.hash }
+	powFailCount.value = 0
+	captchaDialogShow.value = false
+}
+
+async function submitLogin() {
+	if (!captchaToken.value) return
+	const form = loginForm.value
+	if (!form) return
+	try {
+		await form.validate()
+	} catch {
+		return
+	}
 	loading.value = true
-	login(loginData.username, loginData.password, e.code, e.hash)
-		.then(async () => {
-			try {
-				const sessionResponse = await getSessionInfo()
-				setSessionInfo(sessionResponse.data)
-				if (sessionResponse.data.role > 1) {
-					router.push('/chat/assistant')
-				} else {
-					router.push('/')
-				}
-			} catch (error) {
-				setSessionInfo(null)
+	try {
+		await login(
+			loginData.username,
+			loginData.password,
+			captchaToken.value.code,
+			captchaToken.value.hash
+		)
+		try {
+			const sessionResponse = await getSessionInfo()
+			setSessionInfo(sessionResponse.data)
+			if (sessionResponse.data.role > 1) {
+				router.push('/chat/assistant')
+			} else {
 				router.push('/')
 			}
-		})
-		.catch((e) => {
-			console.log(e)
-			if (e.status === 401) {
-				captchaDialogShow.value = false
-				ElMessage.error(t('login.fail'))
-			}
-		})
+		} catch (error) {
+			setSessionInfo(null)
+			router.push('/')
+		}
+	} catch (e: unknown) {
+		console.log(e)
+		if (axios.isAxiosError(e) && e.response?.status === 401) {
+			captchaDialogShow.value = false
+			captchaToken.value = null
+			challengeData.value = null
+			void loadPowChallenge()
+			ElMessage.error(t('login.fail'))
+		}
+	} finally {
+		loading.value = false
+	}
+}
+
+async function handlePrimaryAction() {
+	if (captchaToken.value) {
+		void submitLogin()
+		return
+	}
+	if (!challengeData.value) {
+		void loadPowChallenge()
+		return
+	}
+	const form = loginForm.value
+	if (!form) return
+	try {
+		await form.validate()
+	} catch {
+		return
+	}
+	void runPowVerify()
 }
 </script>
 <style lang="scss" scoped>
