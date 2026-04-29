@@ -24,15 +24,14 @@
 			</el-form-item>
 			<el-form-item>
 				<el-button
-					:type="captchaToken ? 'primary' : challengeData ? 'default' : 'info'"
-					class="submit-btn"
+					type="primary"
+					:class="['submit-btn', { 'submit-btn--captcha': !captchaToken && !powLoading }]"
 					:loading="powLoading || loading || challengeLoading"
-					:icon="!captchaToken && !challengeData ? Refresh : undefined"
 					@click="handlePrimaryAction"
 				>
 					<template v-if="captchaToken">{{ t('login.submit') }}</template>
 					<template v-else-if="powLoading">{{ t('login.verifying') }}</template>
-					<template v-else-if="challengeData">{{ t('login.click.captcha') }}</template>
+					<template v-else>{{ t('login.click.captcha') }}</template>
 				</el-button>
 			</el-form-item>
 		</el-form>
@@ -57,8 +56,7 @@
 
 <script setup lang="ts">
 import axios from 'axios'
-import { Refresh } from '@element-plus/icons-vue'
-import { nextTick, onMounted, reactive, ref } from 'vue'
+import { nextTick, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import {
 	ElForm,
@@ -145,7 +143,6 @@ async function runPowVerify() {
 		if (powNonce === null) {
 			onPowVerifyFailed()
 			challengeData.value = null
-			void loadPowChallenge()
 			return
 		}
 		const verifyRes = await verifyPowCaptcha(challenge.hash, powNonce)
@@ -158,26 +155,21 @@ async function runPowVerify() {
 		} else {
 			onPowVerifyFailed()
 			challengeData.value = null
-			void loadPowChallenge()
 		}
 	} catch (e) {
 		console.error(e)
 		ElMessage.error(t('login.powFail'))
 		challengeData.value = null
-		void loadPowChallenge()
 	} finally {
 		powLoading.value = false
 	}
 }
 
-onMounted(() => {
-	void loadPowChallenge()
-})
-
 function slideCaptchaSuccess(e: { code: string; hash: string }) {
 	captchaToken.value = { code: e.code, hash: e.hash }
 	powFailCount.value = 0
 	captchaDialogShow.value = false
+	void submitLogin()
 }
 
 async function submitLogin() {
@@ -215,7 +207,6 @@ async function submitLogin() {
 			captchaDialogShow.value = false
 			captchaToken.value = null
 			challengeData.value = null
-			void loadPowChallenge()
 			ElMessage.error(t('login.fail'))
 		}
 	} finally {
@@ -228,16 +219,16 @@ async function handlePrimaryAction() {
 		void submitLogin()
 		return
 	}
-	if (!challengeData.value) {
-		void loadPowChallenge()
-		return
-	}
 	const form = loginForm.value
 	if (!form) return
 	try {
 		await form.validate()
 	} catch {
 		return
+	}
+	if (!challengeData.value) {
+		await loadPowChallenge()
+		if (!challengeData.value) return
 	}
 	void runPowVerify()
 }
@@ -285,6 +276,11 @@ async function handlePrimaryAction() {
 		&:hover {
 			transform: scale(1.01);
 		}
+	}
+	.submit-btn--captcha {
+		background: #fff;
+		border-color: #fff;
+		color: var(--el-color-primary);
 	}
 	:global(.login-container .el-dialog) {
 		background: color-mix(in srgb, var(--n-color-neutral-w), transparent 90%);
