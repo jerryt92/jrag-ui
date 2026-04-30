@@ -1,7 +1,7 @@
 import { aiIntroduceZh, webTitleZh } from '@/oem.js'
 
 export default {
-	'ai.center.title': webTitleZh,
+	'ai.title': webTitleZh,
 	'ai.assistant': 'AI助手',
 	'ai.assistant.desc': '与AI助手进行对话',
 	'ai.input.placeholder': '请输入问题',

@@ -1,7 +1,7 @@
 import { aiIntroduceEn, webTitleEn } from '@/oem.js'
 
 export default {
-	'ai.center.title': webTitleEn,
+	'ai.title': webTitleEn,
 	'ai.assistant': 'AI Assistant',
 	'ai.assistant.desc': 'Chat with AI Assistant',
 	'ai.input.placeholder': 'Please enter your question',

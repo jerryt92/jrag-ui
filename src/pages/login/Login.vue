@@ -10,7 +10,7 @@
 			@keyup.enter="handleLoginClick"
 		>
 			<div class="logo-container">
-				<h2 class="logo-text">{{ t('ai.center.title') }}</h2>
+				<h2 class="logo-text">{{ t('ai.title') }}</h2>
 			</div>
 			<el-form-item prop="username">
 				<el-input v-model="loginData.username" placeholder="用户名"></el-input>

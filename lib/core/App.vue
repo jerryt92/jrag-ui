@@ -12,7 +12,7 @@ import { useElementLocale } from '@ai-system/hooks'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { t } from '@ai-system/lib'
-document.getElementsByTagName('title')[0].innerHTML = t('ai.center.title')
+document.getElementsByTagName('title')[0].innerHTML = t('ai.title')
 const { elLocale } = useElementLocale()
 
 const route = useRoute()
