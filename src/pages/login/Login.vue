@@ -30,14 +30,15 @@
 						'is-loading': powLoading || challengeLoading || captchaDialogShow,
 						'is-disabled': loading
 					}"
+					@click="handlePrimaryAction"
 				>
 					<div
 						class="captcha-check-box"
 						:class="{
 							'is-checked': !!captchaToken,
+							'is-loading': powLoading || challengeLoading || captchaDialogShow,
 							'is-disabled': loading || powLoading || challengeLoading || captchaDialogShow
 						}"
-						@click="handlePrimaryAction"
 					></div>
 					<div class="captcha-check-text">
 						<template v-if="powLoading || challengeLoading || captchaDialogShow">{{
@@ -315,6 +316,7 @@ function handleLoginClick() {
 		border-radius: 6px;
 		background-color: #f9f9f9;
 		user-select: none;
+		cursor: pointer;
 		transition: border-color 0.2s ease;
 	}
 
@@ -343,6 +345,14 @@ function handleLoginClick() {
 		border-color: #2e7d32;
 	}
 
+	.captcha-check-box.is-loading {
+		border-radius: 50%;
+		border-color: #d8d8d8;
+		border-top-color: var(--el-color-primary);
+		background: transparent;
+		animation: captcha-check-rotate 0.8s linear infinite;
+	}
+
 	.captcha-check-box.is-disabled {
 		cursor: not-allowed;
 	}
@@ -357,6 +367,10 @@ function handleLoginClick() {
 		border: solid #2e7d32;
 		border-width: 0 3px 3px 0;
 		transform: rotate(45deg);
+	}
+
+	.captcha-check-box.is-loading::after {
+		content: none;
 	}
 
 	.captcha-check-text {
@@ -416,6 +430,12 @@ function handleLoginClick() {
 		min-width: auto;
 		width: auto;
 		padding: 25px;
+	}
+}
+
+@keyframes captcha-check-rotate {
+	to {
+		transform: rotate(360deg);
 	}
 }
 </style>
