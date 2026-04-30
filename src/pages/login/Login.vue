@@ -7,7 +7,7 @@
 			label-position="left"
 			label-width="0px"
 			class="login-form"
-			@keyup.enter="handlePrimaryAction"
+			@keyup.enter="handleLoginClick"
 		>
 			<div class="logo-container">
 				<h2 class="logo-text">{{ t('ai.center.title') }}</h2>
@@ -23,15 +23,46 @@
 				></el-input>
 			</el-form-item>
 			<el-form-item>
+				<div
+					class="captcha-check-panel"
+					:class="{
+						'is-checked': !!captchaToken,
+						'is-loading': powLoading || challengeLoading || captchaDialogShow,
+						'is-disabled': loading
+					}"
+				>
+					<div
+						class="captcha-check-box"
+						:class="{
+							'is-checked': !!captchaToken,
+							'is-disabled': loading || powLoading || challengeLoading || captchaDialogShow
+						}"
+						@click="handlePrimaryAction"
+					></div>
+					<div class="captcha-check-text">
+						<template v-if="powLoading || challengeLoading || captchaDialogShow">{{
+							t('login.verifying')
+						}}</template>
+						<template v-else>{{ t('login.check.captcha') }}</template>
+					</div>
+					<div class="captcha-brand">
+						<div class="captcha-brand-icon">
+							<span class="arc arc-primary"></span>
+							<span class="arc arc-black"></span>
+						</div>
+						<span class="captcha-brand-text">CAPTCHA</span>
+					</div>
+				</div>
+			</el-form-item>
+			<el-form-item>
 				<el-button
 					type="primary"
-					:class="['submit-btn', { 'submit-btn--captcha': !captchaToken && !powLoading }]"
-					:loading="powLoading || loading || challengeLoading"
-					@click="handlePrimaryAction"
+					class="submit-btn"
+					:loading="loading"
+					:disabled="!captchaToken || powLoading || challengeLoading || captchaDialogShow"
+					@click="handleLoginClick"
 				>
-					<template v-if="captchaToken">{{ t('login.submit') }}</template>
-					<template v-else-if="powLoading">{{ t('login.verifying') }}</template>
-					<template v-else>{{ t('login.click.captcha') }}</template>
+					{{ t('login.submit') }}
 				</el-button>
 			</el-form-item>
 		</el-form>
@@ -215,22 +246,17 @@ async function submitLogin() {
 }
 
 async function handlePrimaryAction() {
-	if (captchaToken.value) {
-		void submitLogin()
-		return
-	}
-	const form = loginForm.value
-	if (!form) return
-	try {
-		await form.validate()
-	} catch {
-		return
-	}
+	if (loading.value || powLoading.value || challengeLoading.value || captchaDialogShow.value) return
+	if (captchaToken.value) return
 	if (!challengeData.value) {
 		await loadPowChallenge()
 		if (!challengeData.value) return
 	}
 	void runPowVerify()
+}
+
+function handleLoginClick() {
+	void submitLogin()
 }
 </script>
 <style lang="scss" scoped>
@@ -277,10 +303,111 @@ async function handlePrimaryAction() {
 			transform: scale(1.01);
 		}
 	}
-	.submit-btn--captcha {
+
+	.captcha-check-panel {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		box-sizing: border-box;
+		height: 68px;
+		padding: 0 16px;
+		border: 1px solid var(--el-border-color);
+		border-radius: 6px;
+		background-color: #f9f9f9;
+		user-select: none;
+		transition: border-color 0.2s ease;
+	}
+
+	.captcha-check-panel:hover {
+		border-color: var(--el-color-primary);
+	}
+
+	.captcha-check-panel.is-disabled,
+	.captcha-check-panel.is-loading {
+		cursor: not-allowed;
+		opacity: 0.75;
+	}
+
+	.captcha-check-box {
+		width: 28px;
+		height: 28px;
+		border: 2px solid #b9b9b9;
+		border-radius: 4px;
 		background: #fff;
-		border-color: #fff;
-		color: var(--el-color-primary);
+		position: relative;
+		flex-shrink: 0;
+		cursor: pointer;
+	}
+
+	.captcha-check-box.is-checked {
+		border-color: #2e7d32;
+	}
+
+	.captcha-check-box.is-disabled {
+		cursor: not-allowed;
+	}
+
+	.captcha-check-box.is-checked::after {
+		content: '';
+		position: absolute;
+		left: 8px;
+		top: 3px;
+		width: 8px;
+		height: 15px;
+		border: solid #2e7d32;
+		border-width: 0 3px 3px 0;
+		transform: rotate(45deg);
+	}
+
+	.captcha-check-text {
+		margin-left: 14px;
+		font-size: 14px;
+		color: var(--el-text-color-primary);
+	}
+
+	.captcha-brand {
+		margin-left: auto;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: #7a7f87;
+	}
+
+	.captcha-brand-icon {
+		position: relative;
+		width: 20px;
+		height: 20px;
+	}
+
+	.captcha-brand-icon .arc {
+		position: absolute;
+		display: block;
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		border: 2px solid transparent;
+	}
+
+	.captcha-brand-icon .arc-primary {
+		left: 0;
+		top: 0;
+		border-top-color: var(--el-color-primary);
+		border-left-color: var(--el-color-primary);
+		transform: rotate(-8deg);
+	}
+
+	.captcha-brand-icon .arc-black {
+		right: 0;
+		bottom: 0;
+		border-right-color: var(--n-color-neutral-b);
+		border-bottom-color: var(--n-color-neutral-b);
+		transform: rotate(-8deg);
+	}
+
+	.captcha-brand-text {
+		font-size: 11px;
+		letter-spacing: 0.3px;
+		font-weight: 600;
 	}
 	:global(.login-container .el-dialog) {
 		background: color-mix(in srgb, var(--n-color-neutral-w), transparent 90%);
