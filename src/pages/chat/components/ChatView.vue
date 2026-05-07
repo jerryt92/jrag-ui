@@ -198,7 +198,6 @@ import {
 	ElIcon,
 	ElInput,
 	ElMessage,
-	ElMessageBox,
 	ElScrollbar
 } from 'element-plus'
 import MarkdownIt from 'markdown-it'
@@ -213,7 +212,6 @@ import { t } from '@ai-system/lib'
 import {
 	addMessageFeedback,
 	chatWebsocketClientApi,
-	checkApCenterApi,
 	getHistoryContext,
 	getNewContextId,
 	getQaTemplate
@@ -333,6 +331,10 @@ const sendMessage = (msg?: string) => {
 						isNewLlmResponse.value = true
 					}
 				}
+				// 关闭处理
+				chatWebsocketClient.onclose = () => {
+					onWsClose()
+				}
 			}
 		})
 	} else {
@@ -379,37 +381,35 @@ const handleChatResponse = (chatResponseDto: ChatResponseDto) => {
 			) {
 				console.error('消息index异常')
 			}
-			if (chatResponseDto.done === true) {
-				// 对话结束
+			if (
+				chatResponseDto.message.srcFile &&
+				chatResponseDto.message.srcFile.length > 0
+			) {
+				messageContext.value[messageContext.value.length - 1].srcFile =
+					chatResponseDto.message.srcFile
+			}
+			if (chatResponseDto.message.content) {
 				messageContext.value[messageContext.value.length - 1].content +=
 					chatResponseDto.message.content
-				isWaiting.value = false
-				isNewLlmResponse.value = true
-				nextTick(() => {
-					chatWebsocketClient.close()
-					if (
-						keepAliveWsClient &&
-						keepAliveWsClient.readyState === keepAliveWsClient.OPEN
-					) {
-						keepAliveWsClient.close()
-					}
-				})
-			} else {
-				if (
-					chatResponseDto.message.srcFile &&
-					chatResponseDto.message.srcFile.length > 0
-				) {
-					messageContext.value[messageContext.value.length - 1].srcFile =
-						chatResponseDto.message.srcFile
-				}
-				if (chatResponseDto.message.content) {
-					messageContext.value[messageContext.value.length - 1].content +=
-						chatResponseDto.message.content
-				}
 			}
 		}
 	}
 }
+
+const onWsClose = () => {
+	isWaiting.value = false
+	isNewLlmResponse.value = true
+	nextTick(() => {
+		chatWebsocketClient.close()
+		if (
+			keepAliveWsClient &&
+			keepAliveWsClient.readyState === keepAliveWsClient.OPEN
+		) {
+			keepAliveWsClient.close()
+		}
+	})
+}
+
 // 滚动到底部
 const scrollToBottom = () => {
 	nextTick(() => {
